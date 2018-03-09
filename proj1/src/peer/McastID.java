@@ -10,11 +10,13 @@ public class McastID
 	
 	McastID(String addr, String port)
 	{
-		try {
+		try 
+		{
 			this.addr = InetAddress.getByName(addr);
 			this.port = Integer.parseInt(port);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (UnknownHostException e) 
+		{
 			e.printStackTrace();
 			System.out.println("Unable to resolve IP address " + addr + " with port " + port);
 			throw new IllegalArgumentException();
