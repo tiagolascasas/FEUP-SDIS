@@ -69,12 +69,14 @@ public class Client {
 		if(peer.length == 2)
 		{
 			this.peerIp = peer[0];
+			this.peerPort = Integer.parseInt(peer[1]);
 		}
 		else
 		{
 			this.peerIp = "localhost";
+			this.peerPort = Integer.parseInt(peer[0]);
 		}
-		this.peerPort = Integer.parseInt(peer[1]);	
+	
 
 		this.message = message;
 	}
