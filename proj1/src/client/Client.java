@@ -64,7 +64,7 @@ public class Client {
 
 
 	public Client(String accessPoint, Message message) {
-		String [] peer = accessPoint.split("-");
+		String [] peer = accessPoint.split(":");
 		//TODO adapt for rmi
 		if(peer.length == 2)
 		{
