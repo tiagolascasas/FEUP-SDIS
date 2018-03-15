@@ -8,7 +8,7 @@ public class DispatcherMBR implements Runnable
 	String version;
 	int serverID;
 
-	public DispatcherMBR(MulticastSocket mbrSocket, String version, int serverID) 
+	public DispatcherMBR(MulticastSocket mbrSocket) 
 	{
 		// TODO Auto-generated constructor stub
 	}

@@ -4,20 +4,19 @@ import java.net.MulticastSocket;
 
 public class Peer implements Runnable
 {
-	private String version;
-	private int serverID;
-	private String rmi;
+	private String rmiMethodName;
 	private McastID[] connections;
 	private MulticastSocket mcSocket, mdbSocket, mbrSocket;
+	
 	DispatcherMC mc;
 	DispatcherMDB mdb;
 	DispatcherMBR mbr;
+	DispatcherRMI client;
 	
 	public Peer(String version, int serverID, String rmi, McastID[] connections) 
 	{
-		this.version = version;
-		this.serverID = serverID;
-		this.rmi = rmi;
+		DataManager.getInstance().init(version, serverID);
+		this.rmiMethodName = rmi;
 		this.connections = connections;
 		
 		try
@@ -40,10 +39,10 @@ public class Peer implements Runnable
 			System.exit(-1);
 		}
 		
-		mc = new DispatcherMC(this.mcSocket, version, serverID);
-		mdb = new DispatcherMDB(this.mdbSocket, version, serverID);
-		mbr = new DispatcherMBR(this.mbrSocket, version, serverID);
-		
+		mc = new DispatcherMC(this.mcSocket);
+		mdb = new DispatcherMDB(this.mdbSocket);
+		mbr = new DispatcherMBR(this.mbrSocket);
+		client = new DispatcherRMI(this.rmiMethodName);
 	}
 	
 	@Override
@@ -52,5 +51,6 @@ public class Peer implements Runnable
 		mc.run();
 		mdb.run();
 		mbr.run();
+		client.run();
 	}
 }

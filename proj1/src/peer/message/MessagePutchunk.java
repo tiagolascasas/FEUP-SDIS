@@ -7,9 +7,9 @@ public class MessagePutchunk extends Message
 	private byte[] body;
 	
 	
-	MessagePutchunk(String version, int senderID, String fileID, int chunkNo, int replicationDeg, byte[] body)
+	MessagePutchunk(String fileID, int chunkNo, int replicationDeg, byte[] body)
 	{
-		super(version, senderID, fileID);
+		super(fileID);
 		this.messageType = "PUTCHUNK";
 		this.chunkNo = chunkNo;
 		this.replicationDeg = replicationDeg;

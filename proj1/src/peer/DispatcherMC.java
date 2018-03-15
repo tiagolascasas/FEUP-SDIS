@@ -8,11 +8,9 @@ public class DispatcherMC implements Runnable
 	String version;
 	int serverID;
 	
-	public DispatcherMC(MulticastSocket socket, String version, int serverID)
+	public DispatcherMC(MulticastSocket socket)
 	{
 		this.socket = socket;
-		this.version = version;
-		this.serverID = serverID;
 	}
 	
 	

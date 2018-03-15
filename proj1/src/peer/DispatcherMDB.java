@@ -8,7 +8,7 @@ public class DispatcherMDB implements Runnable
 	String version;
 	int serverID;
 	
-	public DispatcherMDB(MulticastSocket mdbSocket, String version, int serverID) 
+	public DispatcherMDB(MulticastSocket mdbSocket) 
 	{
 		// TODO Auto-generated constructor stub
 	}

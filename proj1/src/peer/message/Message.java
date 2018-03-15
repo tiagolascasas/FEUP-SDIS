@@ -1,5 +1,7 @@
 package peer.message;
 
+import peer.DataManager;
+
 public abstract class Message 
 {
 	protected String messageType;
@@ -7,10 +9,10 @@ public abstract class Message
 	protected int senderID;
 	protected String fileID;
 	
-	protected Message(String version, int senderID, String fileID)
+	protected Message(String fileID)
 	{
-		this.version = version;
-		this.senderID = senderID;
+		this.version = DataManager.getInstance().getVersion();
+		this.senderID = DataManager.getInstance().getId();
 		this.fileID = fileID;
 	}
 	
