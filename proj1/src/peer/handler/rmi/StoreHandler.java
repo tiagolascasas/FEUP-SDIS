@@ -1,6 +1,8 @@
 package peer.handler.rmi;
 
-public class StoreHandler implements Runnable
+import peer.handler.Handler;
+
+public class StoreHandler extends Handler
 {
 
 	@Override

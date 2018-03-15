@@ -1,6 +1,8 @@
 package peer.handler.multicast;
 
-public class GetchunkHandler implements Runnable
+import peer.handler.Handler;
+
+public class GetchunkHandler extends Handler
 {
 
 	@Override

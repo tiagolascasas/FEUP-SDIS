@@ -1,6 +1,8 @@
 package peer.handler.multicast;
 
-public class PutchunkHandler implements Runnable
+import peer.handler.Handler;
+
+public class PutchunkHandler extends Handler
 {
 
 	@Override

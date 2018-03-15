@@ -1,6 +1,8 @@
 package peer.handler.rmi;
 
-public class DeletionHandler implements Runnable
+import peer.handler.Handler;
+
+public class DeletionHandler extends Handler
 {
 
 	@Override

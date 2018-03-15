@@ -1,6 +1,8 @@
 package peer.handler.rmi;
 
-public class RestoreHandler implements Runnable
+import peer.handler.Handler;
+
+public class RestoreHandler extends Handler
 {
 
 	@Override

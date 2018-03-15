@@ -1,6 +1,8 @@
 package peer.handler.multicast;
 
-public class RemovedHandler implements Runnable
+import peer.handler.Handler;
+
+public class RemovedHandler extends Handler
 {
 
 	@Override

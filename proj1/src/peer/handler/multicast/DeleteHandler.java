@@ -1,6 +1,8 @@
 package peer.handler.multicast;
 
-public class DeleteHandler implements Runnable
+import peer.handler.Handler;
+
+public class DeleteHandler extends Handler
 {
 
 	@Override

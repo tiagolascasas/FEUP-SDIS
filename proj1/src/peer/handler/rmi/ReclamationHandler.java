@@ -1,6 +1,8 @@
 package peer.handler.rmi;
 
-public class ReclamationHandler implements Runnable
+import peer.handler.Handler;
+
+public class ReclamationHandler extends Handler
 {
 
 	@Override

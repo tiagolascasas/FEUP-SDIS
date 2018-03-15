@@ -1,6 +1,8 @@
 package peer.handler.multicast;
 
-public class StoredHandler implements Runnable
+import peer.handler.Handler;
+
+public class StoredHandler extends Handler
 {
 
 	@Override

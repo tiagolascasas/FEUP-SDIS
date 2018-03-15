@@ -1,6 +1,8 @@
 package peer.handler.multicast;
 
-public class ChunkHandler implements Runnable
+import peer.handler.Handler;
+
+public class ChunkHandler extends Handler
 {
 
 	@Override
