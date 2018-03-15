@@ -1,17 +1,19 @@
 package peer;
 
 import java.net.MulticastSocket;
+import java.util.concurrent.CountDownLatch;
 
-public class Peer implements Runnable
+public class Peer extends Thread
 {
 	private String rmiMethodName;
 	private McastID[] connections;
 	private MulticastSocket mcSocket, mdbSocket, mbrSocket;
+	static boolean running = true;
 	
-	DispatcherMC mc;
-	DispatcherMDB mdb;
-	DispatcherMBR mbr;
-	DispatcherRMI client;
+	Thread mc;
+	Thread mdb;
+	Thread mbr;
+	Thread client;
 	
 	public Peer(String version, int serverID, String rmi, McastID[] connections) 
 	{
@@ -48,9 +50,21 @@ public class Peer implements Runnable
 	@Override
 	public void run()
 	{
-		mc.run();
-		mdb.run();
-		mbr.run();
-		client.run();
+		mc.start();
+		mdb.start();
+		mbr.start();
+		client.start();
+		
+		CountDownLatch latch = new CountDownLatch(4);
+		try
+		{
+			latch.await();
+		} 
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		return;
 	}
 }

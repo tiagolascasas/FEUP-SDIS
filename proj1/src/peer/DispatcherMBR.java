@@ -2,7 +2,7 @@ package peer;
 
 import java.net.MulticastSocket;
 
-public class DispatcherMBR implements Runnable 
+public class DispatcherMBR extends Dispatcher
 {
 	MulticastSocket socket;
 	String version;
@@ -16,8 +16,19 @@ public class DispatcherMBR implements Runnable
 	@Override
 	public void run() 
 	{
-		// TODO Auto-generated method stub
+		System.out.println("MBR Dispatcher");
+		while (Peer.running)
+		{
 
+		}
+
+	}
+
+	@Override
+	void processMessage(byte[] message)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

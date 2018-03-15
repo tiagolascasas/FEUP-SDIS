@@ -1,17 +1,30 @@
 package peer;
 
-public class DispatcherRMI implements Runnable 
+public class DispatcherRMI extends Dispatcher
 {
+	private String rmiMethodName;
+	
 	public DispatcherRMI(String rmiMethodName)
 	{
-		// TODO Auto-generated constructor stub
+		this.rmiMethodName = rmiMethodName;
 	}
 
 	@Override
 	public void run() 
 	{
-		// TODO Auto-generated method stub
+		System.out.println("RMI Dispatcher");
+		while (Peer.running)
+		{
+			//read something from RMI
+		}
 
+	}
+
+	@Override
+	void processMessage(byte[] message)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }
