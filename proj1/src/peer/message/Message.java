@@ -3,17 +3,20 @@ package peer.message;
 import peer.DataManager;
 
 public abstract class Message 
-{
+{	
+	protected final static char CR  = (char)0x0D;
+	protected final static char LF  = (char)0x0A; 
+
 	protected String messageType;
 	protected String version;
 	protected int senderID;
-	protected String fileID;
+	protected byte[] fileID;
 	
-	protected Message(String fileID)
+	protected Message(byte[] id)
 	{
 		this.version = DataManager.getInstance().getVersion();
 		this.senderID = DataManager.getInstance().getId();
-		this.fileID = fileID;
+		this.fileID = id;
 	}
 	
 	abstract byte[] getMessageBytes();

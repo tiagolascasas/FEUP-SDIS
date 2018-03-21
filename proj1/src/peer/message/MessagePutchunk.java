@@ -1,34 +1,41 @@
 package peer.message;
 
+import java.nio.charset.StandardCharsets;
+
 public class MessagePutchunk extends Message 
 {
 	private int chunkNo;
 	private int replicationDeg;
 	private byte[] body;
+	private byte[] header;
 	
-	
-	MessagePutchunk(String fileID, int chunkNo, int replicationDeg, byte[] body)
+	public MessagePutchunk(byte[] id, int chunkNo, int replicationDeg)
 	{
-		super(fileID);
+		super(id);
 		this.messageType = "PUTCHUNK";
 		this.chunkNo = chunkNo;
 		this.replicationDeg = replicationDeg;
+		
+		String[] headerFields = {
+				this.messageType,
+				this.version,
+				Integer.toString(senderID),
+				new String(this.fileID, StandardCharsets.US_ASCII),
+				Integer.toString(this.chunkNo),
+				Integer.toString(this.replicationDeg),
+				"" + CR + LF + CR + LF
+			};
+		this.header = String.join(" ", headerFields).getBytes();
+	}
+	
+	public void setBody(byte[] body)
+	{
 		this.body = body;
 	}
 	
 	@Override
-	byte[] getMessageBytes() 
+	public byte[] getMessageBytes() 
 	{
-		String[] headerFields = {
-			this.messageType,
-			this.version,
-			Integer.toString(senderID),
-			this.fileID,
-			Integer.toString(this.chunkNo),
-			Integer.toString(this.replicationDeg),
-			"\n\n"
-		};
-		byte[] header = String.join(" ", headerFields).getBytes();
 		byte[] message = new byte[header.length + body.length];
 		System.arraycopy(header, 0, message, 0, header.length);
 		System.arraycopy(body, 0, message, header.length, body.length);

@@ -3,7 +3,7 @@ package peer.message;
 public class MessageGetchunk extends Message
 {
 
-	protected MessageGetchunk(String fileID)
+	protected MessageGetchunk(byte[] fileID)
 	{
 		super(fileID);
 		// TODO Auto-generated constructor stub

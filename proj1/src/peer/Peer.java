@@ -17,7 +17,7 @@ public class Peer extends Thread
 	
 	public Peer(String version, int serverID, String rmi, McastID[] connections) 
 	{
-		DataManager.getInstance().init(version, serverID);
+		DataManager.getInstance().init(version, serverID, connections);
 		this.rmiMethodName = rmi;
 		this.connections = connections;
 		
@@ -34,6 +34,8 @@ public class Peer extends Thread
 			System.out.println("Creating Multicast socket in port " + this.connections[2].port + " and group " + this.connections[2].addr);
 			this.mbrSocket = new MulticastSocket(this.connections[2].port);
 			this.mbrSocket.joinGroup(connections[2].addr);
+			
+			DataManager.getInstance().setSockets(mcSocket, mbrSocket, mdbSocket);
 		}
 		catch (Exception e)
 		{

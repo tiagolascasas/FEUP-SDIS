@@ -3,7 +3,7 @@ package peer.message;
 public class MessageDelete extends Message
 {
 
-	protected MessageDelete(String fileID)
+	protected MessageDelete(byte[] fileID)
 	{
 		super(fileID);
 		// TODO Auto-generated constructor stub
