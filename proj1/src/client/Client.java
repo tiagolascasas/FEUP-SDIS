@@ -10,7 +10,7 @@ public class Client {
 	public static void main(String[] args) {
 		String response;
 		try {
-			Registry registry = LocateRegistry.getRegistry(host, 5555);
+			Registry registry = LocateRegistry.getRegistry("localhost", 5555); //not sure about the host...
 			Message stub = (Message) registry.lookup("Message");
 
 
