@@ -7,7 +7,6 @@ public class MessagePutchunk extends Message
 	private int chunkNo;
 	private int replicationDeg;
 	private byte[] body;
-	private byte[] header;
 	
 	public MessagePutchunk(byte[] id, int chunkNo, int replicationDeg)
 	{

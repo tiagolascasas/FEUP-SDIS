@@ -7,6 +7,7 @@ public abstract class Message
 	protected final static char CR  = (char)0x0D;
 	protected final static char LF  = (char)0x0A; 
 
+	protected byte[] header;
 	protected String messageType;
 	protected String version;
 	protected int senderID;

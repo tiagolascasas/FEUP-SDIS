@@ -52,6 +52,8 @@ public class Peer extends Thread
 	@Override
 	public void run()
 	{
+		installSignalHandler();
+		
 		mc.start();
 		mdb.start();
 		mbr.start();
@@ -68,5 +70,23 @@ public class Peer extends Thread
 			System.exit(-1);
 		}
 		return;
+	}
+	
+	public void installSignalHandler()
+	{/*
+		Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+            	System.out.println("Exiting...");
+            	//close stuff
+            	mc.interrupt();
+            	mdb.interrupt();
+            	mbr.interrupt();
+            	client.interrupt();
+                System.exit(0);
+            }
+        });*/
 	}
 }

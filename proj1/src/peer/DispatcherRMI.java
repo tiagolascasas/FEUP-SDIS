@@ -34,8 +34,11 @@ public class DispatcherRMI extends Dispatcher
 		byte[] file = TestClass.testPutchunk();
 		byte[] metadata = "abcd".getBytes();
 		
-		StoreHandler handler = new StoreHandler(file, metadata, 5);
-		handler.start();
+		if (DataManager.getInstance().getId() == 1)
+		{
+			StoreHandler handler = new StoreHandler(file, metadata, 5);
+			handler.start();
+		}
 	}
 
 }
