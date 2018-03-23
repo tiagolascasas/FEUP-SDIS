@@ -4,16 +4,21 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 import java.nio.charset.StandardCharsets;
+import java.util.Vector;
+
+import peer.handler.Handler;
 import peer.handler.multicast.PutchunkHandler;
 
 public class DispatcherMDB extends Dispatcher
 {
 	private static final int MAX_BUFFER = 65000;
 	MulticastSocket socket;
+	Vector<Handler> handlers;
 	
 	public DispatcherMDB(MulticastSocket mdbSocket) 
 	{
 		this.socket = mdbSocket;
+		this.handlers = new Vector<Handler>();
 	}
 
 	@Override
@@ -23,10 +28,11 @@ public class DispatcherMDB extends Dispatcher
 		while (Peer.running)
 		{
 			byte[] buffer = new byte[MAX_BUFFER];
-			DatagramPacket recPacket = new DatagramPacket(buffer, 256);
+			DatagramPacket recPacket = new DatagramPacket(buffer, buffer.length);
 			try
 			{
 				socket.receive(recPacket);
+				System.out.println("MDB: read packet with " + recPacket.getLength() + " bytes");
 			} 
 			catch (IOException e)
 			{
@@ -34,7 +40,6 @@ public class DispatcherMDB extends Dispatcher
 			}
 			processMessage(recPacket.getData());
 		}
-
 	}
 
 	@Override
@@ -44,9 +49,8 @@ public class DispatcherMDB extends Dispatcher
 		if (type.equalsIgnoreCase("PUTCHUNK"))
 		{
 			PutchunkHandler handler = new PutchunkHandler(message);
+			handlers.add(handler);
 			handler.start();
 		}
-		
 	}
-
 }

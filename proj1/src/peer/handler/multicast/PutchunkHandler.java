@@ -12,6 +12,7 @@ public class PutchunkHandler extends Handler
 {
 	private static final int MAX_WAIT = 400;
 	private byte[] data;
+	private int senderId;
 	private String id;
 	private int repDeg;
 	private int chunkNo;
@@ -19,16 +20,21 @@ public class PutchunkHandler extends Handler
 	public PutchunkHandler(byte[] message)
 	{
 		String[] elements = new String(message, StandardCharsets.US_ASCII).split(" ");
+		this.senderId = Integer.parseInt(elements[2]);
 		this.id = elements[3];
 		this.chunkNo = Integer.parseInt(elements[4]);
 		this.repDeg = Integer.parseInt(elements[5]);
-		this.data = elements[6].getBytes();
+		
+		StringBuilder fullData = new StringBuilder();
+		for (int i = 6; i < elements.length; i++)
+			fullData.append(elements[i]);
+		this.data = fullData.toString().getBytes();
 	}
 	
 	@Override
 	public void run()
-	{
-		if (!DataManager.getInstance().canStore(id))
+	{	
+		if (this.senderId == DataManager.getInstance().getId())
 			return;
 		
 		DataManager.getInstance().store(id, chunkNo, repDeg, data);

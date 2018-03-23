@@ -15,7 +15,7 @@ public class DataManager
 	private ChunkCollection chunks = new ChunkCollection();
 	private McastID mc, mbr, mdb;
 	private MulticastSocket mcSocket, mbrSocket, mdbSocket;
-	private Vector<String> doNotStore;
+	private StoredManager stored;
 	
 	private DataManager() {}
 	
@@ -31,7 +31,6 @@ public class DataManager
 		this.mc = connections[0];
 		this.mdb = connections[1];
 		this.mbr = connections[2];
-		this.doNotStore = new Vector<String>();
 	}
 	
 	public void setSockets(MulticastSocket mc, MulticastSocket mbr, MulticastSocket mdb)
@@ -136,20 +135,5 @@ public class DataManager
 	public synchronized byte[] reassemble(String id)
 	{
 		return this.chunks.reassembleFile(id);
-	}
-	
-	public synchronized boolean canStore(String id)
-	{
-		for (String hash : doNotStore)
-		{
-			if (id.matches(hash))
-				return false;
-		}
-		return true;
-	}
-	
-	public synchronized void registerToNotStore(String id)
-	{
-		doNotStore.addElement(id);
 	}
 }

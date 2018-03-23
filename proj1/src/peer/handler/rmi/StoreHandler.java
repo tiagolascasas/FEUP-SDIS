@@ -29,7 +29,6 @@ public class StoreHandler extends Handler
 		int fileSize = file.length;
 		int chunkNo = 0;
 		byte[] id = calculateId();
-		DataManager.getInstance().registerToNotStore(new String(id, StandardCharsets.US_ASCII));
 		int pos = 0;
 		
 		while(fileSize > 0)
