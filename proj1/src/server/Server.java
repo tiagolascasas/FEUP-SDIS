@@ -11,6 +11,7 @@ public class Server implements Message {
 	public Server() {}
 
 	public String sendMessage(String operation, String[] args) {
+		String result = "";
 		switch(operation)
 		{
 		case "BACKUP":
@@ -30,9 +31,10 @@ public class Server implements Message {
 			break;			
 		}
 
-		return ""; //returns to client
+		return result; //returns to client
 	}
 
+	// To delete when no longer needed
 	public static void main(String args[]) {
 		Server obj = new Server();
 		obj.run();
