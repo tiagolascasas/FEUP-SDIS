@@ -43,7 +43,6 @@ public class Client {
 				}
 				throw new Exception();
 			case "STATE":
-				System.out.println(args[1]);
 				if(args.length == 2)
 				{
 					

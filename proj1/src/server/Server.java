@@ -50,7 +50,7 @@ public class Server implements Message {
 
 			System.err.println("Server ready");
 		}catch (Exception e) {
-			System.err.println("Server exception! Couldn't start server...");
+			System.err.println("An error occured, couldn't start server...");
 		}
 	}
 }
