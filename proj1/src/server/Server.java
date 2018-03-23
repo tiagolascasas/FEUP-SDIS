@@ -11,30 +11,44 @@ public class Server implements Message {
 	public Server() {}
 
 	public String sendMessage(String operation, String[] args) {
-		//TODO Adapt with peer code
-		String message = operation;
-		for(int i = 0; i<args.length; i++)
+		switch(operation)
 		{
-			message += "-" + args[i];
+		case "BACKUP":
+			//TODO call backup method
+			break;
+		case "RESTORE":
+			//TODO call restore method
+			break;
+		case "DELETE":
+			//TODO call delete method
+			break;
+		case "RECLAIM":
+			//TODO call reclaim method
+			break;
+		case "STATE":
+			//TODO call state method
+			break;			
 		}
 
-		return message;
+		return ""; //returns to client
 	}
 
 	public static void main(String args[]) {
-		//TODO adapt for peer
+		Server obj = new Server();
+		obj.run();
+	}
+
+	public void run() {
 		try {
-			Server obj = new Server();
-			Message stub = (Message) UnicastRemoteObject.exportObject(obj, 0);
+			Message stub = (Message) UnicastRemoteObject.exportObject(this, 0);
 
 			// Bind the remote object's stub in the registry
-			Registry registry = LocateRegistry.getRegistry(5555);
+			Registry registry = LocateRegistry.getRegistry();
 			registry.bind("Message", stub);
 
 			System.err.println("Server ready");
-		} catch (Exception e) {
-			System.err.println("Server exception: " + e.toString());
-			e.printStackTrace();
+		}catch (Exception e) {
+			System.err.println("Server exception! Couldn't start server...");
 		}
 	}
 }
