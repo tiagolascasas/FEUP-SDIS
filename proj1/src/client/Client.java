@@ -32,6 +32,7 @@ public class Client {
 					response = stub.sendMessage(args[1].toUpperCase(), new String[] {args[2], args[3]});
 					break;
 				}
+				throw new Exception();
 			case "RESTORE":
 			case "DELETE":
 			case "RECLAIM":
@@ -40,12 +41,16 @@ public class Client {
 					response = stub.sendMessage(args[1].toUpperCase(), new String[] {args[2]});
 					break;
 				}
+				throw new Exception();
 			case "STATE":
+				System.out.println(args[1]);
 				if(args.length == 2)
 				{
+					
 					response = stub.sendMessage(args[1].toUpperCase(), new String[] {});
 					break;
 				}
+				throw new Exception();
 			default:
 				throw new Exception();
 			}
