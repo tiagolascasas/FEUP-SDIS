@@ -4,7 +4,11 @@ import peer.handler.Handler;
 
 public class RestoreHandler extends Handler
 {
-
+	public RestoreHandler(String fileId)
+	{
+		
+	}
+	
 	@Override
 	public void run()
 	{

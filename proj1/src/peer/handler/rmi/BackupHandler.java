@@ -10,7 +10,7 @@ import peer.StoredManager;
 import peer.handler.Handler;
 import peer.message.MessagePutchunk;
 
-public class StoreHandler extends Handler
+public class BackupHandler extends Handler
 {
 	private static final int MAX_CHUNK_SIZE = 64000;
 	private static final int MAX_RETRIES = 5;
@@ -19,9 +19,9 @@ public class StoreHandler extends Handler
 	private int repDegree;
 	private String fileId;
 	
-	public StoreHandler(byte[] file, byte[] metadata, int repDegree)
+	public BackupHandler(byte[] file, byte[] metadata, int repDegree)
 	{
-		this.handlerType = "StoredHandler";
+		this.handlerType = "BackupHandler";
 		this.file = file;
 		this.metadata = metadata;
 		this.repDegree = repDegree;

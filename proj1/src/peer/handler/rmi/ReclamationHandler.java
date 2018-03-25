@@ -4,7 +4,11 @@ import peer.handler.Handler;
 
 public class ReclamationHandler extends Handler
 {
-
+	public ReclamationHandler(int n)
+	{
+		
+	}
+	
 	@Override
 	public void run()
 	{

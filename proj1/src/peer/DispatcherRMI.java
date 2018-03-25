@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import peer.handler.rmi.StoreHandler;
+import peer.handler.rmi.BackupHandler;
 
 public class DispatcherRMI extends Dispatcher
 {
@@ -52,7 +52,7 @@ public class DispatcherRMI extends Dispatcher
 		
 		if (DataManager.getInstance().getId() == 1)
 		{
-			threads.execute(new StoreHandler(file, metadata, 2));
+			threads.execute(new BackupHandler(file, metadata, 2));
 		}
 	}
 }
