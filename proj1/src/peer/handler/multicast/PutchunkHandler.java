@@ -1,11 +1,13 @@
 package peer.handler.multicast;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Random;
 
 import peer.CHANNELS;
 import peer.DataManager;
 import peer.handler.Handler;
+import peer.message.Message;
 import peer.message.MessageStored;
 
 public class PutchunkHandler extends Handler
@@ -25,11 +27,22 @@ public class PutchunkHandler extends Handler
 		this.id = elements[3];
 		this.chunkNo = Integer.parseInt(elements[4]);
 		this.repDeg = Integer.parseInt(elements[5]);
-		
-		StringBuilder fullData = new StringBuilder();
-		for (int i = 6; i < elements.length; i++)
-			fullData.append(elements[i]);
-		this.data = fullData.toString().getBytes();
+
+		ArrayList<Byte> allData = new ArrayList<Byte>();
+		int dataStart = 0;
+		for (int i = 0; i < message.length; i++)
+		{
+			if (message[i] == Message.CR &&
+				message[i+1] == Message.LF &&
+				message[i+2] == Message.CR &&
+				message[i+3] == Message.LF)
+				dataStart = i + 4;
+		}
+		for (int i = dataStart; i < message.length; i++)
+			allData.add(message[i]);
+		this.data = new byte[allData.size()];
+		for (int i = 0; i < allData.size(); i++)
+			this.data[i] = allData.get(i);
 	}
 	
 	@Override
