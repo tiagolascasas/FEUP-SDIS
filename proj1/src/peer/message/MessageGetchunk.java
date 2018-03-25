@@ -1,19 +1,31 @@
 package peer.message;
 
+import java.nio.charset.StandardCharsets;
+
 public class MessageGetchunk extends Message
 {
-
-	protected MessageGetchunk(byte[] fileID)
+	private int chunkNo;
+	
+	public MessageGetchunk(byte[] fileID, int chunkNo)
 	{
 		super(fileID);
-		// TODO Auto-generated constructor stub
+		this.messageType = "CHUNK";
+		this.chunkNo = chunkNo;
+		
+		String[] headerFields = {
+				this.messageType,
+				this.version,
+				Integer.toString(senderID),
+				new String(this.fileID, StandardCharsets.US_ASCII),
+				Integer.toString(this.chunkNo),
+				"" + CR + LF + CR + LF
+			};
+		this.header = String.join(" ", headerFields).getBytes();
 	}
 
 	@Override
-	byte[] getMessageBytes()
+	public byte[] getMessageBytes()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return this.header;
 	}
-
 }
