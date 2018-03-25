@@ -53,7 +53,7 @@ public class PutchunkHandler extends Handler
 		
 		if (!DataManager.getInstance().store(id, chunkNo, repDeg, data))
 			return;
-		log("stored chunk no " + chunkNo + " of file with id " + id);
+		log("stored chunk no. " + chunkNo + " of file " + id);
 		
 		MessageStored reply = new MessageStored(id.getBytes(), chunkNo);
 		Random r = new Random();

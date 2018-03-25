@@ -1,51 +1,50 @@
 package peer;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.MulticastSocket;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
+import peer.handler.multicast.DeleteHandler;
+import peer.handler.multicast.GetchunkHandler;
+import peer.handler.multicast.RemovedHandler;
 import peer.handler.multicast.StoredHandler;
 
 public class DispatcherMC extends Dispatcher
 {
-	MulticastSocket socket;
-	String version;
-	int serverID;
-	
-	public DispatcherMC(MulticastSocket socket)
+	public DispatcherMC()
 	{
-		this.socket = socket;
+		this.socket = DataManager.getInstance().getSocket(CHANNELS.MC);
+		this.threads = new ThreadPoolExecutor(
+		            4,
+		            400,
+		            10000,
+		            TimeUnit.MILLISECONDS,
+		            new LinkedBlockingQueue<Runnable>()
+		            );
 	}
 	
-	
-	@Override
-	public void run() 
-	{
-		while (Peer.running)
-		{
-			byte[] buffer = new byte[MAX_BUFFER];
-			DatagramPacket recPacket = new DatagramPacket(buffer, buffer.length);
-			try
-			{
-				socket.receive(recPacket);
-			} 
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			processMessage(recPacket.getData());
-		}
-	}
-
 	@Override
 	void processMessage(byte[] message)
 	{
 		String type = new String(message, StandardCharsets.US_ASCII).split(" ")[0];
-		if (type.equalsIgnoreCase("STORED"))
+		
+		switch(type.toUpperCase())
 		{
-			StoredHandler handler = new StoredHandler(message);
-			handler.start();
+			case "STORED":
+				threads.execute(new StoredHandler(message));
+				break;
+			case "GETCHUNK":
+				threads.execute(new GetchunkHandler(message));
+				break;
+			case "DELETE":
+				threads.execute(new DeleteHandler(message));
+				break;
+			case "REMOVED":
+				threads.execute(new RemovedHandler(message));
+				break;
+			default:
+				break;
 		}
 	}
 }

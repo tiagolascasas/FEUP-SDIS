@@ -1,54 +1,38 @@
 package peer;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.MulticastSocket;
 import java.nio.charset.StandardCharsets;
-import java.util.Vector;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-import peer.handler.Handler;
 import peer.handler.multicast.PutchunkHandler;
 
 public class DispatcherMDB extends Dispatcher
 {
-	MulticastSocket socket;
-	Vector<Handler> handlers;
-	
-	public DispatcherMDB(MulticastSocket mdbSocket) 
+	public DispatcherMDB() 
 	{
-		this.socket = mdbSocket;
-		this.handlers = new Vector<Handler>();
-	}
-
-	@Override
-	public void run() 
-	{
-		while (Peer.running)
-		{
-			byte[] buffer = new byte[MAX_BUFFER];
-			DatagramPacket recPacket = new DatagramPacket(buffer, buffer.length);
-			try
-			{
-				socket.receive(recPacket);
-				//System.out.println("MDB: read packet with " + recPacket.getLength() + " bytes");
-			} 
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			processMessage(recPacket.getData());
-		}
+		this.socket = DataManager.getInstance().getSocket(CHANNELS.MDB);
+		this.threads = new ThreadPoolExecutor(
+	            4,
+	            400,
+	            10000,
+	            TimeUnit.MILLISECONDS,
+	            new LinkedBlockingQueue<Runnable>()
+	            );
 	}
 
 	@Override
 	void processMessage(byte[] message)
 	{
 		String type = new String(message, StandardCharsets.US_ASCII).split(" ")[0];
-		if (type.equalsIgnoreCase("PUTCHUNK"))
+		
+		switch(type.toUpperCase())
 		{
-			PutchunkHandler handler = new PutchunkHandler(message);
-			handlers.add(handler);
-			handler.start();
+			case "PUTCHUNK":
+				threads.execute(new PutchunkHandler(message));
+				break;
+			default:
+				break;
 		}
 	}
 }

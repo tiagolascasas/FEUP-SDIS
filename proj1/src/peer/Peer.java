@@ -48,9 +48,9 @@ public class Peer extends Thread
 			System.exit(-1);
 		}
 		
-		mc = new DispatcherMC(this.mcSocket);
-		mdb = new DispatcherMDB(this.mdbSocket);
-		mbr = new DispatcherMBR(this.mbrSocket);
+		mc = new DispatcherMC();
+		mdb = new DispatcherMDB();
+		mbr = new DispatcherMBR();
 		client = new DispatcherRMI(this.rmiMethodName);
 	}
 	
