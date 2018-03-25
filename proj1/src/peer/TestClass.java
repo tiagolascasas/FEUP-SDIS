@@ -44,7 +44,7 @@ public class TestClass
 		byte[] file = null;
 		try
 		{
-			file = Files.readAllBytes(Paths.get("../scripts/test1.pdf"));
+			file = Files.readAllBytes(Paths.get("../scripts/test3.pdf"));
 		} catch (IOException e)
 		{
 			// TODO Auto-generated catch block

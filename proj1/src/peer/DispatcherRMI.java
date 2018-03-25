@@ -14,7 +14,6 @@ public class DispatcherRMI extends Dispatcher
 	@Override
 	public void run() 
 	{
-		System.out.println("RMI Dispatcher");
 		
 		//TEST
 		processMessage(null);
@@ -36,7 +35,7 @@ public class DispatcherRMI extends Dispatcher
 		
 		if (DataManager.getInstance().getId() == 1)
 		{
-			StoreHandler handler = new StoreHandler(file, metadata, 5);
+			StoreHandler handler = new StoreHandler(file, metadata, 2);
 			handler.start();
 		}
 	}

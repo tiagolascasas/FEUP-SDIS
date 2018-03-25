@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Vector;
 
 public class DataManager
 {
@@ -31,6 +30,7 @@ public class DataManager
 		this.mc = connections[0];
 		this.mdb = connections[1];
 		this.mbr = connections[2];
+		this.stored = new StoredManager();
 	}
 	
 	public void setSockets(MulticastSocket mc, MulticastSocket mbr, MulticastSocket mdb)
@@ -107,9 +107,9 @@ public class DataManager
 		return "backups_peer" + id + "/" + fileName;
 	}
 	
-	public synchronized void store(String id, int chunkNo, int repDeg, byte[] data)
+	public synchronized boolean store(String id, int chunkNo, int repDeg, byte[] data)
 	{
-		this.chunks.storeChunk(id, chunkNo, repDeg, data);
+		return this.chunks.storeChunk(id, chunkNo, repDeg, data);
 	}
 	
 	public synchronized byte[] retrieve(String id, int chunkNo)
@@ -135,5 +135,10 @@ public class DataManager
 	public synchronized byte[] reassemble(String id)
 	{
 		return this.chunks.reassembleFile(id);
+	}
+	
+	public synchronized StoredManager getStoredManager()
+	{
+		return stored;
 	}
 }

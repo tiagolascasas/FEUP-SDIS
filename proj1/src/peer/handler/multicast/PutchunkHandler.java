@@ -19,6 +19,7 @@ public class PutchunkHandler extends Handler
 	
 	public PutchunkHandler(byte[] message)
 	{
+		this.handlerType = "PutchunkHandler";
 		String[] elements = new String(message, StandardCharsets.US_ASCII).split(" ");
 		this.senderId = Integer.parseInt(elements[2]);
 		this.id = elements[3];
@@ -37,7 +38,9 @@ public class PutchunkHandler extends Handler
 		if (this.senderId == DataManager.getInstance().getId())
 			return;
 		
-		DataManager.getInstance().store(id, chunkNo, repDeg, data);
+		if (!DataManager.getInstance().store(id, chunkNo, repDeg, data))
+			return;
+		log("stored chunk no " + chunkNo + " of file with id " + id);
 		
 		MessageStored reply = new MessageStored(id.getBytes(), chunkNo);
 		Random r = new Random();

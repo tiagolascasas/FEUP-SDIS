@@ -16,7 +16,6 @@ public class DispatcherMBR extends Dispatcher
 	@Override
 	public void run() 
 	{
-		System.out.println("MBR Dispatcher");
 		while (Peer.running)
 		{
 

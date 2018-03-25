@@ -22,16 +22,24 @@ public class ChunkCollection
 		return null;
 	}
 	
-	public void storeChunk(String id, int chunkNo, int repDegree, byte[] data)
+	public boolean storeChunk(String id, int chunkNo, int repDegree, byte[] data)
 	{
-		Chunk newChunk = new Chunk(id, chunkNo, repDegree, data);
-		chunks.add(newChunk);
+		if (retrieveChunk(id, chunkNo) == null)
+		{
+			Chunk newChunk = new Chunk(id, chunkNo, repDegree, data);
+			chunks.add(newChunk);
+			return true;
+		}
+		else return false;
 	}
 	
 	public byte[] retrieveChunk(String id, int chunkNo)
 	{
 		Chunk chunk = findChunk(id, chunkNo);
-		return chunk.retrieveChunkData();
+		if (chunk != null)
+			return chunk.retrieveChunkData();
+		else
+			return null;
 	}
 	
 	public void deleteChunk(String id, int chunkNo)

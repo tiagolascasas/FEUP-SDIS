@@ -9,6 +9,8 @@ import peer.DataManager;
 
 public abstract class Handler extends Thread
 {
+	protected String handlerType;
+	
 	public void send(CHANNELS channel, byte[] message)
 	{
 		DatagramPacket packet = new DatagramPacket(
@@ -25,5 +27,10 @@ public abstract class Handler extends Thread
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void log(String message)
+	{
+		System.out.println(this.getId() + "-" + this.handlerType + ": " + message);
 	}
 }

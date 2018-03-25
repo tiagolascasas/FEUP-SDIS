@@ -23,19 +23,24 @@ public class Peer extends Thread
 		
 		try
 		{
-			System.out.println("Creating Multicast socket in port " + this.connections[0].port + " and group " + this.connections[0].addr);
+			System.out.println("----------------------------------------------");
+			System.out.println("MC  Channel: multicast group " + this.connections[0].addr + ":" + this.connections[0].port);
 			this.mcSocket = new MulticastSocket(this.connections[0].port);
 			this.mcSocket.joinGroup(connections[0].addr);
 			
-			System.out.println("Creating Multicast socket in port " + this.connections[1].port + " and group " + this.connections[1].addr);
+			System.out.println("MDB Channel: multicast group " + this.connections[1].addr + ":" + this.connections[1].port);
 			this.mdbSocket = new MulticastSocket(this.connections[1].port);
 			this.mdbSocket.joinGroup(connections[1].addr);
 			
-			System.out.println("Creating Multicast socket in port " + this.connections[2].port + " and group " + this.connections[2].addr);
+			System.out.println("MBR Channel: multicast group " + this.connections[2].addr + ":" + this.connections[2].port);
 			this.mbrSocket = new MulticastSocket(this.connections[2].port);
 			this.mbrSocket.joinGroup(connections[2].addr);
 			
 			DataManager.getInstance().setSockets(mcSocket, mbrSocket, mdbSocket);
+			System.out.println("----------------------------------------------");
+			System.out.println("Format of log messages:");
+			System.out.println("<Thread id>-<handler type>: <message>");
+			System.out.println("\n");
 		}
 		catch (Exception e)
 		{

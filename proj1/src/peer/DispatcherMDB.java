@@ -11,7 +11,6 @@ import peer.handler.multicast.PutchunkHandler;
 
 public class DispatcherMDB extends Dispatcher
 {
-	private static final int MAX_BUFFER = 65000;
 	MulticastSocket socket;
 	Vector<Handler> handlers;
 	
@@ -24,7 +23,6 @@ public class DispatcherMDB extends Dispatcher
 	@Override
 	public void run() 
 	{
-		System.out.println("MDB Dispatcher");
 		while (Peer.running)
 		{
 			byte[] buffer = new byte[MAX_BUFFER];
@@ -32,7 +30,7 @@ public class DispatcherMDB extends Dispatcher
 			try
 			{
 				socket.receive(recPacket);
-				System.out.println("MDB: read packet with " + recPacket.getLength() + " bytes");
+				//System.out.println("MDB: read packet with " + recPacket.getLength() + " bytes");
 			} 
 			catch (IOException e)
 			{
