@@ -7,7 +7,7 @@ public class Main
 		if (args.length != 9)
 		{
 			System.out.println("Invalid number of arguments for P2P Server");
-			System.out.println("Usage: <protocol version> <server id> <rmi method name> <MC mcas addr> <MC port> <MDB mcas addr> <MDB port> <MBR mcas addr> <MBR port>");
+			System.out.println("Usage: <protocol version> <server id> <rmi method name> <MC mcas addr> <MC port> <MDB mcas addr> <MDB port> <MDR mcas addr> <MDR port>");
 			return;
 		}
 		

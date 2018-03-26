@@ -3,6 +3,6 @@ package peer;
 public enum Channels 
 {
 	MC,
-	MBR,
+	MDR,
 	MDB
 }

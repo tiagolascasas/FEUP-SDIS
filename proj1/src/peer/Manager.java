@@ -13,8 +13,8 @@ public class Manager
 	//store the peer's basic information and sockets for easy access
 	private String version;
 	private int id;
-	private McastID mc, mbr, mdb;
-	private MulticastSocket mcSocket, mbrSocket, mdbSocket;
+	private McastID mc, mdr, mdb;
+	private MulticastSocket mcSocket, mdrSocket, mdbSocket;
 	
 	//single thread-safe manager to manage stored chunks
 	private static ChunkManager chunks = new ChunkManager();
@@ -36,13 +36,13 @@ public class Manager
 		this.setId(id);
 		this.mc = connections[0];
 		this.mdb = connections[1];
-		this.mbr = connections[2];
+		this.mdr = connections[2];
 	}
 	
-	public void setSockets(MulticastSocket mc, MulticastSocket mbr, MulticastSocket mdb)
+	public void setSockets(MulticastSocket mc, MulticastSocket mdr, MulticastSocket mdb)
 	{
 		this.mcSocket = mc;
-		this.mbrSocket = mbr;
+		this.mdrSocket = mdr;
 		this.mdbSocket = mdb;
 	}
 
@@ -72,8 +72,8 @@ public class Manager
 			return mc.addr;
 		if (channel == Channels.MDB)
 			return mdb.addr;
-		if (channel == Channels.MBR)
-			return mbr.addr;
+		if (channel == Channels.MDR)
+			return mdr.addr;
 		return null;
 	}
 	
@@ -83,8 +83,8 @@ public class Manager
 			return mc.port;
 		if (channel == Channels.MDB)
 			return mdb.port;
-		if (channel == Channels.MBR)
-			return mbr.port;
+		if (channel == Channels.MDR)
+			return mdr.port;
 		return -1;
 	}
 	
@@ -94,8 +94,8 @@ public class Manager
 			return mcSocket;
 		if (channel == Channels.MDB)
 			return mdbSocket;
-		if (channel == Channels.MBR)
-			return mbrSocket;
+		if (channel == Channels.MDR)
+			return mdrSocket;
 		return null;
 	} 
 

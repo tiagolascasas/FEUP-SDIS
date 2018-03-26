@@ -12,7 +12,7 @@ public class Peer extends Thread
 	
 	Thread mc;
 	Thread mdb;
-	Thread mbr;
+	Thread mdr;
 	Thread client;
 	
 	public Peer(String version, int serverID, String rmi, McastID[] connections) 
@@ -32,7 +32,7 @@ public class Peer extends Thread
 			this.mdbSocket = new MulticastSocket(this.connections[1].port);
 			this.mdbSocket.joinGroup(connections[1].addr);
 			
-			System.out.println("MBR Channel: multicast group " + this.connections[2].addr + ":" + this.connections[2].port);
+			System.out.println("MDR Channel: multicast group " + this.connections[2].addr + ":" + this.connections[2].port);
 			this.mbrSocket = new MulticastSocket(this.connections[2].port);
 			this.mbrSocket.joinGroup(connections[2].addr);
 			
@@ -50,7 +50,7 @@ public class Peer extends Thread
 		
 		mc = new DispatcherMC();
 		mdb = new DispatcherMDB();
-		mbr = new DispatcherMBR();
+		mdr = new DispatcherMDR();
 		client = new DispatcherRMI(this.rmiMethodName);
 	}
 	
@@ -61,7 +61,7 @@ public class Peer extends Thread
 		
 		mc.start();
 		mdb.start();
-		mbr.start();
+		mdr.start();
 		client.start();
 		
 		CountDownLatch latch = new CountDownLatch(4);

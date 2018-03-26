@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import peer.Channels;
 import peer.Manager;
+import peer.Utilities;
 import peer.BackupManager;
 import peer.handler.Handler;
 import peer.message.MessagePutchunk;
@@ -25,7 +26,7 @@ public class BackupHandler extends Handler
 		this.file = file;
 		this.metadata = metadata;
 		this.repDegree = repDegree;
-		this.fileId = calculateId().toString();
+		this.fileId = Utilities.calculateFileId(metadata, file).toString();
 	}
 	
 	@Override
@@ -84,36 +85,6 @@ public class BackupHandler extends Handler
 			chunkNo++;
 			chunks.add(message);
 		}
-		
 		return chunks;
-	}
-
-	private String calculateId()
-	{
-		MessageDigest digest = null;
-		try
-		{
-			digest = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e)
-		{
-			e.printStackTrace();
-		}
-		
-		byte[] fullFile = new byte[this.file.length + this.metadata.length];
-		System.arraycopy(this.metadata, 0, fullFile, 0, this.metadata.length);
-		System.arraycopy(this.file, 0, fullFile, this.metadata.length, this.file.length);
-		
-		byte[] hash = digest.digest(fullFile);
-		String asciiHash = hexToAscii(hash);
-		
-		return asciiHash;
-	}
-	
-	private String hexToAscii(byte[] hexString)
-	{
-	    StringBuilder stringBuilder = new StringBuilder();
-	    for (int i = 0; i < hexString.length; i++)
-	        stringBuilder.append(String.format("%02X", hexString[i]));
-		return stringBuilder.toString();
 	}
 }

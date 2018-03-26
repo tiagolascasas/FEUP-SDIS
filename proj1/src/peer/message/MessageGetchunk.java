@@ -9,7 +9,7 @@ public class MessageGetchunk extends Message
 	public MessageGetchunk(byte[] fileID, int chunkNo)
 	{
 		super(fileID);
-		this.messageType = "CHUNK";
+		this.messageType = "GETCHUNK";
 		this.chunkNo = chunkNo;
 		
 		String[] headerFields = {

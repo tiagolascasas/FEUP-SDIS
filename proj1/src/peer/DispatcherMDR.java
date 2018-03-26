@@ -8,11 +8,11 @@ import java.util.concurrent.TimeUnit;
 import peer.handler.multicast.ChunkHandler;
 import peer.handler.multicast.PutchunkHandler;
 
-public class DispatcherMBR extends Dispatcher
+public class DispatcherMDR extends Dispatcher
 {
-	public DispatcherMBR() 
+	public DispatcherMDR() 
 	{
-		this.socket = Manager.getInstance().getSocket(Channels.MBR);
+		this.socket = Manager.getInstance().getSocket(Channels.MDR);
 		this.threads = new ThreadPoolExecutor(
 	            4,
 	            400,
