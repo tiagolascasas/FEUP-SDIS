@@ -2,8 +2,8 @@ package peer.handler.multicast;
 
 import java.nio.charset.StandardCharsets;
 
-import peer.DataManager;
-import peer.StoredManager;
+import peer.Manager;
+import peer.BackupManager;
 import peer.handler.Handler;
 
 public class StoredHandler extends Handler
@@ -22,7 +22,7 @@ public class StoredHandler extends Handler
 	@Override
 	public void run()
 	{
-		StoredManager manager = DataManager.getInstance().getStoredManager();
+		BackupManager manager = Manager.getInstance().getStoredManager();
 		if (manager.increment(this.id, this.chunkNo))
 			//log("increased rep count of file " + this.id + ", chunk no " + this.chunkNo + " to " + manager.getReplicationDegree(this.id, this.chunkNo));
 			return;

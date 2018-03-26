@@ -11,7 +11,7 @@ public class DispatcherMDB extends Dispatcher
 {
 	public DispatcherMDB() 
 	{
-		this.socket = DataManager.getInstance().getSocket(CHANNELS.MDB);
+		this.socket = Manager.getInstance().getSocket(Channels.MDB);
 		this.threads = new ThreadPoolExecutor(
 	            4,
 	            400,

@@ -1,6 +1,6 @@
 package peer;
 
-public enum CHANNELS 
+public enum Channels 
 {
 	MC,
 	MBR,

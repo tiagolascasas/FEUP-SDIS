@@ -14,7 +14,7 @@ public class DispatcherMC extends Dispatcher
 {
 	public DispatcherMC()
 	{
-		this.socket = DataManager.getInstance().getSocket(CHANNELS.MC);
+		this.socket = Manager.getInstance().getSocket(Channels.MC);
 		this.threads = new ThreadPoolExecutor(
 		            4,
 		            400,

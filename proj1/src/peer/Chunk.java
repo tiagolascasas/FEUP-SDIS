@@ -22,7 +22,7 @@ public class Chunk implements Comparator
 		this.setChunkNo(chunkNo);
 		this.setRepDegree(repDegree);
 		String fileName = id + "#" + chunkNo;
-		this.filePath = DataManager.getInstance().getPath(fileName); 
+		this.filePath = Manager.getInstance().getPath(fileName); 
 		try 
 		{
 			File file = new File(filePath);
@@ -32,7 +32,6 @@ public class Chunk implements Comparator
 		} 
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -77,7 +76,6 @@ public class Chunk implements Comparator
 		} 
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return fileContents;

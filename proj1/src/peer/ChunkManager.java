@@ -2,11 +2,11 @@ package peer;
 
 import java.util.Vector;
 
-public class ChunkCollection 
+public class ChunkManager 
 {
 	private Vector<Chunk> chunks;
 	
-	public ChunkCollection()
+	public ChunkManager()
 	{
 		chunks = new Vector<Chunk>();
 	}
@@ -59,7 +59,7 @@ public class ChunkCollection
 		Chunk chunk = findChunk(id, chunkNo);
 		return chunk.addToReplicationCount(decrement);
 	}
-
+/*
 	public byte[] reassembleFile(String id) 
 	{
 		Vector<Chunk> fileChunks = new Vector<Chunk>();
@@ -70,5 +70,5 @@ public class ChunkCollection
 		}
 		fileChunks.sort(null);
 		return null;
-	}
+	}*/
 }

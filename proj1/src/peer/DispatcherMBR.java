@@ -12,7 +12,7 @@ public class DispatcherMBR extends Dispatcher
 {
 	public DispatcherMBR() 
 	{
-		this.socket = DataManager.getInstance().getSocket(CHANNELS.MBR);
+		this.socket = Manager.getInstance().getSocket(Channels.MBR);
 		this.threads = new ThreadPoolExecutor(
 	            4,
 	            400,

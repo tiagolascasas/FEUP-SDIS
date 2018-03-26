@@ -1,6 +1,6 @@
 package peer.message;
 
-import peer.DataManager;
+import peer.Manager;
 
 public abstract class Message 
 {	
@@ -15,8 +15,8 @@ public abstract class Message
 	
 	protected Message(byte[] id)
 	{
-		this.version = DataManager.getInstance().getVersion();
-		this.senderID = DataManager.getInstance().getId();
+		this.version = Manager.getInstance().getVersion();
+		this.senderID = Manager.getInstance().getId();
 		this.fileID = id;
 	}
 	

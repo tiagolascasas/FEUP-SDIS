@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StoredManager 
+public class BackupManager 
 {
 	private ConcurrentHashMap<String, ArrayList<Integer>> counts; 
 	
-	public StoredManager()
+	public BackupManager()
 	{
 		this.counts = new ConcurrentHashMap<String, ArrayList<Integer>>();
 	}

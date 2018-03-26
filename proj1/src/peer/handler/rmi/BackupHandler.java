@@ -4,15 +4,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import peer.CHANNELS;
-import peer.DataManager;
-import peer.StoredManager;
+import peer.Channels;
+import peer.Manager;
+import peer.BackupManager;
 import peer.handler.Handler;
 import peer.message.MessagePutchunk;
 
 public class BackupHandler extends Handler
 {
-	private static final int MAX_CHUNK_SIZE = 64000;
+	public static final int MAX_CHUNK_SIZE = 64000;
 	private static final int MAX_RETRIES = 5;
 	private byte[] file;
 	private byte[] metadata;
@@ -32,7 +32,7 @@ public class BackupHandler extends Handler
 	public void run()
 	{
 		ArrayList<MessagePutchunk> chunks = buildAllChunks();
-		StoredManager manager = DataManager.getInstance().getStoredManager();
+		BackupManager manager = Manager.getInstance().getStoredManager();
 		manager.createNewEntry(this.fileId, chunks.size());
 		int retries = 0;
 		int waitingTime = 1000;
@@ -49,7 +49,7 @@ public class BackupHandler extends Handler
 			for (int i = 0; i < chunksToSend.size(); i++)
 			{
 				MessagePutchunk chunk = chunks.get(chunksToSend.get(i));
-				send(CHANNELS.MDB, chunk.getMessageBytes());
+				send(Channels.MDB, chunk.getMessageBytes());
 			}
 			
 			try

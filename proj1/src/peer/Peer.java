@@ -17,7 +17,7 @@ public class Peer extends Thread
 	
 	public Peer(String version, int serverID, String rmi, McastID[] connections) 
 	{
-		DataManager.getInstance().init(version, serverID, connections);
+		Manager.getInstance().init(version, serverID, connections);
 		this.rmiMethodName = rmi;
 		this.connections = connections;
 		
@@ -36,7 +36,7 @@ public class Peer extends Thread
 			this.mbrSocket = new MulticastSocket(this.connections[2].port);
 			this.mbrSocket.joinGroup(connections[2].addr);
 			
-			DataManager.getInstance().setSockets(mcSocket, mbrSocket, mdbSocket);
+			Manager.getInstance().setSockets(mcSocket, mbrSocket, mdbSocket);
 			System.out.println("----------------------------------------------");
 			System.out.println("Format of log messages:");
 			System.out.println("<Thread id>-<handler type>: <message>");

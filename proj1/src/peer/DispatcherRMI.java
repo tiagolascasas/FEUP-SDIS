@@ -50,7 +50,7 @@ public class DispatcherRMI extends Dispatcher
 		byte[] file = TestClass.testPutchunk();
 		byte[] metadata = "abcd".getBytes();
 		
-		if (DataManager.getInstance().getId() == 1)
+		if (Manager.getInstance().getId() == 1)
 		{
 			threads.execute(new BackupHandler(file, metadata, 2));
 		}

@@ -4,21 +4,21 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 
-import peer.CHANNELS;
-import peer.DataManager;
+import peer.Channels;
+import peer.Manager;
 
 public abstract class Handler extends Thread
 {
 	protected String handlerType;
 	
-	public void send(CHANNELS channel, byte[] message)
+	public void send(Channels channel, byte[] message)
 	{
 		DatagramPacket packet = new DatagramPacket(
 							message,
 							message.length,
-							DataManager.getInstance().getAddress(channel),
-							DataManager.getInstance().getPort(channel));
-		MulticastSocket socket = DataManager.getInstance().getSocket(channel);
+							Manager.getInstance().getAddress(channel),
+							Manager.getInstance().getPort(channel));
+		MulticastSocket socket = Manager.getInstance().getSocket(channel);
 		try
 		{
 			socket.send(packet);

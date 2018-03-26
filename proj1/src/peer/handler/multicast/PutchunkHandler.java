@@ -4,8 +4,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
 
-import peer.CHANNELS;
-import peer.DataManager;
+import peer.Channels;
+import peer.ChunkManager;
+import peer.Manager;
 import peer.handler.Handler;
 import peer.message.Message;
 import peer.message.MessageStored;
@@ -48,10 +49,11 @@ public class PutchunkHandler extends Handler
 	@Override
 	public void run()
 	{	
-		if (this.senderId == DataManager.getInstance().getId())
+		if (this.senderId == Manager.getInstance().getId())
 			return;
 		
-		if (!DataManager.getInstance().store(id, chunkNo, repDeg, data))
+		ChunkManager manager = Manager.getInstance().getChunkManager();
+		if (!manager.storeChunk(id, chunkNo, repDeg, data))
 			return;
 		log("stored chunk no. " + chunkNo + " of file " + id);
 		
@@ -67,6 +69,6 @@ public class PutchunkHandler extends Handler
 			e.printStackTrace();
 		}
 		
-		send(CHANNELS.MC, reply.getMessageBytes());
+		send(Channels.MC, reply.getMessageBytes());
 	}
 }
