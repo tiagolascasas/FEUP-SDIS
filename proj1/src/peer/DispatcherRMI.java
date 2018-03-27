@@ -1,15 +1,22 @@
 package peer;
 
+import java.nio.charset.StandardCharsets;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import peer.handler.rmi.BackupHandler;
 import peer.handler.rmi.RestoreHandler;
+import peer.message.MessageRMI;
 
-public class DispatcherRMI extends Dispatcher
+public class DispatcherRMI extends Dispatcher implements MessageRMI
 {
 	private String rmiMethodName;
+	
+	private byte[] filecontent = null;
 	
 	public DispatcherRMI(String rmiMethodName)
 	{
@@ -35,15 +42,72 @@ public class DispatcherRMI extends Dispatcher
 		{
 			//read something from RMI
 			//processMessage(message);
+			try {
+				MessageRMI stub = (MessageRMI) UnicastRemoteObject.exportObject(this, 0);
+
+				// Bind the remote object's stub in the registry
+				Registry registry = LocateRegistry.getRegistry();
+				registry.bind("Message", stub);
+			}catch (Exception e) {
+				System.err.println("An error occured, couldn't start server...");
+			}
 		}
 
+	}
+	
+	public byte[] sendMessage(String operation, String[] args, byte[][] file) {
+		String msg = operation;
+		byte[] message;
+		for(int i = 0; i<args.length;i++)
+		{
+			msg += " " + args[i];
+		}
+		if(file[0] != null)
+		{
+			message = (msg + " " + 
+			new String(file[0], StandardCharsets.US_ASCII) +
+			" " + new String(file[1], StandardCharsets.US_ASCII)).getBytes();
+		}
+		else
+		{
+			message = msg.getBytes(); 
+		}
+		this.processMessage(message);
+		
+		return this.filecontent; //returns file to client if restore or null for another option
 	}
 
 	@Override
 	void processMessage(byte[] message)
 	{
+		String[] msg = new String(message, StandardCharsets.US_ASCII).split(" ");
+		String operation = msg[0];
+		
 		//executa um rmi handler consoante o tipo de pedido
 		//Deletion, Reclamation, Restore ou Store
+		switch(operation)
+		{
+		case "BACKUP":
+			threads.execute(new BackupHandler(msg[2].getBytes(), msg[3].getBytes(), Integer.parseInt(msg[1])));
+			break;
+		case "RESTORE":
+			int numberOfChunks = Utilities.calculateNumberOfChunks(msg[1].getBytes());
+			String fileId = Utilities.calculateFileId(msg[2].getBytes(), msg[1].getBytes());
+			threads.execute(new RestoreHandler(fileId, numberOfChunks));
+			RestoreManager man = Manager.getInstance().getRestoredManager();
+			while(!man.isComplete(fileId)) {}
+			this.filecontent = man.reassemble(fileId);
+			break;
+		case "DELETE":
+			//TODO call delete method
+			break;
+		case "RECLAIM":
+			//TODO call reclaim method
+			break;
+		case "STATE":
+			//TODO call state method
+			break;			
+		}
 	}
 	
 	void test()

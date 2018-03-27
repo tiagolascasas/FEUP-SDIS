@@ -3,12 +3,15 @@ package client;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import server.message.Message;
+import peer.message.MessageRMI;
+import peer.Utilities;
 
 public class Client {
 
 	public static void main(String[] args) {
-		String response;
+
+		String [] messageArgs;
+		byte[][] file = new byte[2][];
 		try {
 			String[] accessPoint = args[0].split(":");
 			String host = null,remoteObjectName;
@@ -22,44 +25,62 @@ public class Client {
 				remoteObjectName = accessPoint[1];
 			}
 			Registry registry = LocateRegistry.getRegistry(host);
-			Message stub = (Message) registry.lookup(remoteObjectName);
+			MessageRMI stub = (MessageRMI) registry.lookup(remoteObjectName);
 
 
 			switch(args[1].toUpperCase()) {
 			case "BACKUP":
 				if(args.length == 4)
 				{
-					response = stub.sendMessage(args[1].toUpperCase(), new String[] {args[2], args[3]});
+					messageArgs = new String[] {args[3]};
+					file[0] = Utilities.fileToBinary(args[2]);
+					file[1] = Utilities.calculateMetadataIdentifier(args[2]);
 					break;
 				}
 				throw new Exception();
 			case "RESTORE":
 			case "DELETE":
+				if(args.length == 3)
+				{
+					messageArgs = new String[] {};
+					file[0] = Utilities.fileToBinary(args[2]);
+					file[1] = Utilities.calculateMetadataIdentifier(args[2]);
+					break;
+				}
+				throw new Exception();
 			case "RECLAIM":
 				if(args.length == 3)
 				{
-					response = stub.sendMessage(args[1].toUpperCase(), new String[] {args[2]});
+					messageArgs = new String[] {args[2]};
 					break;
 				}
 				throw new Exception();
 			case "STATE":
 				if(args.length == 2)
 				{
-					
-					response = stub.sendMessage(args[1].toUpperCase(), new String[] {});
+					messageArgs = new String[] {};
 					break;
 				}
 				throw new Exception();
 			default:
 				throw new Exception();
 			}
+
+			byte[] response = stub.sendMessage(args[1].toUpperCase(), messageArgs, file);
+
+			if(response != null)
+			{
+				Utilities.binaryToFile(response, args[2]);
+			}
+
+			System.out.println("Message transmited successfully");
+
 		} catch (Exception e)
 		{
 			Client.printUsage();
 			return;
 		}
 
-		System.out.println("response: " + response);
 	}
 
 	public static void printUsage() {

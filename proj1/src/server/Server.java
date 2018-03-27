@@ -7,7 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 import server.message.Message;
 
 public class Server implements Message {
-
+//TODO IMPORTANT adapt in DispatcherRMI
 	public Server() {}
 
 	public String sendMessage(String operation, String[] args) {
