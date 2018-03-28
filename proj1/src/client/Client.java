@@ -2,6 +2,7 @@ package client;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Base64;
 
 import peer.message.MessageRMI;
 import peer.Utilities;
@@ -33,8 +34,8 @@ public class Client {
 				if(args.length == 4)
 				{
 					messageArgs = new String[] {args[3]};
-					file[0] = Utilities.fileToBinary(args[2]);
-					file[1] = Utilities.calculateMetadataIdentifier(args[2]);
+					file[0] = Base64.getEncoder().encode(Utilities.fileToBinary(args[2]));
+					file[1] = Base64.getEncoder().encode(Utilities.calculateMetadataIdentifier(args[2]));
 					break;
 				}
 				throw new Exception();
@@ -43,8 +44,8 @@ public class Client {
 				if(args.length == 3)
 				{
 					messageArgs = new String[] {};
-					file[0] = Utilities.fileToBinary(args[2]);
-					file[1] = Utilities.calculateMetadataIdentifier(args[2]);
+					file[0] = Base64.getEncoder().encode(Utilities.fileToBinary(args[2]));
+					file[1] = Base64.getEncoder().encode(Utilities.calculateMetadataIdentifier(args[2]));
 					break;
 				}
 				throw new Exception();
