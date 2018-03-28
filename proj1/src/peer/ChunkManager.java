@@ -1,5 +1,6 @@
 package peer;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class ChunkManager 
@@ -11,7 +12,7 @@ public class ChunkManager
 		chunks = new Vector<Chunk>();
 	}
 	
-	private Chunk findChunk(String id, int chunkNo)
+	private synchronized Chunk findChunk(String id, int chunkNo)
 	{
 		for (int i = 0; i < chunks.size(); i++)
 		{
@@ -22,7 +23,7 @@ public class ChunkManager
 		return null;
 	}
 	
-	public boolean storeChunk(String id, int chunkNo, int repDegree, byte[] data)
+	public synchronized boolean storeChunk(String id, int chunkNo, int repDegree, byte[] data)
 	{
 		if (retrieveChunk(id, chunkNo) == null)
 		{
@@ -33,7 +34,7 @@ public class ChunkManager
 		else return false;
 	}
 	
-	public byte[] retrieveChunk(String id, int chunkNo)
+	public synchronized byte[] retrieveChunk(String id, int chunkNo)
 	{
 		Chunk chunk = findChunk(id, chunkNo);
 		if (chunk != null)
@@ -42,33 +43,37 @@ public class ChunkManager
 			return null;
 	}
 	
-	public void deleteChunk(String id, int chunkNo)
+	public synchronized void deleteChunk(String id, int chunkNo)
 	{
 		Chunk chunk = findChunk(id, chunkNo);
 		chunk.deleteChunk();
 	}
 	
-	public void increaseReplicationCount(String id, int chunkNo, int increment)
+	public synchronized void increaseReplicationCount(String id, int chunkNo, int increment)
 	{
 		Chunk chunk = findChunk(id, chunkNo);
 		chunk.addToReplicationCount(increment);
 	}
 	
-	public boolean decreaseReplicationCount(String id, int chunkNo, int decrement)
+	public synchronized boolean decreaseReplicationCount(String id, int chunkNo, int decrement)
 	{
 		Chunk chunk = findChunk(id, chunkNo);
 		return chunk.addToReplicationCount(decrement);
 	}
-/*
-	public byte[] reassembleFile(String id) 
+
+	public synchronized int deleteAllChunksOfFile(String id)
 	{
-		Vector<Chunk> fileChunks = new Vector<Chunk>();
+		ArrayList<Chunk> fileChunks = new ArrayList<Chunk>();
+		
 		for (int i = 0; i < chunks.size(); i++)
 		{
 			if (chunks.elementAt(i).getId().equals(id))
 				fileChunks.add(chunks.elementAt(i));
 		}
-		fileChunks.sort(null);
-		return null;
-	}*/
+		chunks.removeAll(fileChunks);
+
+		for (int i = 0; i < fileChunks.size(); i++)
+			fileChunks.get(i).deleteChunk();
+		return fileChunks.size();
+	}
 }

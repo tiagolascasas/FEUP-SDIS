@@ -33,7 +33,7 @@ public class BackupHandler extends Handler
 	public void run()
 	{
 		ArrayList<MessagePutchunk> chunks = buildAllChunks();
-		BackupManager manager = Manager.getInstance().getStoredManager();
+		BackupManager manager = Manager.getInstance().getBackupsManager();
 		manager.createNewEntry(this.fileId, chunks.size());
 		int retries = 0;
 		int waitingTime = 1000;

@@ -39,7 +39,7 @@ public class PutchunkHandler extends Handler
 				message[i+3] == Message.LF)
 				dataStart = i + 4;
 		}
-		for (int i = dataStart; i < 64000/*message.length*/; i++)
+		for (int i = dataStart; i < message.length; i++)
 			allData.add(message[i]);
 		this.data = new byte[allData.size()];
 		for (int i = 0; i < allData.size(); i++)
