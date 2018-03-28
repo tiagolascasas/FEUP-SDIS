@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public final class Utilities
 {
@@ -89,6 +90,6 @@ public final class Utilities
 	
 	static public int calculateNumberOfChunks(byte[] data)
 	{
-		return data.length % 64000 + 1;
+		return data.length / 64000 + 1;
 	}
 }

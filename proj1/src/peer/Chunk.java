@@ -27,7 +27,8 @@ public class Chunk implements Comparator
 		{
 			File file = new File(filePath);
 			DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
-			stream.write(data, 0, data.length);
+			int sizeToWrite = data.length > 64000 ? 64000 : data.length;
+			stream.write(data, 0, sizeToWrite);
 			stream.close();
 		} 
 		catch (IOException e) 

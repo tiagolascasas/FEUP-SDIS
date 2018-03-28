@@ -62,13 +62,14 @@ public class RestoreManager
 			return null;
 		
 		ArrayList<ArrayList<Byte>> file = files.get(fileId);
-		byte[] reassembly = new byte[files.size() * BackupHandler.MAX_CHUNK_SIZE * 1000];
+		byte[] reassembly = new byte[file.size() * BackupHandler.MAX_CHUNK_SIZE * 2];
 		
 		int index = 0;
 		for (int i = 0; i < file.size(); i++, index++)
 		{
 			ArrayList<Byte> chunk = file.get(i);
-			for (int j = 0; j < chunk.size(); j++, index++)
+			int size = chunk.size() > 64000 ? 64000 : chunk.size();
+			for (int j = 0; j < size; j++, index++)
 				reassembly[index] = chunk.get(j);
 		}
 		return Arrays.copyOfRange(reassembly, 0, index);

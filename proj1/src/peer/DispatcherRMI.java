@@ -36,10 +36,10 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 	{
 
 		//TEST
-		//test();
+		test();
 		//TEST
 
-
+/*
 		//read something from RMI
 		//processMessage(message);
 		try {
@@ -51,7 +51,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("An error occured, couldn't start server...");
-		}
+		}*/
 
 	}
 
@@ -116,23 +116,23 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 		if (Manager.getInstance().getId() == 1)
 		{
 			//TEST BACKUP
-			byte[] file = Utilities.fileToBinary("../scripts/test3.pdf");
-			byte[] metadata = Utilities.calculateMetadataIdentifier("../scripts/test3.pdf");
+			byte[] file = Utilities.fileToBinary("../scripts/test1.txt");
+			byte[] metadata = Utilities.calculateMetadataIdentifier("../scripts/test1.txt");
 
 			threads.execute(new BackupHandler(file, metadata, 2));
 
 			//Sleep a bit until backup is done
-			try{Thread.sleep(9000);} catch (InterruptedException e){e.printStackTrace();}
+			try{Thread.sleep(12000);} catch (InterruptedException e){e.printStackTrace();}
 
 			//TEST RESTORE
 			int numberOfChunks = Utilities.calculateNumberOfChunks(file);
 			String fileId = Utilities.calculateFileId(metadata, file);
 
-			threads.execute(new RestoreHandler(fileId, 23));
+			threads.execute(new RestoreHandler(fileId, numberOfChunks));
 
 			RestoreManager man = Manager.getInstance().getRestoredManager();
 			while(!man.isComplete(fileId)) {}
-			Utilities.binaryToFile(man.reassemble(fileId), "test3.pdf");
+			Utilities.binaryToFile(man.reassemble(fileId), "test1.txt");
 
 			//Sleep a bit until restore is done
 			try{Thread.sleep(5000);} catch (InterruptedException e){e.printStackTrace();}
