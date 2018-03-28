@@ -36,10 +36,10 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 	{
 
 		//TEST
-		test();
+		//test();
 		//TEST
 
-/*
+
 		//read something from RMI
 		//processMessage(message);
 		try {
@@ -47,11 +47,11 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 
 			// Bind the remote object's stub in the registry
 			Registry registry = LocateRegistry.getRegistry();
-			registry.bind("Message", stub);
+			registry.bind(this.rmiMethodName, stub);
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("An error occured, couldn't start server...");
-		}*/
+		}
 
 	}
 

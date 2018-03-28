@@ -71,7 +71,8 @@ public class Client {
 
 			if(response != null)
 			{
-				Utilities.binaryToFile(response, args[2]);
+				String[] filePath = args[2].split("/");
+				Utilities.binaryToFile(response, filePath[filePath.length-1]);
 			}
 
 			System.out.println("Message transmited successfully");
