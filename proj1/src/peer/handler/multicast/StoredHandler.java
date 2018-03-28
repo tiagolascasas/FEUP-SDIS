@@ -22,10 +22,9 @@ public class StoredHandler extends Handler
 	@Override
 	public void run()
 	{
-		BackupManager manager = Manager.getInstance().getStoredManager();
+		BackupManager manager = Manager.getInstance().getBackupsManager();
 		if (manager.increment(this.id, this.chunkNo))
 			//log("increased rep count of file " + this.id + ", chunk no " + this.chunkNo + " to " + manager.getReplicationDegree(this.id, this.chunkNo));
 			return;
 	}
-
 }

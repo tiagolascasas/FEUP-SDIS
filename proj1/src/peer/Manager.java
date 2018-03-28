@@ -117,7 +117,7 @@ public class Manager
 		return chunks;
 	}
 	
-	public BackupManager getStoredManager()
+	public BackupManager getBackupsManager()
 	{
 		return backups;
 	}
