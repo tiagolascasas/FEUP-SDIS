@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import peer.Manager;
 import peer.RestoreManager;
+import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.Message;
 
@@ -48,6 +49,6 @@ public class ChunkHandler extends Handler
 		RestoreManager manager = Manager.getInstance().getRestoredManager();
 		if (!manager.storeChunk(id, chunkNo, data))
 			return;
-		log("reassembled chunk no. " + chunkNo + " of file " + id);
+		log("reassembled chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
 	}
 }

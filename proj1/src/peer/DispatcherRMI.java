@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import peer.handler.rmi.BackupHandler;
 import peer.handler.rmi.DeletionHandler;
+import peer.handler.rmi.ReclamationHandler;
 import peer.handler.rmi.RestoreHandler;
 import peer.message.MessageRMI;
 
@@ -124,6 +125,8 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 
 			//Sleep a bit until backup is done
 			try{Thread.sleep(12000);} catch (InterruptedException e){e.printStackTrace();}
+			
+			System.out.println(Manager.getInstance().getCurrentState());
 
 			//TEST RESTORE
 			int numberOfChunks = Utilities.calculateNumberOfChunks(file);
@@ -142,9 +145,17 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 			//threads.execute(new DeletionHandler(fileId));
 			
 			//TEST SPACE RECLAIMING
+			//threads.execute(new ReclamationHandler(0));
 
 			//TEST STATE
 			
+		}
+		//RUN THIS ONLY ON PEER 2
+		if (Manager.getInstance().getId() == 2)
+		{
+			System.out.println(Manager.getInstance().getCurrentState());
+			try{Thread.sleep(12000);} catch (InterruptedException e){e.printStackTrace();}
+			threads.execute(new ReclamationHandler(0));
 		}
 		//DO NOTHING MORE
 		while(true) {}

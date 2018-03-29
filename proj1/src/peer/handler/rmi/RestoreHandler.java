@@ -3,6 +3,7 @@ package peer.handler.rmi;
 import peer.Channels;
 import peer.Manager;
 import peer.RestoreManager;
+import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.MessageGetchunk;
 
@@ -21,7 +22,7 @@ public class RestoreHandler extends Handler
 	@Override
 	public void run()
 	{
-		log("running restore handler for file with id " + this.fileId);
+		log("running restore handler for file with id " + Utilities.minifyId(fileId));
 	
 		RestoreManager manager = Manager.getInstance().getRestoredManager();
 		manager.createNewEntry(fileId, numberOfChunks);

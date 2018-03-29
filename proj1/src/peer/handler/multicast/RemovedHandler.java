@@ -3,12 +3,17 @@ package peer.handler.multicast;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
+import peer.BackupManager;
 import peer.Channels;
 import peer.Chunk;
 import peer.ChunkManager;
 import peer.Manager;
+import peer.ReclaimManager;
+import peer.RestoreManager;
+import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.MessageChunk;
+import peer.message.MessagePutchunk;
 
 public class RemovedHandler extends Handler
 {
@@ -32,13 +37,39 @@ public class RemovedHandler extends Handler
 			return;
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
+		ReclaimManager recManager = Manager.getInstance().getReclaimManager();
+		BackupManager bkManager = Manager.getInstance().getBackupsManager();
+		
+		if (bkManager.hasInitiated(id))
+			return;
+		
 		if (manager.decreaseReplicationCount(id, chunkNo))
 		{
-			Chunk chunk = manager.findChunk(id, chunkNo);
+			recManager.registerNewChunk(id, chunkNo);
 			
-			log("decreased rep count of chunk " + chunkNo + " of file " + id + ", starting backup subprotocol for that chunk");
+			Chunk chunk = manager.findChunk(id, chunkNo);
+			MessagePutchunk message = new MessagePutchunk(id.getBytes(), chunkNo, chunk.getDesiredRepDegree());
+			message.setBody(chunk.retrieveChunkData());
+			
+			Random r = new Random();
+			int timeToWait = r.nextInt(400);
+			try
+			{
+				Thread.sleep(timeToWait);
+			} 
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+			if (recManager.isInterrupted(id, chunkNo))
+				return;
+			recManager.unregisterChunk(id, chunkNo);
+			
+			send(Channels.MDB, message.getMessageBytes());
+			
+			log("decreased rep count of chunk " + chunkNo + " of file " + Utilities.minifyId(id) + ", started backup subprotocol for that chunk");
 		}
 		else
-			log("decreased rep count of chunk " + chunkNo + " of file " + id);
+			log("decreased rep count of chunk " + chunkNo + " of file " + Utilities.minifyId(id));
 	}
 }

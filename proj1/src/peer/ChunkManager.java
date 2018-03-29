@@ -1,10 +1,13 @@
 package peer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Vector;
 
-public class ChunkManager 
+public class ChunkManager implements Serializable
 {
+	private static final long serialVersionUID = 4951196329264154605L;
 	private Vector<Chunk> chunks;
 	
 	public ChunkManager()
@@ -47,6 +50,7 @@ public class ChunkManager
 	{
 		Chunk chunk = findChunk(id, chunkNo);
 		chunk.deleteChunk();
+		chunks.remove(chunk);
 	}
 	
 	//returns true if resulting rep count is inferior to desired
@@ -54,7 +58,7 @@ public class ChunkManager
 	{
 		Chunk chunk = findChunk(id, chunkNo);
 		if (chunk == null)
-			return true;
+			return false;
 		return chunk.addToReplicationCount(1);
 	}
 	
@@ -63,7 +67,7 @@ public class ChunkManager
 	{
 		Chunk chunk = findChunk(id, chunkNo);
 		if (chunk == null)
-			return true;
+			return false;
 		return chunk.addToReplicationCount(-1);
 	}
 
@@ -85,5 +89,39 @@ public class ChunkManager
 			chunkNumbers.add(fileChunks.get(i).getChunkNo());
 		}
 		return chunkNumbers;
+	}
+
+	public int getNumberOfChunks()
+	{
+		return chunks.size();
+	}
+	
+	public Chunk getRandomChunk()
+	{
+		Random r = new Random();
+		if (chunks.size() <= 0)
+			return null;
+		return chunks.elementAt(r.nextInt(chunks.size()));
+	}
+	
+	public synchronized String getState()
+	{
+		StringBuilder state = new StringBuilder();
+		state.append("CHUNK STORAGE INFORMATION - chunks this peer has stored\n\n")
+			 .append("file identificator | chunk number | current rep. degree | desired rep. degree\n");
+		for (int i = 0; i < chunks.size(); i++)
+		{
+			Chunk chunk = chunks.elementAt(i);
+			state.append(chunk.getId())
+					.append(" | ")
+					.append(chunk.getId())
+					.append(" | ")
+					.append(chunk.getRepDegree())
+					.append(" | ")
+					.append(chunk.getDesiredRepDegree())
+					.append("\n");
+		}
+		state.append("\n");
+		return state.toString();
 	}
 }

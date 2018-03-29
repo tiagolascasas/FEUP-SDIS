@@ -32,7 +32,7 @@ public final class Utilities
 		try
 		{
 			File outfile = new File(name);
-			DataOutputStream stream = new DataOutputStream(new FileOutputStream(outfile));
+			DataOutputStream stream = new DataOutputStream(new FileOutputStream("files_restored/" + outfile));
 			stream.write(data, 0, data.length);
 			stream.close();
 		} 
@@ -91,5 +91,10 @@ public final class Utilities
 	static public int calculateNumberOfChunks(byte[] data)
 	{
 		return data.length / 64000 + 1;
+	}
+	
+	static public String minifyId(String id)
+	{
+		return id.substring(0, 5) + "...";
 	}
 }

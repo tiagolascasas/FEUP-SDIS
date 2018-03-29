@@ -1,12 +1,13 @@
 package peer.handler.rmi;
 
 import peer.Channels;
+import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.MessageDelete;
 
 public class DeletionHandler extends Handler
 {
-	private static final int MAX_RETRIES = 4;
+	private static final int MAX_RETRIES = 3;
 	private String fileId;
 
 	public DeletionHandler(String fileId)
@@ -26,11 +27,11 @@ public class DeletionHandler extends Handler
 			send(Channels.MC, message.getMessageBytes());
 			
 			if (numberOfRetries == 0)
-				log("sent deletion message for chunks of file " + fileId + ", 1st time");
+				log("sent deletion message for chunks of file " + Utilities.minifyId(fileId) + ", 1st time");
 			else if (numberOfRetries == 1)
-				log("sent deletion message for chunks of file " + fileId + ", 2nd time");
+				log("sent deletion message for chunks of file " + Utilities.minifyId(fileId) + ", 2nd time");
 			else
-				log("sent deletion message for chunks of file " + fileId + ", 3rd time");
+				log("sent deletion message for chunks of file " + Utilities.minifyId(fileId) + ", 3rd time");
 			
 			numberOfRetries++;
 			try

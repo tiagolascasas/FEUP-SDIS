@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import peer.Channels;
 import peer.ChunkManager;
 import peer.Manager;
+import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.MessageRemoved;
 
@@ -27,7 +28,7 @@ public class DeleteHandler extends Handler
 		ArrayList<Integer> removed = manager.deleteAllChunksOfFile(id);
 		
 		if (removed.size() > 0)
-			log("deleted " + removed.size() + " chunks of file with id = "+ id);
+			log("deleted " + removed.size() + " chunks of file with id = "+ Utilities.minifyId(id));
 		
 		for (int i = 0; i < removed.size(); i++)
 		{

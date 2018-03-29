@@ -8,6 +8,7 @@ import peer.Channels;
 import peer.ChunkManager;
 import peer.Manager;
 import peer.ReclaimManager;
+import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.Message;
 import peer.message.MessageStored;
@@ -53,13 +54,16 @@ public class PutchunkHandler extends Handler
 		if (this.senderId == Manager.getInstance().getId())
 			return;
 		
+		if (!Manager.getInstance().getAllowSaving())
+			return;
+		
 		ReclaimManager recManager = Manager.getInstance().getReclaimManager();
-		//recManager.setInterrupted(id, chunkNo);
+		recManager.setInterrupted(id, chunkNo);
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
 		if (!manager.storeChunk(id, chunkNo, repDeg, data))
 			return;
-		log("stored chunk no. " + chunkNo + " of file " + id);
+		log("stored chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
 		
 		MessageStored reply = new MessageStored(id.getBytes(), chunkNo);
 		Random r = new Random();

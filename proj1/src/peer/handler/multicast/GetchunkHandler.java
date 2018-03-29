@@ -6,6 +6,7 @@ import java.util.Random;
 import peer.Channels;
 import peer.ChunkManager;
 import peer.Manager;
+import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.MessageChunk;
 
@@ -47,7 +48,7 @@ public class GetchunkHandler extends Handler
 		{
 			e.printStackTrace();
 		}
-		log("returned chunk no. " + chunkNo + " of file " + id);
+		log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
 		send(Channels.MDR, message.getMessageBytes());
 	}
 }

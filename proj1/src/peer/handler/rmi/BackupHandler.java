@@ -38,12 +38,12 @@ public class BackupHandler extends Handler
 		int retries = 0;
 		int waitingTime = 1000;
 		
-		log("running stored handler for file with id " + this.fileId);
+		log("running stored handler for file with id " + Utilities.minifyId(this.fileId));
 		
 		while (retries < MAX_RETRIES)
 		{
 			ArrayList<Integer> chunksToSend = manager.getChunksBelowDegree(this.fileId, this.repDegree);
-			log("file id = " + this.fileId + ", retries = " + retries + ", chunks below rep deg = " + chunksToSend.size());
+			log("file id = " + Utilities.minifyId(this.fileId) + ", retries = " + retries + ", chunks below rep deg = " + chunksToSend.size());
 	
 			if (chunksToSend.size() == 0)
 				break;

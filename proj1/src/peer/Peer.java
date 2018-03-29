@@ -17,6 +17,7 @@ public class Peer extends Thread
 	
 	public Peer(String version, int serverID, String rmi, McastID[] connections) 
 	{
+		System.out.println("----------------------------------------------");
 		Manager.getInstance().init(version, serverID, connections);
 		this.rmiMethodName = rmi;
 		this.connections = connections;
@@ -57,41 +58,38 @@ public class Peer extends Thread
 	@Override
 	public void run()
 	{
-		installSignalHandler();
+		//installSignalHandler();
 		
 		mc.start();
 		mdb.start();
 		mdr.start();
 		client.start();
 		
-		CountDownLatch latch = new CountDownLatch(4);
-		try
+		while (true)
 		{
-			latch.await();
-		} 
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-			System.exit(-1);
+			try
+			{
+				Thread.sleep(2000);
+				Manager.getInstance().saveState();
+			} 
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
-		return;
 	}
 	
 	public void installSignalHandler()
-	{/*
+	{
 		Runtime.getRuntime().addShutdownHook(new Thread()
         {
             @Override
             public void run()
             {
-            	System.out.println("Exiting...");
-            	//close stuff
-            	mc.interrupt();
-            	mdb.interrupt();
-            	mbr.interrupt();
-            	client.interrupt();
-                System.exit(0);
+            	Manager.getInstance().saveState();
+				System.out.println("Exiting...");
+				System.exit(0);
             }
-        });*/
+        });
 	}
 }

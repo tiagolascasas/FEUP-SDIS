@@ -1,6 +1,15 @@
 package peer;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.file.Files;
@@ -15,15 +24,16 @@ public class Manager
 	private int id;
 	private McastID mc, mdr, mdb;
 	private MulticastSocket mcSocket, mdrSocket, mdbSocket;
+	private boolean allowSaving;
 	
 	//single thread-safe manager to manage stored chunks
-	private static ChunkManager chunks = new ChunkManager();
+	private static ChunkManager chunks;
 	//single thread-safe manager to manage files this peer told other peers to backup
-	private static BackupManager backups = new BackupManager();
+	private static BackupManager backups;
 	//single thread-safe manager to manage files this peer was told to restore
-	private static RestoreManager restores = new RestoreManager();
+	private static RestoreManager restores;
 	//single thread-safe manager to manage chunks that arrived during a transmission in the reclaim protocol
-	private static ReclaimManager reclaims = new ReclaimManager();
+	private static ReclaimManager reclaims;
 	
 	private Manager() {}
 	
@@ -39,8 +49,10 @@ public class Manager
 		this.mc = connections[0];
 		this.mdb = connections[1];
 		this.mdr = connections[2];
+		this.allowSaving = true;
+		restoreState();
 	}
-	
+
 	public void setSockets(MulticastSocket mc, MulticastSocket mdr, MulticastSocket mdb)
 	{
 		this.mcSocket = mc;
@@ -132,5 +144,88 @@ public class Manager
 	public ReclaimManager getReclaimManager()
 	{
 		return reclaims;
+	}
+
+	public void setAllowSaving(boolean allow)
+	{
+		this.allowSaving = allow;
+	}
+
+	public boolean getAllowSaving()
+	{
+		return allowSaving;
+	}
+	
+	public void saveState()
+	{
+		String serName = "state_peer" + this.id;
+		try
+		{
+			ObjectOutputStream outStr = new ObjectOutputStream(new FileOutputStream(new File(serName)));
+			outStr.writeObject(Manager.chunks);
+			outStr.writeObject(Manager.backups);
+			outStr.writeObject(Manager.restores);
+			outStr.writeObject(Manager.reclaims);
+			outStr.close();
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void restoreState()
+	{
+		String serName = "state_peer" + this.id;
+		try
+		{
+			InputStream inputStream = new BufferedInputStream(new FileInputStream(serName));
+			ObjectInput objectStream = new ObjectInputStream(inputStream);
+			Manager.chunks = (ChunkManager)objectStream.readObject();
+			Manager.backups = (BackupManager)objectStream.readObject();
+			Manager.restores = (RestoreManager)objectStream.readObject();
+			Manager.reclaims = (ReclaimManager)objectStream.readObject();
+			objectStream.close();
+		} 
+		catch (IOException | ClassNotFoundException e)
+		{
+			System.out.println("No serialized state found; starting from a blank state"); 
+			Manager.backups = new BackupManager();
+			Manager.chunks = new ChunkManager();
+			Manager.restores = new RestoreManager();
+			Manager.reclaims = new ReclaimManager();
+			return;
+		}
+	}
+	
+	public synchronized String getCurrentState()
+	{
+		int currentOccupiedSpace = chunks.getNumberOfChunks() * 64000;
+		File disk = new File(".");
+		long freeSpace = disk.getFreeSpace();
+		
+		StringBuilder state = new StringBuilder();
+		state.append("STATE OF PEER ")
+		      .append(Manager.getInstance().getId())
+		      .append("\n\n")
+		      .append("-------------------------------------------------------------------------------------\n")
+		      .append("Space used by chunks: ")
+		      .append(currentOccupiedSpace)
+		      .append(" bytes\nFree space: ")
+		      .append(freeSpace / 1000000000)
+		      .append(" Gb (")
+		      .append(freeSpace)
+		      .append(" bytes)\n\n)")
+		      .append("-------------------------------------------------------------------------------------\n")
+		      .append(chunks.getState())
+		      .append("-------------------------------------------------------------------------------------\n")
+		      .append(backups.getState())
+		      .append("-------------------------------------------------------------------------------------\n")
+		      .append(restores.getState())
+		      .append("-------------------------------------------------------------------------------------\n")
+		      .append(reclaims.getState())
+		      .append("\n");
+		return state.toString();
 	}
 }

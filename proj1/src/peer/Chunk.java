@@ -4,13 +4,15 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 
-public class Chunk implements Comparator
+public class Chunk implements Comparator, Serializable
 {
+	private static final long serialVersionUID = -5567032615346943881L;
 	private String id;
 	private int chunkNo;
 	private int repDegree;
