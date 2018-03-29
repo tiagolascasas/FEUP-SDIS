@@ -14,7 +14,7 @@ public class ReclaimManager
 	public synchronized void registerNewChunk(String fileId, int chunkNo)
 	{
 		String id = fileId + chunkNo;
-		interrupted.put(id, false);
+		interrupted.put(id, false); 
 	}
 	
 	public synchronized void setInterrupted(String fileId, int chunkNo)
