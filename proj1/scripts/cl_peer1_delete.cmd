@@ -1,3 +1,3 @@
 setlocal
 cd ../bin
-java client.Client %1:Message1 DELETE test3.pdf
+java testApp.TestApp %1:Message1 DELETE test3.pdf
