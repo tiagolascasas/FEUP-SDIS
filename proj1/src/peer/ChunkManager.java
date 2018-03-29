@@ -12,7 +12,7 @@ public class ChunkManager
 		chunks = new Vector<Chunk>();
 	}
 	
-	private synchronized Chunk findChunk(String id, int chunkNo)
+	public synchronized Chunk findChunk(String id, int chunkNo)
 	{
 		for (int i = 0; i < chunks.size(); i++)
 		{
@@ -25,7 +25,7 @@ public class ChunkManager
 	
 	public synchronized boolean storeChunk(String id, int chunkNo, int repDegree, byte[] data)
 	{
-		if (retrieveChunk(id, chunkNo) == null)
+		if (retrieveChunkData(id, chunkNo) == null)
 		{
 			Chunk newChunk = new Chunk(id, chunkNo, repDegree, data);
 			chunks.add(newChunk);
@@ -34,7 +34,7 @@ public class ChunkManager
 		else return false;
 	}
 	
-	public synchronized byte[] retrieveChunk(String id, int chunkNo)
+	public synchronized byte[] retrieveChunkData(String id, int chunkNo)
 	{
 		Chunk chunk = findChunk(id, chunkNo);
 		if (chunk != null)
@@ -49,19 +49,25 @@ public class ChunkManager
 		chunk.deleteChunk();
 	}
 	
-	public synchronized void increaseReplicationCount(String id, int chunkNo, int increment)
+	//returns true if resulting rep count is inferior to desired
+	public synchronized boolean increaseReplicationCount(String id, int chunkNo)
 	{
 		Chunk chunk = findChunk(id, chunkNo);
-		chunk.addToReplicationCount(increment);
+		if (chunk == null)
+			return true;
+		return chunk.addToReplicationCount(1);
 	}
 	
-	public synchronized boolean decreaseReplicationCount(String id, int chunkNo, int decrement)
+	//same as above
+	public synchronized boolean decreaseReplicationCount(String id, int chunkNo)
 	{
 		Chunk chunk = findChunk(id, chunkNo);
-		return chunk.addToReplicationCount(decrement);
+		if (chunk == null)
+			return true;
+		return chunk.addToReplicationCount(-1);
 	}
 
-	public synchronized int deleteAllChunksOfFile(String id)
+	public synchronized ArrayList<Integer> deleteAllChunksOfFile(String id)
 	{
 		ArrayList<Chunk> fileChunks = new ArrayList<Chunk>();
 		
@@ -72,8 +78,12 @@ public class ChunkManager
 		}
 		chunks.removeAll(fileChunks);
 
+		ArrayList<Integer> chunkNumbers = new ArrayList<Integer>();
 		for (int i = 0; i < fileChunks.size(); i++)
+		{
 			fileChunks.get(i).deleteChunk();
-		return fileChunks.size();
+			chunkNumbers.add(fileChunks.get(i).getChunkNo());
+		}
+		return chunkNumbers;
 	}
 }

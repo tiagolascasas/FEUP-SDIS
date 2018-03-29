@@ -32,7 +32,7 @@ public class GetchunkHandler extends Handler
 			return;
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
-		byte[] data = manager.retrieveChunk(id, chunkNo);
+		byte[] data = manager.retrieveChunkData(id, chunkNo);
 		if (data == null)
 			return;
 		MessageChunk message = new MessageChunk(id.getBytes(), chunkNo, data);

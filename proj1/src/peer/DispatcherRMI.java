@@ -37,7 +37,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 	{
 
 		//TEST
-		//test();
+		test();
 		//TEST
 
 
@@ -139,11 +139,14 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 			try{Thread.sleep(5000);} catch (InterruptedException e){e.printStackTrace();}*/
 
 			//TEST DELETE
-			threads.execute(new DeletionHandler(fileId));
+			//threads.execute(new DeletionHandler(fileId));
 			
 			//TEST SPACE RECLAIMING
 
 			//TEST STATE
+			
 		}
+		//DO NOTHING MORE
+		while(true) {}
 	}
 }

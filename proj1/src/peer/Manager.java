@@ -22,6 +22,8 @@ public class Manager
 	private static BackupManager backups = new BackupManager();
 	//single thread-safe manager to manage files this peer was told to restore
 	private static RestoreManager restores = new RestoreManager();
+	//single thread-safe manager to manage chunks that arrived during a transmission in the reclaim protocol
+	private static ReclaimManager reclaims = new ReclaimManager();
 	
 	private Manager() {}
 	
@@ -125,5 +127,10 @@ public class Manager
 	public RestoreManager getRestoredManager()
 	{
 		return restores;
+	}
+	
+	public ReclaimManager getReclaimManager()
+	{
+		return reclaims;
 	}
 }

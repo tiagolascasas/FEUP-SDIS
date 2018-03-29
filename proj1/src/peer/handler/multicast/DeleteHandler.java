@@ -1,10 +1,13 @@
 package peer.handler.multicast;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
+import peer.Channels;
 import peer.ChunkManager;
 import peer.Manager;
 import peer.handler.Handler;
+import peer.message.MessageRemoved;
 
 public class DeleteHandler extends Handler
 {
@@ -21,8 +24,15 @@ public class DeleteHandler extends Handler
 	public void run()
 	{
 		ChunkManager manager = Manager.getInstance().getChunkManager();
-		int removed = manager.deleteAllChunksOfFile(id);
-		if (removed > 0)
-			log("deleted " + removed + " chunks of file with id = "+ id);
+		ArrayList<Integer> removed = manager.deleteAllChunksOfFile(id);
+		
+		if (removed.size() > 0)
+			log("deleted " + removed.size() + " chunks of file with id = "+ id);
+		
+		for (int i = 0; i < removed.size(); i++)
+		{
+			MessageRemoved message = new MessageRemoved(id.getBytes(), removed.get(i));
+			send(Channels.MC, message.getMessageBytes());
+		}
 	}
 }

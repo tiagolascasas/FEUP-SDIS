@@ -14,6 +14,7 @@ public class Chunk implements Comparator
 	private String id;
 	private int chunkNo;
 	private int repDegree;
+	private int desiredRepDegree;
 	private String filePath;
 	
 	Chunk(String id, int chunkNo, int repDegree, byte[] data)
@@ -21,6 +22,7 @@ public class Chunk implements Comparator
 		this.setId(id);
 		this.setChunkNo(chunkNo);
 		this.setRepDegree(repDegree);
+		this.setDesiredRepDegree(repDegree);
 		String fileName = id + "#" + chunkNo;
 		this.filePath = Manager.getInstance().getPath(fileName); 
 		try 
@@ -66,6 +68,16 @@ public class Chunk implements Comparator
 	{
 		this.repDegree = repDegree;
 	}
+
+	public int getDesiredRepDegree()
+	{
+		return desiredRepDegree;
+	}
+
+	public void setDesiredRepDegree(int desiredRepDegree)
+	{
+		this.desiredRepDegree = desiredRepDegree;
+	}
 	
 	public byte[] retrieveChunkData()
 	{
@@ -98,7 +110,7 @@ public class Chunk implements Comparator
 	public boolean addToReplicationCount(int value) 
 	{
 		this.repDegree += value;
-		return this.repDegree > 0;
+		return this.repDegree < this.desiredRepDegree;
 	}
 
 	@Override
