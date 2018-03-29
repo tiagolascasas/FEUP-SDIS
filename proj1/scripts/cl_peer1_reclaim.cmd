@@ -1,3 +1,3 @@
 setlocal
 cd ../bin
-java client.Client %1:Message1 RECLAIM 0
+java testApp.TestApp %1:Message1 RECLAIM 0

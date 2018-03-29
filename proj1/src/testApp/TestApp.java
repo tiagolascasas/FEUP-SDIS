@@ -1,4 +1,4 @@
-package client;
+package testApp;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -7,7 +7,7 @@ import java.util.Base64;
 import peer.message.MessageRMI;
 import peer.Utilities;
 
-public class Client {
+public class TestApp {
 
 	public static void main(String[] args) {
 
@@ -79,7 +79,7 @@ public class Client {
 
 		} catch (Exception e)
 		{
-			Client.printUsage();
+			TestApp.printUsage();
 			return;
 		}
 
@@ -97,7 +97,7 @@ public class Client {
 		System.out.print("\n");
 	}
 
-	public Client() {}
+	public TestApp() {}
 
 
 }
