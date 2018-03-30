@@ -1,17 +1,19 @@
 package testApp;
 
+import java.nio.charset.StandardCharsets;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Base64;
 
-import peer.message.MessageRMI;
 import peer.Utilities;
+import peer.message.MessageRMI;
 
 public class TestApp {
 
 	public static void main(String[] args) {
 
 		String [] messageArgs;
+		boolean state = false;
 		byte[][] file = new byte[2][];
 		try {
 			String[] accessPoint = args[0].split(":");
@@ -27,7 +29,6 @@ public class TestApp {
 			}
 			Registry registry = LocateRegistry.getRegistry(host);
 			MessageRMI stub = (MessageRMI) registry.lookup(remoteObjectName);
-
 
 			switch(args[1].toUpperCase()) {
 			case "BACKUP":
@@ -57,6 +58,7 @@ public class TestApp {
 				}
 				throw new Exception();
 			case "STATE":
+				state=true;
 				if(args.length == 2)
 				{
 					messageArgs = new String[] {};
@@ -66,19 +68,25 @@ public class TestApp {
 			default:
 				throw new Exception();
 			}
+			byte[] response = stub.sendMessage(args[1], messageArgs, file);
 
-			byte[] response = stub.sendMessage(args[1].toUpperCase(), messageArgs, file);
-
-			if(response != null)
+			if(state)
 			{
+				System.out.print(new String(response, StandardCharsets.US_ASCII));
+				return;
+			} else if(args[1].equalsIgnoreCase("RESTORE"))
+			{
+
 				String[] filePath = args[2].split("/");
 				Utilities.binaryToFile(response, filePath[filePath.length-1]);
 			}
+
 
 			System.out.println("Message transmited successfully");
 
 		} catch (Exception e)
 		{
+			e.printStackTrace();
 			TestApp.printUsage();
 			return;
 		}

@@ -39,7 +39,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 	{
 
 		//TEST
-		test();
+		//test();
 		//TEST
 
 
@@ -60,6 +60,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 
 	public byte[] sendMessage(String operation, String[] args, byte[][] file) {
 		String msg = operation;
+		
 		byte[] message;
 		for(int i = 0; i<args.length;i++)
 		{
@@ -75,8 +76,12 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 		{
 			message = msg.getBytes(); 
 		}
-		this.processMessage(message);
-
+		if(operation.equalsIgnoreCase("STATE"))
+		{	
+			this.filecontent = Manager.getInstance().getCurrentState().getBytes();
+		} else {
+			this.processMessage(message);	
+		}
 		return this.filecontent; //returns file to client if restore or null for another option
 	}
 
@@ -88,7 +93,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 		String fileId;
 		//executa um rmi handler consoante o tipo de pedido
 		//Deletion, Reclamation, Restore ou Store
-		switch(operation)
+		switch(operation.toUpperCase())
 		{
 		case "BACKUP":
 			threads.execute(new BackupHandler(Base64.getDecoder().decode(msg[2].getBytes()), Base64.getDecoder().decode(msg[3].getBytes()), Integer.parseInt(msg[1])));
@@ -107,9 +112,6 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 			break;
 		case "RECLAIM":
 			threads.execute(new ReclamationHandler(Integer.parseInt(msg[1])));
-			break;
-		case "STATE":
-			threads.execute(new StateHandler());
 			break;			
 		}
 	}
@@ -127,7 +129,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 
 			//Sleep a bit until backup is done
 			try{Thread.sleep(12000);} catch (InterruptedException e){e.printStackTrace();}
-			
+
 			System.out.println(Manager.getInstance().getCurrentState());
 
 			//TEST RESTORE
@@ -145,12 +147,12 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 
 			//TEST DELETE
 			//threads.execute(new DeletionHandler(fileId));
-			
+
 			//TEST SPACE RECLAIMING
 			//threads.execute(new ReclamationHandler(0));
 
 			//TEST STATE
-			
+
 		}
 		//RUN THIS ONLY ON PEER 2
 		if (Manager.getInstance().getId() == 2)

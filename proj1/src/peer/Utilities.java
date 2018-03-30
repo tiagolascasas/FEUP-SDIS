@@ -31,8 +31,8 @@ public final class Utilities
 	{
 		try
 		{
-			File outfile = new File(name);
-			DataOutputStream stream = new DataOutputStream(new FileOutputStream("files_restored/" + outfile));
+			File outfile = new File("files_restored/" + name);
+			DataOutputStream stream = new DataOutputStream(new FileOutputStream(outfile));
 			stream.write(data, 0, data.length);
 			stream.close();
 		} 
