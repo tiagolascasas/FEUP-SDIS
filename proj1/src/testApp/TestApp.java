@@ -86,7 +86,7 @@ public class TestApp {
 	}
 
 	public static void printUsage() {
-		System.out.println("\nUsage: Client <peer_ap> <sub_protocol> [args...]\n");
+		System.out.println("\nUsage: TestApp <peer_ap> <sub_protocol> [args...]\n");
 		System.out.println("<peer-ap>\tpeer access point <hostname>:<name of remote object>\n");
 		System.out.println("List of available sub-protocols:\n");
 		System.out.println("BACKUP\t\t<file path> <replication degree>");

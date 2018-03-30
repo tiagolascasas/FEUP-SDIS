@@ -13,6 +13,7 @@ import peer.handler.rmi.BackupHandler;
 import peer.handler.rmi.DeletionHandler;
 import peer.handler.rmi.ReclamationHandler;
 import peer.handler.rmi.RestoreHandler;
+import peer.handler.rmi.StateHandler;
 import peer.message.MessageRMI;
 
 public class DispatcherRMI extends Dispatcher implements MessageRMI
@@ -84,7 +85,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 	{
 		String[] msg = new String(message, StandardCharsets.US_ASCII).split(" ");
 		String operation = msg[0];
-
+		String fileId;
 		//executa um rmi handler consoante o tipo de pedido
 		//Deletion, Reclamation, Restore ou Store
 		switch(operation)
@@ -94,20 +95,21 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 			break;
 		case "RESTORE":
 			int numberOfChunks = Utilities.calculateNumberOfChunks(Base64.getDecoder().decode(msg[1].getBytes()));
-			String fileId = Utilities.calculateFileId(Base64.getDecoder().decode(msg[2].getBytes()), Base64.getDecoder().decode(msg[1].getBytes()));
+			fileId = Utilities.calculateFileId(Base64.getDecoder().decode(msg[2].getBytes()), Base64.getDecoder().decode(msg[1].getBytes()));
 			threads.execute(new RestoreHandler(fileId, numberOfChunks));
 			RestoreManager man = Manager.getInstance().getRestoredManager();
 			while(!man.isComplete(fileId)) {}
 			this.filecontent = man.reassemble(fileId);
 			break;
 		case "DELETE":
-			//TODO call delete method
+			fileId = Utilities.calculateFileId(Base64.getDecoder().decode(msg[2].getBytes()), Base64.getDecoder().decode(msg[1].getBytes()));
+			threads.execute(new DeletionHandler(fileId));
 			break;
 		case "RECLAIM":
-			//TODO call reclaim method
+			threads.execute(new ReclamationHandler(Integer.parseInt(msg[1])));
 			break;
 		case "STATE":
-			//TODO call state method
+			threads.execute(new StateHandler());
 			break;			
 		}
 	}
