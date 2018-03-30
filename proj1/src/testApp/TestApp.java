@@ -86,7 +86,6 @@ public class TestApp {
 
 		} catch (Exception e)
 		{
-			e.printStackTrace();
 			TestApp.printUsage();
 			return;
 		}
