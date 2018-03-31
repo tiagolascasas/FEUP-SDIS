@@ -3,7 +3,6 @@ package peer;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -25,6 +25,9 @@ public class Manager
 	private McastID mc, mdr, mdb;
 	private MulticastSocket mcSocket, mdrSocket, mdbSocket;
 	private boolean allowSaving;
+	private ServerSocket tcpSocket;
+	private int tcpPort;
+	private String localIP;
 	
 	//single thread-safe manager to manage stored chunks
 	private static ChunkManager chunks;
@@ -45,15 +48,26 @@ public class Manager
 		return instance;
 	}
 	
-	public void init(String version, int id, McastID[] connections)
+	public void init(String version, int id, McastID[] connections, String ip)
 	{
 		this.setVersion(version);
 		this.setId(id);
 		this.mc = connections[0];
 		this.mdb = connections[1];
 		this.mdr = connections[2];
+		this.localIP = ip;
 		this.allowSaving = true;
 		restoreState();
+		
+		try
+		{
+			this.tcpSocket = new ServerSocket(0);
+			this.tcpPort = tcpSocket.getLocalPort();
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void setSockets(MulticastSocket mc, MulticastSocket mdr, MulticastSocket mdb)
@@ -83,6 +97,12 @@ public class Manager
 		this.id = id;
 	}
 	
+
+	public String getLocalIP()
+	{
+		return localIP;
+	}
+	
 	public InetAddress getAddress(Channels channel)
 	{
 		if (channel == Channels.MC)
@@ -102,6 +122,8 @@ public class Manager
 			return mdb.port;
 		if (channel == Channels.MDR)
 			return mdr.port;
+		if (channel == Channels.TCP)
+			return tcpPort;
 		return -1;
 	}
 	
@@ -114,7 +136,12 @@ public class Manager
 		if (channel == Channels.MDR)
 			return mdrSocket;
 		return null;
-	} 
+	}
+	
+	public ServerSocket getTCPSocket()
+	{
+		return this.tcpSocket;
+	}
 
 	public String getPath(String fileName) 
 	{

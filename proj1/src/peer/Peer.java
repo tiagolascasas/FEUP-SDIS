@@ -15,10 +15,10 @@ public class Peer extends Thread
 	Thread mdr;
 	Thread client;
 	
-	public Peer(String version, int serverID, String rmi, McastID[] connections) 
+	public Peer(String version, int serverID, String rmi, McastID[] connections, String ip) 
 	{
 		System.out.println("----------------------------------------------");
-		Manager.getInstance().init(version, serverID, connections);
+		Manager.getInstance().init(version, serverID, connections, ip);
 		this.rmiMethodName = rmi;
 		this.connections = connections;
 		

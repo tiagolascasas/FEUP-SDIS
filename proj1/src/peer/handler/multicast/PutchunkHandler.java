@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import peer.BackupManager;
 import peer.Channels;
 import peer.ChunkManager;
 import peer.Manager;
@@ -63,6 +64,11 @@ public class PutchunkHandler extends Handler
 			return;
 		
 		if (!Manager.getInstance().getAllowSaving())
+			return;
+		
+		//a peer that was ordered to store a file can never store a chunk of that file
+		BackupManager man = Manager.getInstance().getBackupsManager();
+		if (man.hasInitiated(id))
 			return;
 		
 		MessageRegister putchunkReg = Manager.getInstance().getPutchunkRegister();

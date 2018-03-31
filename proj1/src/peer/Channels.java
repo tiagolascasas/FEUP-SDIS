@@ -4,5 +4,6 @@ public enum Channels
 {
 	MC,
 	MDR,
-	MDB
+	MDB,
+	TCP
 }

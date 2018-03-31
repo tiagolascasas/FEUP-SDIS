@@ -17,8 +17,8 @@ public class TestClass
 		Manager.getInstance().init("1.0", 1, new McastID[] {
 				new McastID("224.0.16.0", "10001"),
 				new McastID("225.0.32.0", "20001"),
-				new McastID("226.0.64.0", "30001")
-		});
+				new McastID("226.0.64.0", "30001"),
+		}, "");
 		String s = "abcdefghijklmnopqrstuvwxyz0123456789\n";
 		/*
 		Manager.getInstance().store("1234", 1, 5, s.getBytes());

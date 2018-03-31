@@ -1,5 +1,9 @@
 package peer.handler.multicast;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
@@ -17,14 +21,24 @@ public class GetchunkHandler extends Handler
 	private int chunkNo;
 	private String id;
 	private int senderId;
+	private String version;
+	private int destinyPort;
+	private String destinyAddr;
 
 	public GetchunkHandler(byte[] message)
 	{
+		this.handlerType = "GetchunkHandler";
 		String[] elements = new String(message, StandardCharsets.US_ASCII).split(" ");
+		this.version = elements[1];
 		this.senderId = Integer.parseInt(elements[2]);
 		this.id = elements[3];
 		this.chunkNo = Integer.parseInt(elements[4]);
-		this.handlerType = "GetchunkHandler";
+		
+		if (this.version.equals("1.1"))
+		{
+			this.destinyPort = Integer.parseInt(elements[6]);
+			this.destinyAddr = elements[7];
+		}
 	}
 
 	@Override
@@ -32,7 +46,7 @@ public class GetchunkHandler extends Handler
 	{
 		if (this.senderId == Manager.getInstance().getId())
 			return;
-		
+
 		ChunkManager manager = Manager.getInstance().getChunkManager();
 		byte[] data = manager.retrieveChunkData(id, chunkNo);
 		if (data == null)
@@ -56,7 +70,26 @@ public class GetchunkHandler extends Handler
 			return;
 		chunkReg.unregisterChunk(id, chunkNo);
 		
-		send(Channels.MDR, message.getMessageBytes());
-		log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
+		String peerVersion = Manager.getInstance().getVersion();
+		if (this.version.equals("1.0") || (this.version.equals("1.1") && peerVersion.equals("1.0")))
+		{
+			send(Channels.MDR, message.getMessageBytes());
+			log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id) + " via Multicast");
+		}
+		if (this.version.equals("1.1") && peerVersion.equals("1.1"))
+		{
+			try
+			{
+				log("creating socket in port " + this.destinyPort + " and addr " + this.destinyAddr);
+				Socket socket = new Socket(this.destinyAddr, this.destinyPort);
+				socket.getOutputStream().write(message.getMessageBytes());
+				socket.close();
+				log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id) + " via TCP");
+			} 
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }

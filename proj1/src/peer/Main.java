@@ -4,10 +4,10 @@ public class Main
 {
 	public static void main(String[] args) 
 	{
-		if (args.length != 9)
+		if (args.length != 9 && args.length != 10)
 		{
 			System.out.println("Invalid number of arguments for P2P Server");
-			System.out.println("Usage: <protocol version> <server id> <rmi method name> <MC mcas addr> <MC port> <MDB mcas addr> <MDB port> <MDR mcas addr> <MDR port>");
+			System.out.println("Usage: <protocol version> <server id> <rmi method name> <MC mcas addr> <MC port> <MDB mcas addr> <MDB port> <MDR mcas addr> <MDR port> [<localIP>]");
 			return;
 		}
 		
@@ -25,8 +25,11 @@ public class Main
 		
 		int serverID;
 		serverID = (int)Double.parseDouble(args[1]);
+		String ip = null;
+		if (args.length == 10)
+			ip = args[9];
 		
-		Peer peer = new Peer(args[0], serverID, args[2], connections);
+		Peer peer = new Peer(args[0], serverID, args[2], connections, ip);
 		peer.run();
 		System.exit(0);
 	}

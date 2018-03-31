@@ -20,5 +20,5 @@ public abstract class Message
 		this.fileID = id;
 	}
 	
-	abstract byte[] getMessageBytes();
+	public abstract byte[] getMessageBytes();
 }

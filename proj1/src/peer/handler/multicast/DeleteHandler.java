@@ -29,11 +29,5 @@ public class DeleteHandler extends Handler
 		
 		if (removed.size() > 0)
 			log("deleted " + removed.size() + " chunks of file with id = "+ Utilities.minifyId(id));
-		
-		for (int i = 0; i < removed.size(); i++)
-		{
-			MessageRemoved message = new MessageRemoved(id.getBytes(), removed.get(i));
-			send(Channels.MC, message.getMessageBytes());
-		}
 	}
 }
