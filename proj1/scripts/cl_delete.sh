@@ -1,2 +1,2 @@
 cd ../bin
-java testApp.TestApp $1:Message$2 DELETE $3
+java testApp.TestApp $1:Message$2 DELETE files_original/$3

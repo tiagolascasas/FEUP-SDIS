@@ -1,3 +1,3 @@
 setlocal
 cd ../bin
-java testApp.TestApp %1:Message%2 RESTORE %3
+java testApp.TestApp %1:Message%2 RESTORE files_original/%3
