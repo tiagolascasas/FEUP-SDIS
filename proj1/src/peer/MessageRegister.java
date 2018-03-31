@@ -22,14 +22,14 @@ public class MessageRegister implements Serializable
 		interrupted.put(id, false); 
 	}
 	
-	public synchronized void setInterrupted(String fileId, int chunkNo)
+	public synchronized void setArrived(String fileId, int chunkNo)
 	{
 		String id = fileId + chunkNo;
 		if (interrupted.get(id) != null)
 			interrupted.put(id, true);
 	}
 	
-	public synchronized boolean isInterrupted(String fileId, int chunkNo)
+	public synchronized boolean isArrived(String fileId, int chunkNo)
 	{
 		String id = fileId + chunkNo;
 		if (interrupted.get(id) != null)
@@ -44,7 +44,7 @@ public class MessageRegister implements Serializable
 	}
 	
 	public synchronized String getState()
-	{
+	{/*
 		StringBuilder state = new StringBuilder();
 		state.append("RECLAIM/REMOVED MANAGER - information about the the chunks this peer started the\n")
 			 .append("backup subprotocol upon getting an insufficient rep. degree for that chunk.\n")
@@ -65,6 +65,7 @@ public class MessageRegister implements Serializable
 		if (interrupted.size() == 0)
 			state.append("\t(looks like this peer is not initializing any backup subprotocol after a removed message receival)\n");
 		state.append("\n");
-		return state.toString();
+		return state.toString();*/
+		return "\n";
 	}
 }

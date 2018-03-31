@@ -65,8 +65,8 @@ public class PutchunkHandler extends Handler
 		if (!Manager.getInstance().getAllowSaving())
 			return;
 		
-		MessageRegister recManager = Manager.getInstance().getReclaimManager();
-		recManager.setInterrupted(id, chunkNo);
+		MessageRegister putchunkReg = Manager.getInstance().getPutchunkRegister();
+		putchunkReg.setArrived(id, chunkNo);
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
 		if (!manager.storeChunk(id, chunkNo, repDeg, data))

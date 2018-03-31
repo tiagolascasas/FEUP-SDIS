@@ -39,15 +39,16 @@ public class RemovedHandler extends Handler
 			return;
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
-		MessageRegister recManager = Manager.getInstance().getReclaimManager();
 		BackupManager bkManager = Manager.getInstance().getBackupsManager();
+		
+		MessageRegister putchunkReg = Manager.getInstance().getPutchunkRegister();
 		
 		if (bkManager.hasInitiated(id))
 			return;
 		
 		if (manager.decreaseReplicationCount(id, chunkNo))
 		{
-			recManager.registerNewChunk(id, chunkNo);
+			putchunkReg.registerNewChunk(id, chunkNo);
 			
 			Chunk chunk = manager.findChunk(id, chunkNo);
 			MessagePutchunk message = new MessagePutchunk(id.getBytes(), chunkNo, chunk.getDesiredRepDegree());
@@ -63,12 +64,11 @@ public class RemovedHandler extends Handler
 			{
 				e.printStackTrace();
 			}
-			if (recManager.isInterrupted(id, chunkNo))
+			if (putchunkReg.isArrived(id, chunkNo))
 				return;
-			recManager.unregisterChunk(id, chunkNo);
+			putchunkReg.unregisterChunk(id, chunkNo);
 			
 			send(Channels.MDB, message.getMessageBytes());
-			
 			log("decreased rep count of chunk " + chunkNo + " of file " + Utilities.minifyId(id) + ", started backup subprotocol for that chunk");
 		}
 		else

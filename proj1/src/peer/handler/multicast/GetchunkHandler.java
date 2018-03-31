@@ -6,6 +6,7 @@ import java.util.Random;
 import peer.Channels;
 import peer.ChunkManager;
 import peer.Manager;
+import peer.MessageRegister;
 import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.MessageChunk;
@@ -38,6 +39,9 @@ public class GetchunkHandler extends Handler
 			return;
 		MessageChunk message = new MessageChunk(id.getBytes(), chunkNo, data);
 		
+		MessageRegister chunkReg = Manager.getInstance().getChunkRegister();
+		chunkReg.registerNewChunk(id, chunkNo);
+		
 		Random r = new Random();
 		int time = r.nextInt(MAX_WAIT);
 		try
@@ -48,10 +52,11 @@ public class GetchunkHandler extends Handler
 		{
 			e.printStackTrace();
 		}
-		//check if another arrived
+		if (chunkReg.isArrived(id, chunkNo))
+			return;
+		chunkReg.unregisterChunk(id, chunkNo);
 		
-		//if not, send
-		log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
 		send(Channels.MDR, message.getMessageBytes());
+		log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
 	}
 }

@@ -3,6 +3,7 @@ package peer.handler.multicast;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import peer.Manager;
+import peer.MessageRegister;
 import peer.RestoreManager;
 import peer.Utilities;
 import peer.handler.Handler;
@@ -23,7 +24,7 @@ public class ChunkHandler extends Handler
 		if (this.senderId == Manager.getInstance().getId())
 			return;
 		this.id = elements[3];
-		this.chunkNo = Integer.parseInt(elements[4]);int i;
+		this.chunkNo = Integer.parseInt(elements[4]);
 
 		this.data = new String(message, StandardCharsets.ISO_8859_1).split("\r\n\r\n", 2)[1].getBytes();
 		/* 
@@ -50,6 +51,9 @@ public class ChunkHandler extends Handler
 	{	
 		if (this.senderId == Manager.getInstance().getId())
 			return;
+		
+		MessageRegister chunkReg = Manager.getInstance().getChunkRegister();
+		chunkReg.setArrived(id, chunkNo);
 		
 		RestoreManager manager = Manager.getInstance().getRestoredManager();
 		if (!manager.storeChunk(id, chunkNo, data))

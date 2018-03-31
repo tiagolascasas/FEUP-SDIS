@@ -32,8 +32,11 @@ public class Manager
 	private static BackupManager backups;
 	//single thread-safe manager to manage files this peer was told to restore
 	private static RestoreManager restores;
-	//single thread-safe manager to manage chunks that arrived during a transmission in the reclaim protocol
-	private static MessageRegister reclaims;
+	
+	//registers PUTCHUNK messages that arrived during a transmission in the reclaim protocol
+	private static MessageRegister putchunkRegister;
+	//registers CHUNK messages that arrived during a transmission in the restore protocol
+	private static MessageRegister chunkRegister;
 	
 	private Manager() {}
 	
@@ -141,9 +144,14 @@ public class Manager
 		return restores;
 	}
 	
-	public MessageRegister getReclaimManager()
+	public MessageRegister getPutchunkRegister()
 	{
-		return reclaims;
+		return putchunkRegister;
+	}
+	
+	public MessageRegister getChunkRegister()
+	{
+		return chunkRegister;
 	}
 
 	public void setAllowSaving(boolean allow)
@@ -165,7 +173,7 @@ public class Manager
 			outStr.writeObject(Manager.chunks);
 			outStr.writeObject(Manager.backups);
 			outStr.writeObject(Manager.restores);
-			outStr.writeObject(Manager.reclaims);
+			outStr.writeObject(Manager.putchunkRegister);
 			outStr.close();
 		} 
 		catch (IOException e)
@@ -185,7 +193,8 @@ public class Manager
 			Manager.chunks = (ChunkManager)objectStream.readObject();
 			Manager.backups = (BackupManager)objectStream.readObject();
 			Manager.restores = (RestoreManager)objectStream.readObject();
-			Manager.reclaims = (MessageRegister)objectStream.readObject();
+			Manager.putchunkRegister = (MessageRegister)objectStream.readObject();
+			Manager.chunkRegister = (MessageRegister)objectStream.readObject();
 			objectStream.close();
 		} 
 		catch (IOException | ClassNotFoundException e)
@@ -194,7 +203,8 @@ public class Manager
 			Manager.backups = new BackupManager();
 			Manager.chunks = new ChunkManager();
 			Manager.restores = new RestoreManager();
-			Manager.reclaims = new MessageRegister();
+			Manager.putchunkRegister = new MessageRegister();
+			Manager.chunkRegister = new MessageRegister();
 			return;
 		}
 	}
@@ -224,7 +234,9 @@ public class Manager
 		      .append("-------------------------------------------------------------------------------------\n")
 		      .append(restores.getState())
 		      .append("-------------------------------------------------------------------------------------\n")
-		      .append(reclaims.getState())
+		      .append(putchunkRegister.getState())
+		      .append("-------------------------------------------------------------------------------------\n")
+		      .append(chunkRegister.getState())
 		      .append("\n");
 		return state.toString();
 	}
