@@ -33,7 +33,7 @@ public class Manager
 	//single thread-safe manager to manage files this peer was told to restore
 	private static RestoreManager restores;
 	//single thread-safe manager to manage chunks that arrived during a transmission in the reclaim protocol
-	private static ReclaimManager reclaims;
+	private static MessageRegister reclaims;
 	
 	private Manager() {}
 	
@@ -141,7 +141,7 @@ public class Manager
 		return restores;
 	}
 	
-	public ReclaimManager getReclaimManager()
+	public MessageRegister getReclaimManager()
 	{
 		return reclaims;
 	}
@@ -185,7 +185,7 @@ public class Manager
 			Manager.chunks = (ChunkManager)objectStream.readObject();
 			Manager.backups = (BackupManager)objectStream.readObject();
 			Manager.restores = (RestoreManager)objectStream.readObject();
-			Manager.reclaims = (ReclaimManager)objectStream.readObject();
+			Manager.reclaims = (MessageRegister)objectStream.readObject();
 			objectStream.close();
 		} 
 		catch (IOException | ClassNotFoundException e)
@@ -194,7 +194,7 @@ public class Manager
 			Manager.backups = new BackupManager();
 			Manager.chunks = new ChunkManager();
 			Manager.restores = new RestoreManager();
-			Manager.reclaims = new ReclaimManager();
+			Manager.reclaims = new MessageRegister();
 			return;
 		}
 	}
@@ -216,7 +216,7 @@ public class Manager
 		      .append(freeSpace / 1000000000)
 		      .append(" Gb (")
 		      .append(freeSpace)
-		      .append(" bytes)\n\n)")
+		      .append(" bytes)\n\n")
 		      .append("-------------------------------------------------------------------------------------\n")
 		      .append(chunks.getState())
 		      .append("-------------------------------------------------------------------------------------\n")

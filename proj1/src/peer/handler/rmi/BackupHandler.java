@@ -1,7 +1,5 @@
 package peer.handler.rmi;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import peer.Channels;
@@ -14,7 +12,7 @@ import peer.message.MessagePutchunk;
 public class BackupHandler extends Handler
 {
 	public static final int MAX_CHUNK_SIZE = 64000;
-	private static final int MAX_RETRIES = 5;
+	private static final int MAX_RETRIES = 5; 
 	private byte[] file;
 	private byte[] metadata;
 	private int repDegree;
@@ -37,8 +35,6 @@ public class BackupHandler extends Handler
 		manager.createNewEntry(this.fileId, chunks.size());
 		int retries = 0;
 		int waitingTime = 1000;
-		
-		log("running stored handler for file with id " + Utilities.minifyId(this.fileId));
 		
 		while (retries < MAX_RETRIES)
 		{
@@ -72,7 +68,9 @@ public class BackupHandler extends Handler
 		int fileSize = file.length;
 		int chunkNo = 0;
 		int pos = 0;
-		
+		boolean lastChunkEmpty = fileSize % MAX_CHUNK_SIZE == 0;
+		log("running stored handler for file with id " + Utilities.minifyId(this.fileId) + ", size " + fileSize + " bytes");
+		 
 		while(fileSize > 0)
 		{
 			MessagePutchunk message = new MessagePutchunk(fileId.getBytes(), chunkNo, repDegree);
@@ -83,6 +81,12 @@ public class BackupHandler extends Handler
 			fileSize -= chunkSize;
 			pos += chunkSize;
 			chunkNo++;
+			chunks.add(message);
+		}
+		if (lastChunkEmpty)
+		{
+			MessagePutchunk message = new MessagePutchunk(fileId.getBytes(), chunkNo, repDegree);
+			message.setBody(new byte[0]);
 			chunks.add(message);
 		}
 		return chunks;

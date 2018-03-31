@@ -13,7 +13,6 @@ import peer.handler.rmi.BackupHandler;
 import peer.handler.rmi.DeletionHandler;
 import peer.handler.rmi.ReclamationHandler;
 import peer.handler.rmi.RestoreHandler;
-import peer.handler.rmi.StateHandler;
 import peer.message.MessageRMI;
 
 public class DispatcherRMI extends Dispatcher implements MessageRMI

@@ -114,7 +114,7 @@ public class ChunkManager implements Serializable
 			Chunk chunk = chunks.elementAt(i);
 			state.append(chunk.getId())
 					.append(" | ")
-					.append(chunk.getId())
+					.append(chunk.getChunkNo())
 					.append(" | ")
 					.append(chunk.getRepDegree())
 					.append(" | ")

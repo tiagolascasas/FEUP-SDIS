@@ -48,6 +48,9 @@ public class GetchunkHandler extends Handler
 		{
 			e.printStackTrace();
 		}
+		//check if another arrived
+		
+		//if not, send
 		log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
 		send(Channels.MDR, message.getMessageBytes());
 	}

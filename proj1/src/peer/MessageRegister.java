@@ -6,12 +6,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ReclaimManager implements Serializable
+public class MessageRegister implements Serializable
 {
 	private static final long serialVersionUID = 3873468185792885428L;
 	ConcurrentHashMap<String, Boolean> interrupted;
 	
-	public ReclaimManager()
+	public MessageRegister()
 	{
 		this.interrupted = new ConcurrentHashMap<String, Boolean>();
 	}

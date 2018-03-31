@@ -68,12 +68,15 @@ public class RestoreManager implements Serializable
 		byte[] reassembly = new byte[file.size() * BackupHandler.MAX_CHUNK_SIZE * 2];
 		
 		int index = 0;
-		for (int i = 0; i < file.size(); i++, index++)
+		for (int i = 0; i < file.size(); i++)
 		{
 			ArrayList<Byte> chunk = file.get(i);
-			int size = chunk.size() > 64000 ? 64000 : chunk.size();
-			for (int j = 0; j < size; j++, index++)
+			int size = chunk.size();
+			for (int j = 0; j < size; j++)
+			{
 				reassembly[index] = chunk.get(j);
+				index++;
+			}
 		}
 		return Arrays.copyOfRange(reassembly, 0, index);
 	}

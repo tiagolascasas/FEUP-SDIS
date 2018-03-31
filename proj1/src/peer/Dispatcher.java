@@ -21,12 +21,15 @@ public abstract class Dispatcher extends Thread
 			try
 			{
 				socket.receive(recPacket);
+				int len = recPacket.getLength();
+				byte[] received = new byte[len];
+				System.arraycopy(recPacket.getData(), 0, received, 0, len);
+				processMessage(received);
 			} 
 			catch (IOException e)
 			{
 				e.printStackTrace();
 			}
-			processMessage(recPacket.getData());
 		}
 	}
 	

@@ -20,9 +20,13 @@ public class ChunkHandler extends Handler
 		this.handlerType = "ChunkHandler";
 		String[] elements = new String(message, StandardCharsets.US_ASCII).split(" ");
 		this.senderId = Integer.parseInt(elements[2]);
+		if (this.senderId == Manager.getInstance().getId())
+			return;
 		this.id = elements[3];
-		this.chunkNo = Integer.parseInt(elements[4]);
+		this.chunkNo = Integer.parseInt(elements[4]);int i;
 
+		this.data = new String(message, StandardCharsets.ISO_8859_1).split("\r\n\r\n", 2)[1].getBytes();
+		/* 
 		ArrayList<Byte> allData = new ArrayList<Byte>();
 		int dataStart = 0;
 		for (int i = 0; i < message.length; i++)
@@ -33,11 +37,12 @@ public class ChunkHandler extends Handler
 				message[i+3] == Message.LF)
 				dataStart = i + 4;
 		}
+		
 		for (int i = dataStart; i < message.length; i++)
 			allData.add(message[i]);
 		this.data = new byte[allData.size()];
 		for (int i = 0; i < allData.size(); i++)
-			this.data[i] = allData.get(i);
+			this.data[i] = allData.get(i);*/
 	}
 	
 	@Override

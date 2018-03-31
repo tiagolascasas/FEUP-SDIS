@@ -8,7 +8,7 @@ import peer.Channels;
 import peer.Chunk;
 import peer.ChunkManager;
 import peer.Manager;
-import peer.ReclaimManager;
+import peer.MessageRegister;
 import peer.RestoreManager;
 import peer.Utilities;
 import peer.handler.Handler;
@@ -26,6 +26,8 @@ public class RemovedHandler extends Handler
 		this.handlerType = "RemovedHandler";
 		String[] elements = new String(message, StandardCharsets.US_ASCII).split(" ");
 		this.senderId = Integer.parseInt(elements[2]);
+		if (this.senderId == Manager.getInstance().getId())
+			return;
 		this.id = elements[3];
 		this.chunkNo = Integer.parseInt(elements[4]);
 	}
@@ -37,7 +39,7 @@ public class RemovedHandler extends Handler
 			return;
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
-		ReclaimManager recManager = Manager.getInstance().getReclaimManager();
+		MessageRegister recManager = Manager.getInstance().getReclaimManager();
 		BackupManager bkManager = Manager.getInstance().getBackupsManager();
 		
 		if (bkManager.hasInitiated(id))

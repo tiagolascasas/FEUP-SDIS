@@ -1,4 +1,5 @@
 setlocal
 cd ../bin
-start /B rmiregistry
+taskkill /f /t /im rmiregistry.exe
+start /b rmiregistry
 cls
