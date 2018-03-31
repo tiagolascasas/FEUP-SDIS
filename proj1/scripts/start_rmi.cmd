@@ -1,0 +1,3 @@
+setlocal
+cd ../bin
+rmiregistry ^&

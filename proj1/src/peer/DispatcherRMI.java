@@ -117,7 +117,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 	}
 
 	void test()
-	{
+	{/*
 		//TESTS ONLY RUN ON PEER 1
 		if (Manager.getInstance().getId() == 1)
 		{
@@ -152,7 +152,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 			//threads.execute(new ReclamationHandler(0));
 
 			//TEST STATE
-
+		/*
 		}
 		//RUN THIS ONLY ON PEER 2
 		if (Manager.getInstance().getId() == 2)
@@ -162,6 +162,6 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 			threads.execute(new ReclamationHandler(0));
 		}
 		//DO NOTHING MORE
-		while(true) {}
+		while(true) {} */
 	}
 }
