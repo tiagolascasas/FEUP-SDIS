@@ -1,3 +1,4 @@
 setlocal
 cd ../bin
-rmiregistry ^&
+start /B rmiregistry
+cls

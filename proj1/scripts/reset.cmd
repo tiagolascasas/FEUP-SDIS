@@ -1,7 +1,8 @@
 setlocal
 cd ../bin
-del /f state_peer*
-del /f backups_peer*
+del /F state_peer*
+for /d %%x in (backups_peer*) do rd /s /q "%%x"
 cd files_restored
-del /f test*
+del /F test*
 cd ..
+cls
