@@ -29,11 +29,12 @@ public class PutchunkHandler extends Handler
 		this.handlerType = "PutchunkHandler";
 		String[] elements = new String(message, StandardCharsets.US_ASCII).split(" ");
 		this.senderId = Integer.parseInt(elements[2]);
-		if (this.senderId == Manager.getInstance().getId())
-			return;
 		this.id = elements[3];
 		this.chunkNo = Integer.parseInt(elements[4]);
 		this.repDeg = Integer.parseInt(elements[5]);
+		
+		if (this.senderId == Manager.getInstance().getId())
+			return;
 		
 		this.data = new String(message, StandardCharsets.US_ASCII).split("\r\n\r\n", 2)[1].getBytes();
 		/*
@@ -60,6 +61,11 @@ public class PutchunkHandler extends Handler
 	@Override
 	public void run()
 	{	
+		//Enhancement: if peer receives a Putchunk for a file it sent a delete order
+		//previously, then it should remove the record of that order
+		//this should be done even if this was the initiator peer for the backup
+		Manager.getInstance().unregisterDelete(this.id);
+		
 		if (this.senderId == Manager.getInstance().getId())
 			return;
 		

@@ -11,7 +11,7 @@ public abstract class Handler extends Thread
 {
 	protected String handlerType;
 	
-	public void send(Channels channel, byte[] message)
+	public static void send(Channels channel, byte[] message)
 	{
 		DatagramPacket packet = new DatagramPacket(
 							message,

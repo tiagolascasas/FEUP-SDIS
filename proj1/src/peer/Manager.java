@@ -14,6 +14,8 @@ import java.net.MulticastSocket;
 import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class Manager
 {
@@ -28,6 +30,7 @@ public class Manager
 	private ServerSocket tcpSocket;
 	private int tcpPort;
 	private String localIP;
+	private static TreeSet<String> deletedSent;
 	
 	//single thread-safe manager to manage stored chunks
 	private static ChunkManager chunks;
@@ -191,6 +194,21 @@ public class Manager
 		return allowSaving;
 	}
 	
+	public TreeSet<String> getDeletedSent()
+	{
+		return Manager.deletedSent;
+	}
+	
+	public synchronized void registerDelete(String fileId)
+	{
+		Manager.deletedSent.add(fileId);
+	}
+	
+	public synchronized void unregisterDelete(String fileId)
+	{
+		Manager.deletedSent.remove(fileId);
+	}
+	
 	public void saveState()
 	{
 		String serName = "state_peer" + this.id;
@@ -201,6 +219,8 @@ public class Manager
 			outStr.writeObject(Manager.backups);
 			outStr.writeObject(Manager.restores);
 			outStr.writeObject(Manager.putchunkRegister);
+			outStr.writeObject(Manager.chunkRegister);
+			outStr.writeObject(Manager.deletedSent);
 			outStr.close();
 		} 
 		catch (IOException e)
@@ -222,6 +242,7 @@ public class Manager
 			Manager.restores = (RestoreManager)objectStream.readObject();
 			Manager.putchunkRegister = (MessageRegister)objectStream.readObject();
 			Manager.chunkRegister = (MessageRegister)objectStream.readObject();
+			Manager.deletedSent = (TreeSet<String>)objectStream.readObject();
 			objectStream.close();
 		} 
 		catch (IOException | ClassNotFoundException e)
@@ -232,6 +253,7 @@ public class Manager
 			Manager.restores = new RestoreManager();
 			Manager.putchunkRegister = new MessageRegister();
 			Manager.chunkRegister = new MessageRegister();
+			Manager.deletedSent = new TreeSet<String>();
 			return;
 		}
 	}

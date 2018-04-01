@@ -1,6 +1,7 @@
 package peer.handler.rmi;
 
 import peer.Channels;
+import peer.Manager;
 import peer.Utilities;
 import peer.handler.Handler;
 import peer.message.MessageDelete;
@@ -22,6 +23,10 @@ public class DeletionHandler extends Handler
 		MessageDelete message = new MessageDelete(fileId.getBytes());
 		int numberOfRetries = 0;
 		int timeToWait = 1000;
+		
+		//Enhancement: take note of this delete
+		Manager.getInstance().registerDelete(fileId);
+		
 		while(numberOfRetries < MAX_RETRIES)
 		{
 			send(Channels.MC, message.getMessageBytes());

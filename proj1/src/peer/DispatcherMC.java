@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import peer.handler.multicast.DeleteHandler;
 import peer.handler.multicast.GetchunkHandler;
+import peer.handler.multicast.OnlineHandler;
 import peer.handler.multicast.RemovedHandler;
 import peer.handler.multicast.StoredHandler;
 
@@ -27,7 +28,7 @@ public class DispatcherMC extends Dispatcher
 	@Override
 	void processMessage(byte[] message)
 	{
-		String type = new String(message, StandardCharsets.US_ASCII).split(" ")[0];
+		String type = new String(message, StandardCharsets.US_ASCII).split(" ", 2)[0];
 		
 		switch(type.toUpperCase())
 		{
@@ -42,6 +43,9 @@ public class DispatcherMC extends Dispatcher
 				break;
 			case "REMOVED":
 				threads.execute(new RemovedHandler(message));
+				break;
+			case "ONLINE":
+				threads.execute(new OnlineHandler(message));
 				break;
 			default:
 				break;

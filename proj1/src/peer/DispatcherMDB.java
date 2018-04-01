@@ -24,7 +24,7 @@ public class DispatcherMDB extends Dispatcher
 	@Override
 	void processMessage(byte[] message)
 	{
-		String type = new String(message, StandardCharsets.US_ASCII).split(" ")[0];
+		String type = new String(message, StandardCharsets.US_ASCII).split(" ", 2)[0];
 		
 		switch(type.toUpperCase())
 		{

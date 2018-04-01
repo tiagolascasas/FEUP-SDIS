@@ -3,6 +3,9 @@ package peer;
 import java.net.MulticastSocket;
 import java.util.concurrent.CountDownLatch;
 
+import peer.handler.Handler;
+import peer.message.MessageOnline;
+
 public class Peer extends Thread
 {
 	private String rmiMethodName;
@@ -58,12 +61,14 @@ public class Peer extends Thread
 	@Override
 	public void run()
 	{
-		//installSignalHandler();
-		
 		mc.start();
 		mdb.start();
 		mdr.start();
 		client.start();
+		
+		//Enhancement: send ONLINE message upon start
+		MessageOnline message = new MessageOnline();
+		Handler.send(Channels.MC, message.getMessageBytes());
 		
 		while (true)
 		{
@@ -77,19 +82,5 @@ public class Peer extends Thread
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public void installSignalHandler()
-	{
-		Runtime.getRuntime().addShutdownHook(new Thread()
-        {
-            @Override
-            public void run()
-            {
-            	Manager.getInstance().saveState();
-				System.out.println("Exiting...");
-				System.exit(0);
-            }
-        });
 	}
 }
