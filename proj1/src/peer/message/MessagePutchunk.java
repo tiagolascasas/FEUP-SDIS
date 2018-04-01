@@ -2,6 +2,8 @@ package peer.message;
 
 import java.nio.charset.StandardCharsets;
 
+import peer.Utilities;
+
 public class MessagePutchunk extends Message 
 {
 	private int chunkNo;

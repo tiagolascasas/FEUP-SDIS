@@ -30,7 +30,7 @@ public class DispatcherMC extends Dispatcher
 	{
 		String type = new String(message, StandardCharsets.US_ASCII).split(" ", 2)[0];
 		
-		switch(type.toUpperCase())
+		switch(type)
 		{
 			case "STORED":
 				threads.execute(new StoredHandler(message));

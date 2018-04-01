@@ -26,10 +26,8 @@ public class ChunkHandler extends Handler
 		this.id = elements[3];
 		this.chunkNo = Integer.parseInt(elements[4]);
 
-		this.data = new String(message, StandardCharsets.ISO_8859_1).split("\r\n\r\n", 2)[1].getBytes();
-		/* 
 		ArrayList<Byte> allData = new ArrayList<Byte>();
-		int dataStart = 0;
+		int dataStart = -1;
 		for (int i = 0; i < message.length; i++)
 		{
 			if (message[i] == Message.CR &&
@@ -43,7 +41,7 @@ public class ChunkHandler extends Handler
 			allData.add(message[i]);
 		this.data = new byte[allData.size()];
 		for (int i = 0; i < allData.size(); i++)
-			this.data[i] = allData.get(i);*/
+			this.data[i] = allData.get(i);
 	}
 	
 	@Override

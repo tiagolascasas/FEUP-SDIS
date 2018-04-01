@@ -35,11 +35,9 @@ public class PutchunkHandler extends Handler
 		
 		if (this.senderId == Manager.getInstance().getId())
 			return;
-		
-		this.data = new String(message, StandardCharsets.US_ASCII).split("\r\n\r\n", 2)[1].getBytes();
-		/*
+
 		ArrayList<Byte> allData = new ArrayList<Byte>();
-		int dataStart = 0;
+		int dataStart = -1;
 		for (int i = 0; i < message.length; i++)
 		{
 			if (message[i] == Message.CR &&
@@ -54,8 +52,6 @@ public class PutchunkHandler extends Handler
 		this.data = new byte[allData.size()];
 		for (int i = 0; i < allData.size(); i++)
 			this.data[i] = allData.get(i);
-		log("message has size " + message.length);
-		log("chunk has size " + this.data.length);*/
 	}
 	
 	@Override

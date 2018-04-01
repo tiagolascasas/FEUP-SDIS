@@ -31,8 +31,7 @@ public class Chunk implements Comparator, Serializable
 		{
 			File file = new File(filePath);
 			DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
-			int sizeToWrite = data.length > 64000 ? 64000 : data.length;
-			stream.write(data, 0, sizeToWrite);
+			stream.write(data, 0, data.length);
 			stream.close();
 		} 
 		catch (IOException e) 

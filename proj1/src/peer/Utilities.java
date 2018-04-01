@@ -97,4 +97,18 @@ public final class Utilities
 	{
 		return id.substring(0, 5) + "...";
 	}
+	
+	static public String simpleHash(byte[] data)
+	{
+		MessageDigest digest = null;
+		try
+		{
+			digest = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+		}
+		byte[] hash = digest.digest(data);
+		return minifyId(hexToAscii(hash));
+	}
 }

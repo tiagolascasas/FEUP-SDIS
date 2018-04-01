@@ -26,7 +26,7 @@ public class DispatcherMDB extends Dispatcher
 	{
 		String type = new String(message, StandardCharsets.US_ASCII).split(" ", 2)[0];
 		
-		switch(type.toUpperCase())
+		switch(type)
 		{
 			case "PUTCHUNK":
 				threads.execute(new PutchunkHandler(message));
