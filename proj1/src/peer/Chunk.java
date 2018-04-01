@@ -30,9 +30,14 @@ public class Chunk implements Comparator, Serializable
 		try 
 		{
 			File file = new File(filePath);
-			DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
-			stream.write(data, 0, data.length);
-			stream.close();
+			if (data != null) 
+			{
+				DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
+				stream.write(data, 0, data.length);
+				stream.close();
+			}
+			else
+				file.createNewFile();
 		} 
 		catch (IOException e) 
 		{

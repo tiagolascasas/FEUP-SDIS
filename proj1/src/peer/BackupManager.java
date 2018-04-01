@@ -1,10 +1,8 @@
 package peer;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +16,7 @@ public class BackupManager implements Serializable
 		this.counts = new ConcurrentHashMap<String, ArrayList<Integer>>();
 	}
 	
-	public void createNewEntry(String fileId, int numberOfChunks)
+	public synchronized void createNewEntry(String fileId, int numberOfChunks)
 	{
 		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(numberOfChunks, 0));
 		counts.put(fileId, arr);
@@ -29,7 +27,7 @@ public class BackupManager implements Serializable
 		return counts.get(fileId) == null ? false : true; 
 	}
 	
-	public boolean increment(String fileId, int chunkNo)
+	public synchronized boolean increment(String fileId, int chunkNo)
 	{
 		if (counts.get(fileId) == null)
 			return false;
@@ -42,7 +40,7 @@ public class BackupManager implements Serializable
 		return counts.get(fileId).get(chunkNo);
 	}
 	
-	public ArrayList<Integer> getChunksBelowDegree(String fileId, int degree)
+	public synchronized ArrayList<Integer> getChunksBelowDegree(String fileId, int degree)
 	{
 		ArrayList<Integer> repDegs = counts.get(fileId);
 		ArrayList<Integer> res = new ArrayList<Integer>();

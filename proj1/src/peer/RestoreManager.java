@@ -3,7 +3,6 @@ package peer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import peer.handler.rmi.BackupHandler;
@@ -34,6 +33,12 @@ public class RestoreManager implements Serializable
 		
 		if (file.get(chunkNo) != null)
 			return false;
+		
+		if (data == null && chunkNo == file.size() - 1)
+		{
+			file.remove(chunkNo);
+			return true;
+		}
 		
 		ArrayList<Byte> dataArray = new ArrayList<Byte>();
 		for (int i = 0; i < data.length; i++)

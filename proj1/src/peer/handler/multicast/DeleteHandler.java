@@ -3,12 +3,10 @@ package peer.handler.multicast;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import peer.Channels;
 import peer.ChunkManager;
 import peer.Manager;
 import peer.Utilities;
 import peer.handler.Handler;
-import peer.message.MessageRemoved;
 
 public class DeleteHandler extends Handler
 {

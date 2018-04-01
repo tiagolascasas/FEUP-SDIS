@@ -1,9 +1,7 @@
 package peer.handler.multicast;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
@@ -80,7 +78,6 @@ public class GetchunkHandler extends Handler
 		{
 			try
 			{
-				log("creating socket in port " + this.destinyPort + " and addr " + this.destinyAddr);
 				Socket socket = new Socket(this.destinyAddr, this.destinyPort);
 				socket.getOutputStream().write(message.getMessageBytes());
 				socket.close();

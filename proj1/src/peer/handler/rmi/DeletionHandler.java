@@ -24,7 +24,7 @@ public class DeletionHandler extends Handler
 		int numberOfRetries = 0;
 		int timeToWait = 1000;
 		
-		//Enhancement: take note of this delete
+		//Enhancement: take note of this DELETE message
 		Manager.getInstance().registerDelete(fileId);
 		
 		while(numberOfRetries < MAX_RETRIES)

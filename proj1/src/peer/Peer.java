@@ -1,8 +1,6 @@
 package peer;
 
 import java.net.MulticastSocket;
-import java.util.concurrent.CountDownLatch;
-
 import peer.handler.Handler;
 import peer.message.MessageOnline;
 

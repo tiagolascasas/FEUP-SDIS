@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import peer.handler.multicast.ChunkHandler;
-import peer.handler.multicast.PutchunkHandler;
 
 public class DispatcherMDR extends Dispatcher
 {

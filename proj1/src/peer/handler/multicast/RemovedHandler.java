@@ -9,10 +9,8 @@ import peer.Chunk;
 import peer.ChunkManager;
 import peer.Manager;
 import peer.MessageRegister;
-import peer.RestoreManager;
 import peer.Utilities;
 import peer.handler.Handler;
-import peer.message.MessageChunk;
 import peer.message.MessagePutchunk;
 
 public class RemovedHandler extends Handler

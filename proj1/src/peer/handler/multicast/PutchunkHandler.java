@@ -2,7 +2,6 @@ package peer.handler.multicast;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 import peer.BackupManager;
@@ -44,8 +43,13 @@ public class PutchunkHandler extends Handler
 				message[i+1] == Message.LF &&
 				message[i+2] == Message.CR &&
 				message[i+3] == Message.LF)
+			{
 				dataStart = i + 4;
+				break;
+			}
 		}
+		if (dataStart >= message.length)
+			return;
 		
 		for (int i = dataStart; i < message.length; i++)
 			allData.add(message[i]);

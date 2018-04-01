@@ -22,7 +22,7 @@ public class BackupHandler extends Handler
 	{
 		this.handlerType = "BackupHandler";
 		this.file = file;
-		this.metadata = metadata;
+		this.setMetadata(metadata);
 		this.repDegree = repDegree;
 		this.fileId = Utilities.calculateFileId(metadata, file).toString();
 	}
@@ -90,5 +90,15 @@ public class BackupHandler extends Handler
 			chunks.add(message);
 		}
 		return chunks;
+	}
+
+	public byte[] getMetadata()
+	{
+		return metadata;
+	}
+
+	public void setMetadata(byte[] metadata)
+	{
+		this.metadata = metadata;
 	}
 }

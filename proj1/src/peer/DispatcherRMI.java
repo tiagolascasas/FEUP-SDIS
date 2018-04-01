@@ -36,14 +36,6 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 	@Override
 	public void run() 
 	{
-
-		//TEST
-		//test();
-		//TEST
-
-
-		//read something from RMI
-		//processMessage(message);
 		try {
 			MessageRMI stub = (MessageRMI) UnicastRemoteObject.exportObject(this, 0);
 
@@ -113,54 +105,5 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 			threads.execute(new ReclamationHandler(Integer.parseInt(msg[1])));
 			break;			
 		}
-	}
-
-	void test()
-	{/*
-		//TESTS ONLY RUN ON PEER 1
-		if (Manager.getInstance().getId() == 1)
-		{
-			//TEST BACKUP
-			byte[] file = Utilities.fileToBinary("../scripts/test3.pdf");
-			byte[] metadata = Utilities.calculateMetadataIdentifier("../scripts/test3.pdf");
-
-			threads.execute(new BackupHandler(file, metadata, 2));
-
-			//Sleep a bit until backup is done
-			try{Thread.sleep(12000);} catch (InterruptedException e){e.printStackTrace();}
-
-			System.out.println(Manager.getInstance().getCurrentState());
-
-			//TEST RESTORE
-			int numberOfChunks = Utilities.calculateNumberOfChunks(file);
-			String fileId = Utilities.calculateFileId(metadata, file);
-			/*
-			threads.execute(new RestoreHandler(fileId, numberOfChunks));
-
-			RestoreManager man = Manager.getInstance().getRestoredManager();
-			while(!man.isComplete(fileId)) {}
-			Utilities.binaryToFile(man.reassemble(fileId), "test1.txt");
-
-			//Sleep a bit until restore is done
-			try{Thread.sleep(5000);} catch (InterruptedException e){e.printStackTrace();}*/
-
-			//TEST DELETE
-			//threads.execute(new DeletionHandler(fileId));
-
-			//TEST SPACE RECLAIMING
-			//threads.execute(new ReclamationHandler(0));
-
-			//TEST STATE
-		/*
-		}
-		//RUN THIS ONLY ON PEER 2
-		if (Manager.getInstance().getId() == 2)
-		{
-			System.out.println(Manager.getInstance().getCurrentState());
-			try{Thread.sleep(12000);} catch (InterruptedException e){e.printStackTrace();}
-			threads.execute(new ReclamationHandler(0));
-		}
-		//DO NOTHING MORE
-		while(true) {} */
 	}
 }
