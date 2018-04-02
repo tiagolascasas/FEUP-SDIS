@@ -81,9 +81,16 @@ public class PutchunkHandler extends Handler
 		putchunkReg.setArrived(id, chunkNo);
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
-		if (!manager.storeChunk(id, chunkNo, repDeg, data))
+		
+		if (!manager.registerChunk(id, chunkNo, 0, data))
 			return;
-		log("stored chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
+		
+		//Default behaviour: store as soon as it receives the message
+		if (Manager.getInstance().getVersion().equals("1.0"))
+		{
+			manager.storeChunk(id, chunkNo);
+			log("stored chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
+		}
 		
 		MessageStored reply = new MessageStored(id.getBytes(), chunkNo);
 		Random r = new Random();
@@ -97,6 +104,30 @@ public class PutchunkHandler extends Handler
 			e.printStackTrace();
 		}
 		
-		send(Channels.MC, reply.getMessageBytes());
+		//Default behaviour: send STORED message after waiting
+		if (Manager.getInstance().getVersion().equals("1.0"))
+		{
+			send(Channels.MC, reply.getMessageBytes());
+			return;
+		}
+		
+		//Enhanced behaviour: check if rep. degree is below expected, and if such, 
+		//store the chunk and send the STORED message. 
+		//Otherwise, unregister the chunk and do nothing
+		if (Manager.getInstance().getVersion().equals("1.1"))
+		{
+			int currentRepDeg = manager.findChunk(id, chunkNo).getRepDegree();
+			if (currentRepDeg >= this.repDeg)
+			{
+				manager.deleteChunk(id, chunkNo);
+				log("ignored chunk no. " + chunkNo + " of file " + Utilities.minifyId(id) + ", rep deg is superior than " + this.repDeg);
+			}
+			else
+			{
+				manager.storeChunk(id, chunkNo);
+				send(Channels.MC, reply.getMessageBytes());
+				log("stored chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
+			}
+		}
 	}
 }

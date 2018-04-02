@@ -38,11 +38,14 @@ public class RemovedHandler extends Handler
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
 		BackupManager bkManager = Manager.getInstance().getBackupsManager();
-		
 		MessageRegister putchunkReg = Manager.getInstance().getPutchunkRegister();
 		
+		//if this was the initiator-peer for this file, reduce the rep count and return
 		if (bkManager.hasInitiated(id))
+		{
+			bkManager.decrement(id, chunkNo);
 			return;
+		}
 		
 		if (manager.decreaseReplicationCount(id, chunkNo))
 		{

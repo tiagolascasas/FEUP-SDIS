@@ -26,12 +26,23 @@ public class ChunkManager implements Serializable
 		return null;
 	}
 	
-	public synchronized boolean storeChunk(String id, int chunkNo, int repDegree, byte[] data)
+	public synchronized boolean registerChunk(String id, int chunkNo, int repDegree, byte[] data)
 	{
-		if (retrieveChunkData(id, chunkNo) == null)
+		if (findChunk(id, chunkNo) == null)
 		{
 			Chunk newChunk = new Chunk(id, chunkNo, repDegree, data);
 			chunks.add(newChunk);
+			return true;
+		}
+		else return false;
+	}
+	
+	public synchronized boolean storeChunk(String id, int chunkNo)
+	{
+		Chunk chunk = findChunk(id, chunkNo);
+		if (findChunk(id, chunkNo) != null)
+		{
+			chunk.store();
 			return true;
 		}
 		else return false;
@@ -108,7 +119,8 @@ public class ChunkManager implements Serializable
 	{
 		StringBuilder state = new StringBuilder();
 		state.append("CHUNK STORAGE INFORMATION - chunks this peer has stored\n\n")
-			 .append("file identificator | chunk number | current rep. degree | desired rep. degree\n");
+			 .append("file identificator | chunk number | size (in KB) | current rep. degree | desired rep. degree\n");
+		
 		for (int i = 0; i < chunks.size(); i++)
 		{
 			Chunk chunk = chunks.elementAt(i);
@@ -116,12 +128,25 @@ public class ChunkManager implements Serializable
 					.append(" | ")
 					.append(chunk.getChunkNo())
 					.append(" | ")
+					.append(chunk.getSize())
+					.append(" | ")
 					.append(chunk.getRepDegree())
 					.append(" | ")
 					.append(chunk.getDesiredRepDegree())
 					.append("\n");
 		}
+		
+		if (chunks.size() == 0)
+			state.append("\t(looks like this peer is not storing any chunk)\n");
 		state.append("\n");
 		return state.toString();
+	}
+
+	public Long getTotalSize()
+	{
+		long count = 0;
+		for (int i = 0; i < chunks.size(); i++)
+			count += chunks.elementAt(i).getSize();
+		return count;
 	}
 }

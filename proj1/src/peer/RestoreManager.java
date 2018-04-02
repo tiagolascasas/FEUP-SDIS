@@ -85,28 +85,4 @@ public class RestoreManager implements Serializable
 		}
 		return Arrays.copyOfRange(reassembly, 0, index);
 	}
-	
-	public synchronized String getState()
-	{
-		StringBuilder state = new StringBuilder();
-		state.append("RESTORE MANAGER - information about files this peer is restoring right now\n\n")
-			 .append("file identificator -> [chunks it has already received (first position = chunk 0]\n");
-/*		for (Entry<String, ArrayList<ArrayList<Byte>>> entry : files.entrySet())
-		{
-			String fileId = entry.getKey();
-			ArrayList<ArrayList<Byte>> chunks = entry.getValue();
-			ArrayList<Boolean> checks = new ArrayList<Boolean>();
-			for (int i = 0; i < chunks.size(); i++)
-				checks.add(chunks.get(i) == null ? false : true);	
-			
-			state.append(fileId)
-			     .append(" -> ")
-			     .append(checks)
-			     .append("\n");
-		}
-		if (files.size() == 0)
-			state.append("\n(looks like this peer is not reassembling any file right now)");*/
-		state.append("\n");
-		return state.toString();
-	}
 }

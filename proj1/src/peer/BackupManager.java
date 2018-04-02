@@ -9,17 +9,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BackupManager implements Serializable
 {
 	private static final long serialVersionUID = -4404737373903487422L;
-	private ConcurrentHashMap<String, ArrayList<Integer>> counts; 
+	private ConcurrentHashMap<String, ArrayList<Integer>> counts;
+	private ConcurrentHashMap<String, Integer> desiredRepDegrees;
 	
 	public BackupManager()
 	{
 		this.counts = new ConcurrentHashMap<String, ArrayList<Integer>>();
+		this.desiredRepDegrees = new ConcurrentHashMap<String, Integer>();
 	}
 	
-	public synchronized void createNewEntry(String fileId, int numberOfChunks)
+	public synchronized void createNewEntry(String fileId, int numberOfChunks, int desiredRepDegree)
 	{
 		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(numberOfChunks, 0));
 		counts.put(fileId, arr);
+		desiredRepDegrees.put(fileId, desiredRepDegree);
 	}
 	
 	public boolean hasInitiated(String fileId)
@@ -32,6 +35,14 @@ public class BackupManager implements Serializable
 		if (counts.get(fileId) == null)
 			return false;
 		counts.get(fileId).set(chunkNo, counts.get(fileId).get(chunkNo) + 1);
+		return true;
+	}
+	
+	public synchronized boolean decrement(String fileId, int chunkNo)
+	{
+		if (counts.get(fileId) == null)
+			return false;
+		counts.get(fileId).set(chunkNo, counts.get(fileId).get(chunkNo) - 1);
 		return true;
 	}
 	
@@ -57,20 +68,27 @@ public class BackupManager implements Serializable
 	public synchronized String getState()
 	{
 		StringBuilder state = new StringBuilder();
-		state.append("INITIATOR PEER INFORMATION - chunks this file sent but did not store\n\n")
-		     .append("file identificator -> [replication degree of each chunk (first position = chunk no. 0)]\n\n");
+		state.append("INITIATOR PEER INFORMATION - chunks this file was ordered to backup by the client\n\n")
+		     .append("file identificator | desired rep degree | [actual rep degree of each chunk (first pos = chunk no. 0)]\n\n");
+		
 		for (Map.Entry<String, ArrayList<Integer>> entry : counts.entrySet())
 		{
 			String fileId = entry.getKey();
+			int repDeg = desiredRepDegrees.get(fileId);
 			ArrayList<Integer> fileChunks = entry.getValue();
+			
 			state.append(fileId);
-			state.append(" -> ");
+			state.append(" | ");
+			state.append(repDeg);
+			state.append(" | ");
 			state.append(fileChunks);
 			state.append("\n");
 		}
+		
 		if (counts.size() == 0)
 			state.append("\t(looks like this peer never initiated any backup)\n");
 		state.append("\n");
+		
 		return state.toString();
 	}
 }

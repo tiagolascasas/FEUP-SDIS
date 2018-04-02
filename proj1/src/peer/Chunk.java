@@ -18,6 +18,7 @@ public class Chunk implements Comparator, Serializable
 	private int repDegree;
 	private int desiredRepDegree;
 	private String filePath;
+	private byte[] data;
 	
 	Chunk(String id, int chunkNo, int repDegree, byte[] data)
 	{
@@ -26,23 +27,8 @@ public class Chunk implements Comparator, Serializable
 		this.setRepDegree(repDegree);
 		this.setDesiredRepDegree(repDegree);
 		String fileName = id + "#" + chunkNo;
+		this.data = data;
 		this.filePath = Manager.getInstance().getPath(fileName); 
-		try 
-		{
-			File file = new File(filePath);
-			if (data != null) 
-			{
-				DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
-				stream.write(data, 0, data.length);
-				stream.close();
-			}
-			else
-				file.createNewFile();
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
 	}
 
 	public String getId() 
@@ -128,5 +114,32 @@ public class Chunk implements Comparator, Serializable
 			return 1;
 		else
 			return 0;
+	}
+
+	public float getSize()
+	{
+		File f = new File(filePath);
+		Long len = f.length();
+		return len.floatValue() / 1000f;
+	}
+
+	public void store()
+	{
+		try 
+		{
+			File file = new File(filePath);
+			if (data != null) 
+			{
+				DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
+				stream.write(data, 0, data.length);
+				stream.close();
+			}
+			else
+				file.createNewFile();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 }

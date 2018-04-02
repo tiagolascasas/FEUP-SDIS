@@ -18,6 +18,8 @@ import java.util.TreeSet;
 
 public class Manager
 {
+	private static final boolean VERBOSE = false;
+
 	private static Manager instance = new Manager();
 
 	//store the peer's basic information and sockets for easy access
@@ -228,7 +230,6 @@ public class Manager
 		}
 	}
 	
-	
 	private void restoreState()
 	{
 		String serName = "state_peer" + this.id;
@@ -259,33 +260,35 @@ public class Manager
 	
 	public synchronized String getCurrentState()
 	{
-		int currentOccupiedSpace = chunks.getNumberOfChunks() * 64000;
+		Long currentOccupiedSpace = chunks.getTotalSize();
 		File disk = new File(".");
-		long freeSpace = disk.getFreeSpace();
+		Long freeSpace = disk.getFreeSpace();
 		
 		StringBuilder state = new StringBuilder();
-		state.append("STATE OF PEER ")
+		state.append("\nSTATE OF PEER ")
 		      .append(Manager.getInstance().getId())
-		      .append("\n\n")
-		      .append("-------------------------------------------------------------------------------------\n")
-		      .append("Space used by chunks: ")
+		      .append("\n-------------------------------------------------------------------------------------\n")
+		      .append("Protocol version: ")
+		      .append(this.version)
+		      .append("\nSpace used by chunks: ")
 		      .append(currentOccupiedSpace)
 		      .append(" bytes\nFree space: ")
-		      .append(freeSpace / 1000000000)
+		      .append(freeSpace.floatValue() / 1000000000f)
 		      .append(" Gb (")
 		      .append(freeSpace)
 		      .append(" bytes)\n\n")
 		      .append("-------------------------------------------------------------------------------------\n")
 		      .append(chunks.getState())
 		      .append("-------------------------------------------------------------------------------------\n")
-		      .append(backups.getState())
-		      .append("-------------------------------------------------------------------------------------\n")
-		      .append(restores.getState())
-		      .append("-------------------------------------------------------------------------------------\n")
-		      .append(putchunkRegister.getState())
-		      .append("-------------------------------------------------------------------------------------\n")
-		      .append(chunkRegister.getState())
-		      .append("\n");
+		      .append(backups.getState());
+		if (Manager.VERBOSE)
+		{
+			state.append("-------------------------------------------------------------------------------------\n")
+			      .append(putchunkRegister.getState())
+			      .append("-------------------------------------------------------------------------------------\n")
+			      .append(chunkRegister.getState())
+			      .append("\n");
+		}
 		return state.toString();
 	}
 }
