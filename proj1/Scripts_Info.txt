@@ -10,6 +10,8 @@ Peer:    existe um script, peer.sh, que inicia um peer usando um ID passado como
          1.1, usar o seguinte script:
 
          peerEnhanced.sh <peer ID> <IP local>
+
+         IP local é o IP da interface de rede onde as conexões TCP serão criadas.
       
 TestApp: existem 5 scripts cujo objetivo é fazer um pedido a um peer.
          Existe um script para cada ação e, com base nessa ação, são necessários alguns argumentos:
@@ -23,6 +25,8 @@ TestApp: existem 5 scripts cujo objetivo é fazer um pedido a um peer.
          NOTA IMPORTANTE: assumem que o ficheiro existe e se encontra na pasta ../bin/files_original
          
 Existem ainda outros scripts adicionais, tais como:
-         snooper.sh:   inicia o snooper de datagramas multicast nos mesmos canais dos peers
+         snooper.sh:   inicia o snooper de datagramas multicast nos mesmos canais dos peers.
          reset.sh:     apaga todos os chunks e todos os estados persistentes dos peers. Assume que os peers não estão a correr.
-         start_rmi.sh: inicia o rmiregister como um processo a correr em background
+         start_rmi.sh: inicia o RMI Register como um processo a correr em background. Assume que rmiregistry se encontra no path.
+         build.sh:     compila o código-fonte do projeto para ficheiros .class prontos a executar.
+                       Assume que o compilador javac se encontra no path.

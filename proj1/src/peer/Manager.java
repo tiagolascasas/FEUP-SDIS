@@ -18,8 +18,6 @@ import java.util.TreeSet;
 
 public class Manager
 {
-	private static final boolean VERBOSE = false;
-
 	private static Manager instance = new Manager();
 
 	//store the peer's basic information and sockets for easy access
@@ -281,14 +279,7 @@ public class Manager
 		      .append(chunks.getState())
 		      .append("-------------------------------------------------------------------------------------\n")
 		      .append(backups.getState());
-		if (Manager.VERBOSE)
-		{
-			state.append("-------------------------------------------------------------------------------------\n")
-			      .append(putchunkRegister.getState())
-			      .append("-------------------------------------------------------------------------------------\n")
-			      .append(chunkRegister.getState())
-			      .append("\n");
-		}
+
 		return state.toString();
 	}
 }
