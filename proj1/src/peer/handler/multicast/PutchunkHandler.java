@@ -125,6 +125,7 @@ public class PutchunkHandler extends Handler
 			else
 			{
 				manager.storeChunk(id, chunkNo);
+				manager.increaseReplicationCount(id, chunkNo);
 				send(Channels.MC, reply.getMessageBytes());
 				log("stored chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
 			}
