@@ -13,7 +13,7 @@ public class DispatcherMDB extends Dispatcher
 	{
 		this.socket = Manager.getInstance().getSocket(Channels.MDB);
 		this.threads = new ThreadPoolExecutor(
-	            4,
+	            200,
 	            400,
 	            10000,
 	            TimeUnit.MILLISECONDS,

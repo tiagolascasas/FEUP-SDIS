@@ -25,7 +25,7 @@ public class DispatcherRMI extends Dispatcher implements MessageRMI
 	{
 		this.rmiMethodName = rmiMethodName;
 		this.threads = new ThreadPoolExecutor(
-				4,
+				50,
 				400,
 				10000,
 				TimeUnit.MILLISECONDS,

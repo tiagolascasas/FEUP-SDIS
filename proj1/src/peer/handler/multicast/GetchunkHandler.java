@@ -69,24 +69,37 @@ public class GetchunkHandler extends Handler
 		chunkReg.unregisterChunk(id, chunkNo);
 		
 		String peerVersion = Manager.getInstance().getVersion();
+		
+		boolean enhancedResult = false;
+		if (this.version.equals("1.1") && peerVersion.equals("1.1"))
+			enhancedResult = enhancedProtocol(message);
+		
+		//try to use the enhanced version. if the enhanced version fails due to a TCP error,
+		//do the default, since it is backwards compatible
+		if (enhancedResult)
+			return;
+		
 		if (this.version.equals("1.0") || (this.version.equals("1.1") && peerVersion.equals("1.0")))
 		{
 			send(Channels.MDR, message.getMessageBytes());
 			log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id) + " via Multicast");
 		}
-		if (this.version.equals("1.1") && peerVersion.equals("1.1"))
+		
+	}
+	
+	public boolean enhancedProtocol(MessageChunk message)
+	{
+		try
 		{
-			try
-			{
-				Socket socket = new Socket(this.destinyAddr, this.destinyPort);
-				socket.getOutputStream().write(message.getMessageBytes());
-				socket.close();
-				log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id) + " via TCP");
-			} 
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+			Socket socket = new Socket(this.destinyAddr, this.destinyPort);
+			socket.getOutputStream().write(message.getMessageBytes());
+			socket.close();
+			log("returned chunk no. " + chunkNo + " of file " + Utilities.minifyId(id) + " via TCP");
+			return true;
+		} 
+		catch (IOException e)
+		{
+			return false;
 		}
 	}
 }

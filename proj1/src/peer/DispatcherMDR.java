@@ -13,7 +13,7 @@ public class DispatcherMDR extends Dispatcher
 	{
 		this.socket = Manager.getInstance().getSocket(Channels.MDR);
 		this.threads = new ThreadPoolExecutor(
-	            4,
+	            200,
 	            400,
 	            10000,
 	            TimeUnit.MILLISECONDS,

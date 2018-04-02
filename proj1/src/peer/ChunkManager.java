@@ -26,11 +26,11 @@ public class ChunkManager implements Serializable
 		return null;
 	}
 	
-	public synchronized boolean registerChunk(String id, int chunkNo, int repDegree, byte[] data)
+	public synchronized boolean registerChunk(String id, int chunkNo, int repDegree, byte[] data, int desiredRepDeg)
 	{
 		if (findChunk(id, chunkNo) == null)
 		{
-			Chunk newChunk = new Chunk(id, chunkNo, repDegree, data);
+			Chunk newChunk = new Chunk(id, chunkNo, repDegree, data, desiredRepDeg);
 			chunks.add(newChunk);
 			return true;
 		}

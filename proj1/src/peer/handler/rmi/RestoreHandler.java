@@ -85,6 +85,7 @@ public class RestoreHandler extends Handler
 						byteMessage[i] = message.get(i);
 					
 					this.threads.execute(new ChunkHandler(byteMessage));
+					socket.close();
 				} 
 				catch (IOException e)
 				{

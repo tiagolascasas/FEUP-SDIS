@@ -17,7 +17,7 @@ public class DispatcherMC extends Dispatcher
 	{
 		this.socket = Manager.getInstance().getSocket(Channels.MC);
 		this.threads = new ThreadPoolExecutor(
-		            4,
+		            200,
 		            400,
 		            10000,
 		            TimeUnit.MILLISECONDS,

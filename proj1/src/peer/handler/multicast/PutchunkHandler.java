@@ -82,13 +82,14 @@ public class PutchunkHandler extends Handler
 		
 		ChunkManager manager = Manager.getInstance().getChunkManager();
 		
-		if (!manager.registerChunk(id, chunkNo, 0, data))
+		if (!manager.registerChunk(id, chunkNo, 0, data, repDeg))
 			return;
 		
 		//Default behaviour: store as soon as it receives the message
 		if (Manager.getInstance().getVersion().equals("1.0"))
 		{
 			manager.storeChunk(id, chunkNo);
+			manager.increaseReplicationCount(id, chunkNo);	//rep degree = 1
 			log("stored chunk no. " + chunkNo + " of file " + Utilities.minifyId(id));
 		}
 		

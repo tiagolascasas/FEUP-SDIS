@@ -20,7 +20,7 @@ public class Chunk implements Comparator, Serializable
 	private String filePath;
 	private byte[] data;
 	
-	Chunk(String id, int chunkNo, int repDegree, byte[] data)
+	Chunk(String id, int chunkNo, int repDegree, byte[] data, int desiredRepDeg)
 	{
 		this.setId(id);
 		this.setChunkNo(chunkNo);
@@ -29,6 +29,7 @@ public class Chunk implements Comparator, Serializable
 		String fileName = id + "#" + chunkNo;
 		this.data = data;
 		this.filePath = Manager.getInstance().getPath(fileName); 
+		this.desiredRepDegree = desiredRepDeg;
 	}
 
 	public String getId() 

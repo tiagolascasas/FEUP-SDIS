@@ -10,7 +10,7 @@ import peer.handler.rmi.BackupHandler;
 public class RestoreManager implements Serializable
 {
 	private static final long serialVersionUID = -2952517571955987887L;
-	private static ConcurrentHashMap<String, ArrayList<ArrayList<Byte>>> files;
+	private ConcurrentHashMap<String, ArrayList<ArrayList<Byte>>> files;
 	
 	public RestoreManager()
 	{
@@ -19,6 +19,9 @@ public class RestoreManager implements Serializable
 	
 	public synchronized void createNewEntry(String fileId, int numberOfChunks)
 	{
+		if (files == null)
+			files = new ConcurrentHashMap<String, ArrayList<ArrayList<Byte>>>();
+		
 		ArrayList<ArrayList<Byte>> file = new ArrayList<ArrayList<Byte>>();
 		for (int i = 0; i < numberOfChunks; i++)
 			file.add(null);
