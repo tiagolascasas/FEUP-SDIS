@@ -1,0 +1,14 @@
+1524352292445: > printCommands
+1524352292446: Error: No such method found.
+1524352294112: > help
+1524352294114: search : String
+1524352294121: upload : 
+1524352294121: play : 
+1524352294121: help : 
+1524352294121: help : String
+1524352294122: printLog : String
+1524352294122: exitApp : 
+1524352294122: logView : 
+1524352298745: > printLog
+1524352298747: Error: Bad parameters. Check your code.
+1524352300852: > printLog asdasda
