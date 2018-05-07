@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class Utils
 {
@@ -38,5 +39,17 @@ public class Utils
 	    for (int i = 0; i < hexString.length; i++)
 	        stringBuilder.append(String.format("%02X", hexString[i]));
 		return stringBuilder.toString();
+	}
+	
+	static public String decode(String encoded)
+	{
+		byte[] dec = Base64.getDecoder().decode(encoded);
+		return new String(dec, StandardCharsets.US_ASCII);
+	}
+	
+	static public String encode(String decoded)
+	{
+		byte[] en = Base64.getEncoder().encode(decoded.getBytes());
+		return new String(en, StandardCharsets.US_ASCII);
 	}
 }

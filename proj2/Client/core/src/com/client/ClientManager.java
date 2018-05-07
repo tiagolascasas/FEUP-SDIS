@@ -16,6 +16,7 @@ public class ClientManager
 	private GUIConsole console;
 	private ServerListener listener;
 	private boolean loggedIn;
+	private boolean connected = false;
 
 	private ClientManager(){}
 	
@@ -80,5 +81,15 @@ public class ClientManager
 	public void setLoggedIn(boolean isLoggedIn)
 	{
 		this.loggedIn = isLoggedIn;
+	}
+
+	public void setConnected(boolean b)
+	{
+		this.connected  = b;
+	}
+
+	public boolean getConnected()
+	{
+		return this.connected;
 	}
 }

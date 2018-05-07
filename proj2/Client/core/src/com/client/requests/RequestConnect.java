@@ -9,7 +9,6 @@ import com.client.ClientManager;
 
 public class RequestConnect extends Request
 {
-	public static boolean isConnected = false;
 	private String ip;
 	private int port;
 	
@@ -23,7 +22,7 @@ public class RequestConnect extends Request
 	@Override
 	public void run()
 	{
-		if (isConnected == true)
+		if (ClientManager.getInstance().getConnected() == true)
 		{
 			ClientManager.getInstance().getConsole().log("You are already connected");
 			return;
@@ -53,6 +52,6 @@ public class RequestConnect extends Request
 		ClientManager.getInstance().getConsole().log("Connection to " + ip + ":" + port + " successfully established!");
 		
 		ClientManager.getInstance().initListener();
-		RequestConnect.isConnected = true;
+		ClientManager.getInstance().setConnected(true);
 	}
 }

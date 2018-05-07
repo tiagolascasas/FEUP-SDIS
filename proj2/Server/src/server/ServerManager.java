@@ -48,9 +48,9 @@ public class ServerManager
 		return users.exists(username);
 	}
 	
-	public void registerUser(String username, String passwordHash)
+	public boolean registerUser(String username, String passwordHash)
 	{
-		users.register(username, passwordHash);
+		return users.register(username, passwordHash);
 	}
 	
 	public boolean loginUser(String username, String passwordHash, Socket socket)

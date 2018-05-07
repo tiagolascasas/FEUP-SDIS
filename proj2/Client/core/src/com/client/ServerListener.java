@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import com.badlogic.gdx.Gdx;
 import com.client.handlers.ResponseHandlerDownload;
 import com.client.handlers.ResponseHandlerRegister;
+import com.client.requests.RequestConnect;
 import com.strongjoshua.console.GUIConsole;
 
 public class ServerListener extends Thread
@@ -54,9 +55,7 @@ public class ServerListener extends Thread
 				} 
 				catch (IOException e)
 				{
-					e.printStackTrace();
 					this.running = false;
-					ClientManager.getInstance().getConsole().log("Fatal error");
 					break;
 				}
 			}
@@ -72,7 +71,8 @@ public class ServerListener extends Thread
 			this.socket.close();
 			System.out.println("Closed a connection from server " + this.socket.getRemoteSocketAddress());
 			ClientManager.getInstance().getConsole().log("The server terminated the connection");
-		} 
+			ClientManager.getInstance().setConnected(false);
+		}
 		catch (IOException e)
 		{
 			System.out.println("Error closing a connection from server " + this.socket.getRemoteSocketAddress());
@@ -127,7 +127,7 @@ public class ServerListener extends Thread
 			case "RES_DOWNLOAD":
 			{
 				if (elements.length == 4)
-					(new ResponseHandlerDownload(elements[1], elements[2], elements[3])).run();
+					threads.execute(new ResponseHandlerDownload(elements[1], elements[2], elements[3]));
 				else
 					hasErrors = true;
 				break;
@@ -145,7 +145,7 @@ public class ServerListener extends Thread
 			case "RES_REGISTER":
 			{
 				if (elements.length == 3)
-					(new ResponseHandlerRegister(elements[1], elements[2])).run();
+					threads.execute(new ResponseHandlerRegister(elements[1], elements[2]));
 				else
 					hasErrors = true;
 				break;

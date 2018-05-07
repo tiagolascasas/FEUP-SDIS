@@ -1,5 +1,7 @@
 package com.client.handlers;
 
+import java.util.Base64;
+
 import com.client.ClientManager;
 
 public class ResponseHandlerRegister extends ResponseHandler
@@ -15,7 +17,7 @@ public class ResponseHandlerRegister extends ResponseHandler
 	@Override
 	public void run()
 	{
-		int status = Integer.parseInt(this.status);
-		ClientManager.getInstance().getConsole().log(this.msg);
+		String res = new String(Base64.getDecoder().decode(this.msg));
+		ClientManager.getInstance().getConsole().log(res);
 	}
 }

@@ -17,12 +17,27 @@ public class HandlerRegister extends Handler
 	{
 		log("Starting");
 		String hash = Utils.hashPassword(password);
-		ServerManager.getInstance().registerUser(username, hash);
+		boolean ok = ServerManager.getInstance().registerUser(username, hash);
 		
-		String response = "RES_REGISTER 1 OK\0";
+		StringBuilder build = new StringBuilder();
+		build.append("RES_REGISTER ");
+		if (ok)
+		{
+			String message = Utils.encode("Successfully registered the new user");
+			build.append(1).append(" ").append(message);
+		}
+		else
+		{
+			String message = Utils.encode("Error: username already exists");
+			build.append(0).append(" ").append(message);
+		}
+		build.append('\0');
+		String s = build.toString();
+		
 		try
 		{
-			socket.getOutputStream().write(response.getBytes());
+			log("sending message \"" + s + "\"");
+			socket.getOutputStream().write(s.getBytes());
 		} 
 		catch (IOException e)
 		{
