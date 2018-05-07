@@ -80,7 +80,7 @@ public class ClientListener implements Runnable
 	/**
 	 * Message formats:
 	 * 
-	 * CLOSE <username> <password>
+	 * CLOSE
 	 * DOWNLOAD <username> <password> <title>
 	 * LOGIN <username> <password>
 	 * REGISTER <username> <password>
@@ -92,7 +92,7 @@ public class ClientListener implements Runnable
 	protected void processMessage(String message)
 	{
 		String[] elements = message.split(" ");
-		if (elements.length < 3)
+		if (elements.length < 1)
 		{
 			System.out.println("Dropped uncomprehensible message \"" + message + "\"");
 			return;

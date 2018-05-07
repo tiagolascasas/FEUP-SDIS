@@ -1,5 +1,6 @@
 package server.handlers;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,5 +35,18 @@ public abstract class Handler implements Runnable
         out +=" | " + s;
 		
 		System.out.println(out);
+	}
+	
+	protected void send(String message)
+	{
+		try
+		{
+			log("sending message \"" + message + "\"");
+			socket.getOutputStream().write(message.getBytes());
+		} 
+		catch (IOException e)
+		{
+			log("Unable to write response to client " + socket.getRemoteSocketAddress());
+		}
 	}
 }

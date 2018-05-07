@@ -63,13 +63,11 @@ public class ServerListener extends Thread
 				break;
 			
 			String messageStr = byteToString(message);
-			System.out.println("Received message: " + messageStr);
 			processMessage(messageStr);
 		}
 		try
 		{
 			this.socket.close();
-			System.out.println("Closed a connection from server " + this.socket.getRemoteSocketAddress());
 			ClientManager.getInstance().getConsole().log("The server terminated the connection");
 			ClientManager.getInstance().setConnected(false);
 		}

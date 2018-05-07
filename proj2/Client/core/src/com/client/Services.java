@@ -80,4 +80,10 @@ public class Services extends CommandExecutor
 		RequestClose request = new RequestClose();
 		threads.execute(request);
 	}
+	
+	@ConsoleDoc(description = "Closes the application (same as exit)")
+	public void close()
+	{
+		exit();
+	}
 }

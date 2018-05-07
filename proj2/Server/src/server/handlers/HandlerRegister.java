@@ -33,16 +33,7 @@ public class HandlerRegister extends Handler
 		}
 		build.append('\0');
 		String s = build.toString();
-		
-		try
-		{
-			log("sending message \"" + s + "\"");
-			socket.getOutputStream().write(s.getBytes());
-		} 
-		catch (IOException e)
-		{
-			log("Unable to write response to client " + socket.getRemoteSocketAddress());
-		}
+		send(s);
 		log("Exiting");
 	}
 }
