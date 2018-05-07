@@ -14,9 +14,11 @@ import com.strongjoshua.console.annotation.ConsoleDoc;
 
 public class Services extends CommandExecutor 
 {
+	private ServerListener listener;
+	
 	public Services(GUIConsole console)
 	{
-		DataManager.getInstance().setConsole(console);
+		ClientManager.getInstance().setConsole(console);
 	}
 	
 	@ConsoleDoc(description = "Establishes a connection to the server")
@@ -59,7 +61,7 @@ public class Services extends CommandExecutor
 	{
 		try
 		{
-			DataManager.getInstance().getSocket().close();
+			ClientManager.getInstance().getSocket().close();
 		} 
 		catch (IOException e)
 		{

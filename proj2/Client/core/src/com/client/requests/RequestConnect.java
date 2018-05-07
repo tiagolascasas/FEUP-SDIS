@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import com.client.DataManager;
+import com.client.ClientManager;
 
 public class RequestConnect extends Request
 {
@@ -25,7 +25,7 @@ public class RequestConnect extends Request
 	{
 		if (isConnected == true)
 		{
-			DataManager.getInstance().getConsole().log("You are already connected");
+			ClientManager.getInstance().getConsole().log("You are already connected");
 			return;
 		}
 		InetAddress ip = null;
@@ -35,22 +35,22 @@ public class RequestConnect extends Request
 		} 
 		catch (UnknownHostException e)
 		{
-			DataManager.getInstance().getConsole().log("Unable to resolve specified IP " + ip);
+			ClientManager.getInstance().getConsole().log("Unable to resolve specified IP " + ip);
 			return;
 		}
 		
-		DataManager.getInstance().getConsole().log("Attempting to connect to " + ip + ":" + port);
+		ClientManager.getInstance().getConsole().log("Attempting to connect to " + ip + ":" + port);
 		try
 		{
 			Socket socket = new Socket(ip, this.port);
-			DataManager.getInstance().setSocket(socket);
+			ClientManager.getInstance().setSocket(socket);
 		} 
 		catch (IOException e)
 		{
-			DataManager.getInstance().getConsole().log("Error connecting to " + ip + ":" + port);
+			ClientManager.getInstance().getConsole().log("Error connecting to " + ip + ":" + port);
 			return;
 		}
-		DataManager.getInstance().getConsole().log("Connection to " + ip + ":" + port + " successfully established!");
+		ClientManager.getInstance().getConsole().log("Connection to " + ip + ":" + port + " successfully established!");
 		this.isConnected = true;
 	}
 }

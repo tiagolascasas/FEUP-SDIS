@@ -1,15 +1,13 @@
 package server;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class Server
 {
 	private ServerSocket socket;
-	private NotificationsHandler notifHandler;
+	private Notifier notifHandler;
 	private boolean running = true;
 	
 	public Server(int port)
@@ -17,7 +15,6 @@ public class Server
 		try
 		{
 			this.socket = new ServerSocket(port);
-			DataManager.getInstance().init(socket);
 		} 
 		catch (IOException e)
 		{
@@ -52,7 +49,7 @@ public class Server
 
 	public void run()
 	{
-		this.notifHandler = new NotificationsHandler();
+		this.notifHandler = new Notifier();
 		this.notifHandler.run();
 		
 		while (this.running)
@@ -68,7 +65,7 @@ public class Server
 				System.out.println("Unable to accept socket connection");
 				System.exit(-1);
 			}
-			ClientHandler client = new ClientHandler(clSocket);
+			ClientListener client = new ClientListener(clSocket);
 			client.run();
 		}
 		System.exit(0);

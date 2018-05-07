@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 
-import com.client.DataManager;
+import com.client.ClientManager;
 
 public class RequestDownload extends Request
 {
@@ -32,7 +32,7 @@ public class RequestDownload extends Request
 		} 
         catch (IOException e)
 		{
-			DataManager.getInstance().getConsole().log("Error accessing file " + this.track);
+			ClientManager.getInstance().getConsole().log("Error accessing file " + this.track);
 			return;
 		}
         

@@ -3,7 +3,7 @@ package com.client.requests;
 import java.io.IOException;
 import java.net.Socket;
 
-import com.client.DataManager;
+import com.client.ClientManager;
 
 public abstract class Request implements Runnable
 {
@@ -23,22 +23,22 @@ public abstract class Request implements Runnable
 	
 	protected void send(String message)
 	{
-		Socket socket = DataManager.getInstance().getSocket();
+		Socket socket = ClientManager.getInstance().getSocket();
 		try
 		{
 			socket.getOutputStream().write(message.getBytes());
 		} 
 		catch (IOException e)
 		{
-			DataManager.getInstance().getConsole().log("Error sending a request");
+			ClientManager.getInstance().getConsole().log("Error sending a request");
 		}
 	}
 	
 	protected boolean checkAuthenticated()
 	{
-		if (!DataManager.getInstance().isLoggedIn())
+		if (!ClientManager.getInstance().isLoggedIn())
 		{
-			DataManager.getInstance().getConsole().log("You cannot use this functionality without authentication");
+			ClientManager.getInstance().getConsole().log("You cannot use this functionality without authentication");
 			return false;
 		}
 		return true;
@@ -46,6 +46,6 @@ public abstract class Request implements Runnable
 	
 	protected String getMessageHeader()
 	{
-		return this.type + " " + DataManager.getInstance().getUsername() + " " + DataManager.getInstance().getPassword();
+		return this.type + " " + ClientManager.getInstance().getUsername() + " " + ClientManager.getInstance().getPassword();
 	}
 }

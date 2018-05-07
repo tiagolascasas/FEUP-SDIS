@@ -6,11 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import server.ServerManager;
-import server.Utils;
+import server.utils.Utils;
 
 public class HandlerRegister extends Handler 
 {
-	public HandlerRegister(String username, String password, Socket socket) 
+	public HandlerRegister(Socket socket, String username, String password) 
 	{
 		super("REGISTER", username, password, socket);
 	}
@@ -19,7 +19,7 @@ public class HandlerRegister extends Handler
 	public void run() 
 	{
 		String hash = Utils.hashPassword(password);
-		
+		/*
 		Connection db = ServerManager.getInstance().getDatabase();
 		try
 		{
@@ -31,6 +31,6 @@ public class HandlerRegister extends Handler
 		catch (SQLException e) 
 		{
 			//user exists
-		}
+		}*/
 	}
 }

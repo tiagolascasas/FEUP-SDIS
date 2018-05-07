@@ -1,48 +1,46 @@
 package server;
 
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class OnlineUsers 
+import server.utils.Pair;
+import server.utils.PairList;
+
+public class OnlineUsers implements Serializable
 {
-	ArrayList<String> usernames;
-	ArrayList<Socket> sockets;
+	private static final long serialVersionUID = 8931759196661021575L;
+	PairList<String, Socket> list;
 	
 	public OnlineUsers()
 	{
-		this.usernames = new ArrayList<>();
-		this.sockets = new ArrayList<>();
+		this.list = new PairList<String, Socket>();
 	}
 	
 	public synchronized void setUserOnline(String username, Socket socket)
 	{
-		usernames.add(username);
-		sockets.add(socket);
+		list.pushPair(username, socket);
 	}
 	
 	public synchronized void setUserOffline(String username)
 	{
-		int index = usernames.indexOf(username);
-		usernames.remove(index);
-		sockets.remove(index);
+		Socket socket = list.getSecondFromFirst(username);
+		list.removePair(username, socket);
 	}
 	
 	public synchronized void setUserOffline(Socket socket)
 	{
-		int index = sockets.indexOf(socket);
-		usernames.remove(index);
-		sockets.remove(index);
+		String username = list.getFirstFromSecond(socket);
+		list.removePair(username, socket);
 	}
 	
 	public Socket getUserSocket(String username)
 	{
-		int index = usernames.indexOf(username);
-		return sockets.get(index);
+		return list.getSecondFromFirst(username);
 	}
 	
 	public String getUsername(Socket socket)
 	{
-		int index = sockets.indexOf(sockets);
-		return usernames.get(index);
+		return list.getFirstFromSecond(socket);
 	}
 }
