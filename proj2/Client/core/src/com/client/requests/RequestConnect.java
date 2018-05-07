@@ -51,6 +51,8 @@ public class RequestConnect extends Request
 			return;
 		}
 		ClientManager.getInstance().getConsole().log("Connection to " + ip + ":" + port + " successfully established!");
-		this.isConnected = true;
+		
+		ClientManager.getInstance().initListener();
+		RequestConnect.isConnected = true;
 	}
 }

@@ -1,10 +1,7 @@
 package server.handlers;
 
+import java.io.IOException;
 import java.net.Socket;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import server.ServerManager;
 import server.utils.Utils;
 
@@ -18,19 +15,19 @@ public class HandlerRegister extends Handler
 	@Override
 	public void run() 
 	{
+		log("Starting");
 		String hash = Utils.hashPassword(password);
-		/*
-		Connection db = ServerManager.getInstance().getDatabase();
+		ServerManager.getInstance().registerUser(username, hash);
+		
+		String response = "RES_REGISTER 1 OK\0";
 		try
 		{
-			PreparedStatement stmt = db.prepareStatement("insert into Users values (?, ?)");
-			stmt.setString(1, username);
-			stmt.setString(2, hash);
-			stmt.executeUpdate();
+			socket.getOutputStream().write(response.getBytes());
 		} 
-		catch (SQLException e) 
+		catch (IOException e)
 		{
-			//user exists
-		}*/
+			log("Unable to write response to client " + socket.getRemoteSocketAddress());
+		}
+		log("Exiting");
 	}
 }

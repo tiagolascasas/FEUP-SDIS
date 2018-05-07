@@ -1,16 +1,13 @@
 package com.client.handlers;
 
-import java.net.Socket;
-
-import com.strongjoshua.console.Console;
-
 public class ResponseHandlerUpload extends ResponseHandler
 {
+	private String message;
 
-	public ResponseHandlerUpload(Console console, Socket socket)
+	public ResponseHandlerUpload(String status, String message)
 	{
-		super("Upload");
-		// TODO Auto-generated constructor stub
+		super("Upload", status);
+		this.message = message;
 	}
 
 	@Override

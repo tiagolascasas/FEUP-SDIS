@@ -6,11 +6,14 @@ import com.strongjoshua.console.Console;
 
 public class ResponseHandlerDownload extends ResponseHandler
 {
+	private String body;
+	private String title;
 
-	public ResponseHandlerDownload()
+	public ResponseHandlerDownload(String status, String title, String body)
 	{
-		super("Download");
-		// TODO Auto-generated constructor stub
+		super("RES_DOWNLOAD", status);
+		this.title = title;
+		this.body = body;
 	}
 
 	@Override

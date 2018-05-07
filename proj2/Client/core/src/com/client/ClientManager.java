@@ -1,6 +1,8 @@
 package com.client;
 
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
@@ -13,6 +15,7 @@ public class ClientManager
 	private String password;
 	private GUIConsole console;
 	private ServerListener listener;
+	private boolean loggedIn;
 
 	private ClientManager(){}
 	
@@ -63,18 +66,19 @@ public class ClientManager
 		this.console = console;
 	}
 
-	public boolean isLoggedIn()
+	public boolean getLoggedIn()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return this.loggedIn;
 	}
 	
 	public void initListener()
 	{
-		if (this.listener != null)
-		{
-			this.listener = new ServerListener(this.socket);
-			this.listener.run();
-		}
+		this.listener = new ServerListener(this.socket);
+		this.listener.start();
+	}
+
+	public void setLoggedIn(boolean isLoggedIn)
+	{
+		this.loggedIn = isLoggedIn;
 	}
 }

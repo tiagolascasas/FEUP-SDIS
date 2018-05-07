@@ -3,6 +3,9 @@ package server;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import server.handlers.HandlerClose;
 import server.handlers.HandlerDownload;
@@ -16,10 +19,18 @@ public class ClientListener implements Runnable
 {
 	private Socket socket;
 	private boolean running = true;
+	private ThreadPoolExecutor threads;
 
 	public ClientListener(Socket socket)
 	{
 		this.socket = socket;
+		this.threads = new ThreadPoolExecutor(
+	            200,
+	            400,
+	            10000,
+	            TimeUnit.MILLISECONDS,
+	            new LinkedBlockingQueue<Runnable>()
+				);
 	}
 
 	@Override
@@ -44,9 +55,13 @@ public class ClientListener implements Runnable
 				} 
 				catch (IOException e)
 				{
-					e.printStackTrace();
+					this.running = false;
+					break;
 				}
 			}
+			if (!this.running)
+				break;
+			
 			String messageStr = Utils.byteToString(message);
 			System.out.println("Received message: " + messageStr);
 			processMessage(messageStr);
@@ -54,15 +69,14 @@ public class ClientListener implements Runnable
 		try
 		{
 			this.socket.close();
-			System.out.println("Closed socket of client " + this.socket.getRemoteSocketAddress());
+			System.out.println("Closed a connection from client " + this.socket.getRemoteSocketAddress());
 		} 
 		catch (IOException e)
 		{
-			System.out.println("Error closing socket of client " + this.socket.getRemoteSocketAddress());
+			System.out.println("Error closing a connection from client " + this.socket.getRemoteSocketAddress());
 		}
 		return;
 	}
-
 	/**
 	 * Message formats:
 	 * 
@@ -75,7 +89,7 @@ public class ClientListener implements Runnable
 	 * 
 	 * @param message
 	 */
-	private void processMessage(String message)
+	protected void processMessage(String message)
 	{
 		String[] elements = message.split(" ");
 		if (elements.length < 3)

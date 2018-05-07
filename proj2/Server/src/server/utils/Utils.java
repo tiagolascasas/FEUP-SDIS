@@ -1,6 +1,8 @@
 package server.utils;
 
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class Utils
@@ -15,7 +17,26 @@ public class Utils
 
 	public static String hashPassword(String password)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		MessageDigest digest = null;
+		try
+		{
+			digest = MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+		}
+		
+		byte[] hash = digest.digest(password.getBytes());
+		String asciiHash = hexToAscii(hash);
+		
+		return asciiHash;
+	}
+	
+	static public String hexToAscii(byte[] hexString)
+	{
+	    StringBuilder stringBuilder = new StringBuilder();
+	    for (int i = 0; i < hexString.length; i++)
+	        stringBuilder.append(String.format("%02X", hexString[i]));
+		return stringBuilder.toString();
 	}
 }

@@ -12,6 +12,7 @@ public class Server
 	
 	public Server(int port)
 	{
+		ServerManager.getInstance();
 		try
 		{
 			this.socket = new ServerSocket(port);
@@ -58,12 +59,11 @@ public class Server
 			try
 			{
 				clSocket = this.socket.accept();
-				System.out.println("Accepted a connection from " + clSocket.getRemoteSocketAddress());
+				System.out.println("Accepted a connection from client " + clSocket.getRemoteSocketAddress());
 			} 
 			catch (IOException e)
 			{
-				System.out.println("Unable to accept socket connection");
-				System.exit(-1);
+				System.out.println("Unable to accept a socket connection");
 			}
 			ClientListener client = new ClientListener(clSocket);
 			client.run();

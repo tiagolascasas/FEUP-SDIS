@@ -36,7 +36,7 @@ public abstract class Request implements Runnable
 	
 	protected boolean checkAuthenticated()
 	{
-		if (!ClientManager.getInstance().isLoggedIn())
+		if (!ClientManager.getInstance().getLoggedIn())
 		{
 			ClientManager.getInstance().getConsole().log("You cannot use this functionality without authentication");
 			return false;

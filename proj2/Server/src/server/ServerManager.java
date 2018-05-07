@@ -6,16 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerManager
 {
-	private static ServerManager instance = null;
+	private static final ServerManager instance = new ServerManager();
 	private static final String STATEFILE = ".state";
 	
 	private UserRegistry users;
@@ -44,7 +40,7 @@ public class ServerManager
 	
 	public static ServerManager getInstance()
 	{
-		return instance == null ? new ServerManager() : instance;
+		return instance;
 	}
 	
 	public boolean userExists(String username)
