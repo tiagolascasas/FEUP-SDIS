@@ -3,12 +3,12 @@ package com.client.handlers;
 public abstract class ResponseHandler implements Runnable
 {
 	private String type;
-	protected String status;
+	protected int status;
 
 	public ResponseHandler(String type, String status)
 	{
 		this.type = type;
-		this.status = status;
+		this.status = Integer.parseInt(status);
 	}
 
 	@Override

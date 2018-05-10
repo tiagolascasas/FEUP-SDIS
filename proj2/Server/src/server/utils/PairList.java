@@ -44,4 +44,14 @@ public class PairList<Left, Right> implements Serializable
 		}
 		return null;
 	}
+
+	public boolean firstExists(Left exists)
+	{
+		for (Pair<Left, Right> pair : list)
+		{
+			if (pair.first == exists)
+				return true;
+		}
+		return false;
+	}
 }

@@ -10,9 +10,9 @@ public class Server
 	private Notifier notifHandler;
 	private boolean running = true;
 	
-	public Server(int port)
+	public Server(int port, boolean enableStdoutLogging)
 	{
-		ServerManager.getInstance();
+		ServerManager.getInstance().setLogging(enableStdoutLogging);
 		try
 		{
 			this.socket = new ServerSocket(port);
@@ -29,21 +29,24 @@ public class Server
 	{
 		boolean valid = true;
 		Integer port = null;
+		boolean enable = true;
 		
-		if (args.length != 1)
+		if (args.length != 1 && args.length != 2)
 			valid = false;
 		else
 		{
 			port = Integer.parseInt(args[0]);
+			if (args.length == 2)
+				enable = Integer.parseInt(args[1]) != 0;
 		}
 		if (!valid)
 		{
-			System.out.println("\nUsage: java -jar Client.jar <server port>\n");
+			System.out.println("\nUsage: java -jar Client.jar <server port> [enable stdout logging 0..1]\n");
 			System.exit(-1);
 		}
 		else
 		{
-			Server server = new Server(port);
+			Server server = new Server(port, enable);
 			server.run();
 		}
 	}

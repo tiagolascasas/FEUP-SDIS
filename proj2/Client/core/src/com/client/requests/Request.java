@@ -23,6 +23,11 @@ public abstract class Request implements Runnable
 	
 	protected void send(String message)
 	{
+		if (!ClientManager.getInstance().getConnected())
+		{
+			ClientManager.getInstance().getConsole().log("You must be connected to a server in order to send requests");
+		}
+		
 		Socket socket = ClientManager.getInstance().getSocket();
 		try
 		{

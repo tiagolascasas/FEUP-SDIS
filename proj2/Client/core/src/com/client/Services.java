@@ -86,4 +86,14 @@ public class Services extends CommandExecutor
 	{
 		exit();
 	}
+
+	public ThreadPoolExecutor getThreads()
+	{
+		return threads;
+	}
+
+	public void setThreads(ThreadPoolExecutor threads)
+	{
+		this.threads = threads;
+	}
 }

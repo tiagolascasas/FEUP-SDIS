@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
 import com.client.handlers.ResponseHandlerDownload;
+import com.client.handlers.ResponseHandlerLogin;
 import com.client.handlers.ResponseHandlerRegister;
 import com.client.requests.RequestConnect;
 import com.strongjoshua.console.GUIConsole;
@@ -133,9 +134,7 @@ public class ServerListener extends Thread
 			case "RES_LOGIN":
 			{
 				if (elements.length == 3)
-				{
-
-				}
+					threads.execute(new ResponseHandlerLogin(elements[1], elements[2]));
 				else
 					hasErrors = true;
 				break;

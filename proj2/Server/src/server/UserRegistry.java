@@ -15,12 +15,12 @@ public class UserRegistry implements Serializable
 	
 	public boolean exists(String username)
 	{
-		return !(this.users.get(username) == null);
+		return this.users.get(username) != null;
 	}
 
 	public boolean register(String username, String passwordHash)
 	{
-		if (this.users.get(username) != null)
+		if (exists(username))
 			return false;
 		
 		User user = new User(username, passwordHash);
@@ -28,7 +28,15 @@ public class UserRegistry implements Serializable
 		return true;
 	}
 
-	public boolean verifyUser(String username, String passwordHash)
+	public boolean verifyUsername(String username)
+	{
+		User user = this.users.get(username);
+		if (user == null)
+			return false;
+		return true;
+	}
+	
+	public boolean verifyPassword(String username, String passwordHash)
 	{
 		User user = this.users.get(username);
 		if (user == null)

@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import server.ServerManager;
+
 public abstract class Handler implements Runnable
 {
 	protected String type;
@@ -34,19 +36,19 @@ public abstract class Handler implements Runnable
         out += sdf.format(cal.getTime());
         out +=" | " + s;
 		
-		System.out.println(out);
+        ServerManager.getInstance().log(out);
 	}
 	
 	protected void send(String message)
 	{
 		try
 		{
-			log("sending message \"" + message + "\"");
+			log("Sending message \"" + message + "\"");
 			socket.getOutputStream().write(message.getBytes());
 		} 
 		catch (IOException e)
 		{
-			log("Unable to write response to client " + socket.getRemoteSocketAddress());
+			log("Unable to write response to client");
 		}
 	}
 }

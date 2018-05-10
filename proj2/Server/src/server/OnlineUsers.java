@@ -43,4 +43,9 @@ public class OnlineUsers implements Serializable
 	{
 		return list.getFirstFromSecond(socket);
 	}
+
+	public boolean isOnline(String username)
+	{
+		return list.getSecondFromFirst(username) != null;
+	}
 }
