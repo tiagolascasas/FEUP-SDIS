@@ -4,6 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.client.requests.RequestClose;
 import com.client.requests.RequestConnect;
 import com.client.requests.RequestDownload;
@@ -19,9 +20,11 @@ public class Services extends CommandExecutor
 {
 	private ThreadPoolExecutor threads;
 	
-	public Services(GUIConsole console)
+	public Services(GUIConsole console, FileHandle serverList)
 	{
 		ClientManager.getInstance().setConsole(console);
+		ClientManager.getInstance().setConfFile(serverList);
+		
 		this.threads = new ThreadPoolExecutor(
 	            200,
 	            400,
@@ -29,14 +32,16 @@ public class Services extends CommandExecutor
 	            TimeUnit.MILLISECONDS,
 	            new LinkedBlockingQueue<Runnable>()
 				);
-		connect("localhost", 30000);
+		
+		String[] serverAddr = ClientManager.getInstance().getNextServer().split(":");
+		connect(serverAddr[0], Integer.parseInt(serverAddr[1]));
 	}
 	
 	@ConsoleDoc(description = "Establishes a connection to the server")
 	public void connect(String ip, int port)
 	{
 		RequestConnect request = new RequestConnect(ip, port);
-		request.run();
+		threads.execute(request);
 	}
 	
 	@ConsoleDoc(description = "Registers the user")

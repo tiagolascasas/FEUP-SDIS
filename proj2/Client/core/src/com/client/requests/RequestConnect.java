@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 
 import com.client.ClientManager;
 
+
 public class RequestConnect extends Request
 {
 	private String ip;
@@ -15,7 +16,7 @@ public class RequestConnect extends Request
 	public RequestConnect(String ip, int port)
 	{
 		super("CONNECT");
-		this.ip = ip;
+		this.ip = ip; 
 		this.port = port;
 	}
 	

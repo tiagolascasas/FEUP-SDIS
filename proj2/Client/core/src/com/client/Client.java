@@ -4,9 +4,11 @@ import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.JsonReader;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
 
@@ -18,13 +20,15 @@ public class Client extends ApplicationAdapter
 	@Override
 	public void create()
 	{
-		this.console = new GUIConsole();
-		this.services = new Services(console);
-		
-		console.setCommandExecutor(services);
+		console = new GUIConsole();
 		console.setVisible(true);
 		console.setPosition(0, 700);
 		console.setSize(700, 400);
+		
+		FileHandle serverList = Gdx.files.local("servers.json");
+		
+		services = new Services(console, serverList);
+		console.setCommandExecutor(services);
 	}
 
 	@Override

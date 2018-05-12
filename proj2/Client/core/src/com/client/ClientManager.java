@@ -1,10 +1,11 @@
 package com.client;
 
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import com.strongjoshua.console.Console;
+import java.util.LinkedList;
+import java.util.Queue;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.strongjoshua.console.GUIConsole;
 
 public class ClientManager
@@ -17,8 +18,13 @@ public class ClientManager
 	private ServerListener listener;
 	private boolean loggedIn;
 	private boolean connected = false;
+	private FileHandle confFile;
+	private Queue<String> servers;
 
-	private ClientManager(){}
+	private ClientManager()
+	{
+		this.servers = new LinkedList<>();
+	}
 	
 	public static ClientManager getInstance()
 	{
@@ -91,5 +97,29 @@ public class ClientManager
 	public boolean getConnected()
 	{
 		return this.connected;
+	}
+
+	public void setConfFile(FileHandle confFile)
+	{
+		this.confFile = confFile;
+		JsonReader reader = new JsonReader();
+		JsonValue val = reader.parse(confFile);
+		JsonValue servers = val.get("servers");
+		JsonValue str = servers.child;
+		while (str != null)
+		{
+			this.servers.add(str.asString());
+			str = str.next();
+		}
+	}
+	
+	public FileHandle getConfFile()
+	{
+		return this.confFile;
+	}
+	
+	public String getNextServer()
+	{
+		return servers.poll();
 	}
 }
