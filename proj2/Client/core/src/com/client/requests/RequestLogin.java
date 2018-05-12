@@ -1,5 +1,7 @@
 package com.client.requests;
 
+import com.client.ClientManager;
+
 public class RequestLogin extends Request
 {
 	private String username;
@@ -15,7 +17,13 @@ public class RequestLogin extends Request
 	@Override
 	public void run()
 	{
-		String message = this.type + " " + username + " " + password + "\0";
+		if (ClientManager.getInstance().getLoggedIn())
+		{
+			ClientManager.getInstance().log("You are already logged in");
+			return;
+		}
+		
+		String message = this.type + " " + username + " " + password + "\0"; 
 		send(message);
 	}
 }

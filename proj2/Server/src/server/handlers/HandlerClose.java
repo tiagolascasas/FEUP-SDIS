@@ -5,7 +5,7 @@ import java.net.Socket;
 
 import server.Notifier;
 import server.ServerManager;
-import server.utils.Utils;
+import server.Utils;
 
 public class HandlerClose extends Handler
 {

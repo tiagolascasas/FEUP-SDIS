@@ -4,7 +4,7 @@ import java.net.Socket;
 
 import server.Notifier;
 import server.ServerManager;
-import server.utils.Utils;
+import server.Utils;
 
 public class HandlerLogin extends Handler
 {
@@ -24,14 +24,9 @@ public class HandlerLogin extends Handler
 		
 		StringBuilder build = new StringBuilder();
 		build.append("RES_LOGIN ");
-		if (!manager.userIsRegistered(username))
+		if (!verifyCredentials())
 		{
-			String message = Utils.encode("Error logging in: this user does not exist");
-			build.append(0).append(" ").append(message);
-		}
-		else if (!manager.passwordIsCorrect(username, hash))
-		{
-			String message = Utils.encode("Error: the password is incorrect");
+			String message = Utils.encode("Error: the username and/or password are incorrect");
 			build.append(0).append(" ").append(message);
 		}
 		else if (!manager.loginUser(username, password, socket))

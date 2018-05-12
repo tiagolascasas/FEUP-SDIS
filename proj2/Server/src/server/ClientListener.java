@@ -13,7 +13,6 @@ import server.handlers.HandlerLogin;
 import server.handlers.HandlerRegister;
 import server.handlers.HandlerSearch;
 import server.handlers.HandlerUpload;
-import server.utils.Utils;
 
 public class ClientListener implements Runnable
 {

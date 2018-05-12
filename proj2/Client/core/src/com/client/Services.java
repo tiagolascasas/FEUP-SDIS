@@ -50,7 +50,7 @@ public class Services extends CommandExecutor
 		RequestRegister request = new RequestRegister(username, password);
 		threads.execute(request);
 	}
-	
+	 
 	@ConsoleDoc(description = "Logs the user onto the server")
 	public void login(String username, String password)
 	{
@@ -83,7 +83,7 @@ public class Services extends CommandExecutor
 	public void exit()
 	{
 		RequestClose request = new RequestClose();
-		threads.execute(request);
+		request.run();
 	}
 	
 	@ConsoleDoc(description = "Closes the application (same as exit)")

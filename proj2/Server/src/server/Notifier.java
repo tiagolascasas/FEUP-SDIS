@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import server.utils.Utils;
-
 public class Notifier extends Thread
 {
 	private String excludeClient;

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class OnlineUsers implements Serializable
 {
 	private static final long serialVersionUID = 8931759196661021575L;
-	ArrayList<String> users;
-	ArrayList<Socket> sockets;
+	private ArrayList<String> users;
+	private ArrayList<Socket> sockets;
 	
 	public OnlineUsers()
 	{
@@ -18,8 +18,11 @@ public class OnlineUsers implements Serializable
 	
 	public synchronized void setUserOnline(String username, Socket socket)
 	{
-		users.add(username);
-		sockets.add(socket);
+		if (users.indexOf(username) == -1)
+		{
+			users.add(username);
+			sockets.add(socket);
+		}
 	}
 	
 	public synchronized void setUserOffline(String username)
@@ -48,16 +51,26 @@ public class OnlineUsers implements Serializable
 		return users.get(index);
 	}
 
-	public boolean isOnline(String username)
+	public boolean isOnline(String username, Socket socket)
 	{
-		return users.indexOf(username) > -1;
+		return users.indexOf(username) > -1 && sockets.indexOf(socket) > -1;
 	}
 	
 	public ArrayList<Socket> getAllUserSockets(String excludeUser)
 	{
 		ArrayList<Socket> res = (ArrayList<Socket>) this.sockets.clone();
 		int index = users.indexOf(excludeUser);
-		res.remove(index);
+		if (index > -1)
+			res.remove(index);
 		return res;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String s = "";
+		for (String u : users)
+			s += u + '\n';
+		return s;
 	}
 }

@@ -66,6 +66,9 @@ public class Server
 
 	public void run()
 	{	
+		StateSaver saver = new StateSaver();
+		saver.start();
+		
 		while (this.running)
 		{
 			Socket clSocket = null;

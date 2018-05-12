@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import server.ServerManager;
+import server.Utils;
 
 public abstract class Handler implements Runnable
 {
@@ -50,5 +51,14 @@ public abstract class Handler implements Runnable
 		{
 			log("Unable to write response to client");
 		}
+	}
+	
+	protected boolean verifyCredentials()
+	{
+		String hash = Utils.hashPassword(password);
+		
+		if (!ServerManager.getInstance().userIsRegistered(username))
+			return false;
+		else return ServerManager.getInstance().passwordIsCorrect(username, hash);
 	}
 }

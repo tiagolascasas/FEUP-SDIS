@@ -37,6 +37,7 @@ public class ServerManager
 			ObjectInput objectStream = new ObjectInputStream(inputStream);
 			this.files = (FileStorage)objectStream.readObject();
 			this.users = (UserRegistry)objectStream.readObject();
+			this.onlineUsers = new OnlineUsers();
 			objectStream.close();
 			System.out.println("Successfully accessed persistent data");
 		}
@@ -71,8 +72,10 @@ public class ServerManager
 	
 	public synchronized boolean loginUser(String username, String passwordHash, Socket socket)
 	{
-		if (onlineUsers.isOnline(username))
+		if (onlineUsers.isOnline(username, socket))
 			return false;
+		
+		System.out.println("ONLINE USERS:");
 		System.out.print(onlineUsers.toString());
 		
 		onlineUsers.setUserOnline(username, socket);
