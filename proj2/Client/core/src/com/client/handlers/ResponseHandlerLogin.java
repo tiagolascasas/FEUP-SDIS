@@ -20,6 +20,6 @@ public class ResponseHandlerLogin extends ResponseHandler
 		if (status == 0)
 			ClientManager.getInstance().setLoggedIn(true);
 		String res = new String(Base64.getDecoder().decode(this.msg));
-		ClientManager.getInstance().getConsole().log(res);
+		ClientManager.getInstance().log(res);
 	}
 }

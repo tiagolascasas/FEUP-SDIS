@@ -3,6 +3,7 @@ package server.handlers;
 import java.io.IOException;
 import java.net.Socket;
 
+import server.Notifier;
 import server.ServerManager;
 import server.utils.Utils;
 
@@ -30,6 +31,11 @@ public class HandlerClose extends Handler
 		{
 			System.out.println("Error closing connection to client " + socket.getRemoteSocketAddress());
 		}
+		
+		String notify = "Client " + username + " is now offline";
+		Notifier notif = new Notifier(username, notify);
+		notif.start();
+		
 		log("Exiting");
 	}
 

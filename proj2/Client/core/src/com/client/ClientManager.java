@@ -26,80 +26,80 @@ public class ClientManager
 		this.servers = new LinkedList<>();
 	}
 	
-	public static ClientManager getInstance()
+	public synchronized static ClientManager getInstance()
 	{
 		if (instance == null)
 			instance = new ClientManager();
 		return instance;
 	}
 
-	public String getPassword()
+	public synchronized String getPassword()
 	{
 		return password;
 	}
 
-	public void setPassword(String password)
+	public synchronized void setPassword(String password)
 	{
 		this.password = password;
 	}
 
-	public String getUsername()
+	public synchronized String getUsername()
 	{
 		return username;
 	}
 
-	public void setUsername(String username)
+	public synchronized void setUsername(String username)
 	{
 		this.username = username;
 	}
 
-	public Socket getSocket()
+	public synchronized Socket getSocket()
 	{
 		return socket;
 	}
 
-	public void setSocket(Socket socket)
+	public synchronized void setSocket(Socket socket)
 	{
 		this.socket = socket;
 	}
 
-	public GUIConsole getConsole()
+	public synchronized GUIConsole getConsole()
 	{
 		return console;
 	}
 
-	public void setConsole(GUIConsole console)
+	public synchronized void setConsole(GUIConsole console)
 	{
 		this.console = console;
 	}
 
-	public boolean getLoggedIn()
+	public synchronized boolean getLoggedIn()
 	{
 		return this.loggedIn;
 	}
 	
-	public void initListener()
+	public synchronized void initListener()
 	{
 		this.listener = new ServerListener(this.socket);
 		this.listener.start();
 	}
 
-	public void setLoggedIn(boolean isLoggedIn)
+	public synchronized void setLoggedIn(boolean isLoggedIn)
 	{
 		this.loggedIn = isLoggedIn;
 	}
 
-	public void setConnected(boolean b)
+	public synchronized void setConnected(boolean b)
 	{
 		this.connected  = b;
 	}
 
-	public boolean getConnected()
+	public synchronized boolean getConnected()
 	{
 		return this.connected;
 	}
 
-	public void setConfFile(FileHandle confFile)
+	public synchronized void setConfFile(FileHandle confFile)
 	{
 		this.confFile = confFile;
 		JsonReader reader = new JsonReader();
@@ -113,13 +113,18 @@ public class ClientManager
 		}
 	}
 	
-	public FileHandle getConfFile()
+	public synchronized FileHandle getConfFile()
 	{
 		return this.confFile;
 	}
 	
-	public String getNextServer()
+	public synchronized String getNextServer()
 	{
 		return servers.poll();
+	}
+	
+	public synchronized void log(String s)
+	{
+		this.console.log(s);
 	}
 }

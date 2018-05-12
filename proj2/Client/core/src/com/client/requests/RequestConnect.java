@@ -25,7 +25,7 @@ public class RequestConnect extends Request
 	{
 		if (ClientManager.getInstance().getConnected() == true)
 		{
-			ClientManager.getInstance().getConsole().log("You are already connected");
+			ClientManager.getInstance().log("You are already connected");
 			return;
 		}
 		InetAddress ip = null;
@@ -35,11 +35,11 @@ public class RequestConnect extends Request
 		} 
 		catch (UnknownHostException e)
 		{
-			ClientManager.getInstance().getConsole().log("Unable to resolve specified IP " + ip);
+			ClientManager.getInstance().log("Unable to resolve specified IP " + ip);
 			return;
 		}
 		
-		ClientManager.getInstance().getConsole().log("Attempting to connect to " + ip + ":" + port);
+		ClientManager.getInstance().log("Attempting to connect to " + ip + ":" + port);
 		try
 		{
 			Socket socket = new Socket(ip, this.port);
@@ -47,10 +47,10 @@ public class RequestConnect extends Request
 		} 
 		catch (IOException e)
 		{
-			ClientManager.getInstance().getConsole().log("Error connecting to " + ip + ":" + port);
+			ClientManager.getInstance().log("Error connecting to " + ip + ":" + port);
 			return;
 		}
-		ClientManager.getInstance().getConsole().log("Connection to " + ip + ":" + port + " successfully established!");
+		ClientManager.getInstance().log("Connection to " + ip + ":" + port + " successfully established!");
 		
 		ClientManager.getInstance().initListener();
 		ClientManager.getInstance().setConnected(true);

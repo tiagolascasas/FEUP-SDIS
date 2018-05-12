@@ -4,48 +4,60 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import server.utils.Pair;
-import server.utils.PairList;
-
 public class OnlineUsers implements Serializable
 {
 	private static final long serialVersionUID = 8931759196661021575L;
-	PairList<String, Socket> list;
+	ArrayList<String> users;
+	ArrayList<Socket> sockets;
 	
 	public OnlineUsers()
 	{
-		this.list = new PairList<String, Socket>();
+		this.users = new ArrayList<>();
+		this.sockets = new ArrayList<>();
 	}
 	
 	public synchronized void setUserOnline(String username, Socket socket)
 	{
-		list.pushPair(username, socket);
+		users.add(username);
+		sockets.add(socket);
 	}
 	
 	public synchronized void setUserOffline(String username)
 	{
-		Socket socket = list.getSecondFromFirst(username);
-		list.removePair(username, socket);
+		int index = users.indexOf(username);
+		users.remove(index);
+		sockets.remove(index);	
 	}
 	
 	public synchronized void setUserOffline(Socket socket)
 	{
-		String username = list.getFirstFromSecond(socket);
-		list.removePair(username, socket);
+		int index = sockets.indexOf(socket);
+		users.remove(index);
+		sockets.remove(index);
 	}
 	
 	public Socket getUserSocket(String username)
 	{
-		return list.getSecondFromFirst(username);
+		int index = users.indexOf(username);
+		return sockets.get(index);
 	}
 	
 	public String getUsername(Socket socket)
 	{
-		return list.getFirstFromSecond(socket);
+		int index = sockets.indexOf(socket);
+		return users.get(index);
 	}
 
 	public boolean isOnline(String username)
 	{
-		return list.getSecondFromFirst(username) != null;
+		return users.indexOf(username) > -1;
+	}
+	
+	public ArrayList<Socket> getAllUserSockets(String excludeUser)
+	{
+		ArrayList<Socket> res = (ArrayList<Socket>) this.sockets.clone();
+		int index = users.indexOf(excludeUser);
+		res.remove(index);
+		return res;
 	}
 }

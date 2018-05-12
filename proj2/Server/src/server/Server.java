@@ -3,16 +3,29 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class Server
 {
 	private ServerSocket socket;
 	private Notifier notifHandler;
 	private boolean running = true;
+	private ThreadPoolExecutor threads;
 	
 	public Server(int port, boolean enableStdoutLogging)
 	{
 		ServerManager.getInstance().setLogging(enableStdoutLogging);
+		
+		this.threads = new ThreadPoolExecutor(
+	            200,
+	            400,
+	            10000,
+	            TimeUnit.MILLISECONDS,
+	            new LinkedBlockingQueue<Runnable>()
+				);
+		
 		try
 		{
 			this.socket = new ServerSocket(port);
@@ -52,10 +65,7 @@ public class Server
 	}
 
 	public void run()
-	{
-		this.notifHandler = new Notifier();
-		this.notifHandler.run();
-		
+	{	
 		while (this.running)
 		{
 			Socket clSocket = null;
@@ -69,7 +79,7 @@ public class Server
 				System.out.println("Unable to accept a socket connection");
 			}
 			ClientListener client = new ClientListener(clSocket);
-			client.run();
+			this.threads.execute(client);
 		}
 		System.exit(0);
 	}

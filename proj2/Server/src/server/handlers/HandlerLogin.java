@@ -2,6 +2,7 @@ package server.handlers;
 
 import java.net.Socket;
 
+import server.Notifier;
 import server.ServerManager;
 import server.utils.Utils;
 
@@ -42,6 +43,10 @@ public class HandlerLogin extends Handler
 		{
 			String message = Utils.encode("Successfully logged in");
 			build.append(1).append(" ").append(message);
+			
+			String notify = "Client " + username + " is now online";
+			Notifier notif = new Notifier(username, notify);
+			notif.start();
 		}
 		build.append('\0');
 		String s = build.toString();

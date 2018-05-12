@@ -32,7 +32,7 @@ public class RequestDownload extends Request
 		} 
         catch (IOException e)
 		{
-			ClientManager.getInstance().getConsole().log("Error accessing file " + this.track);
+			ClientManager.getInstance().log("Error accessing file " + this.track);
 			return;
 		}
         

@@ -54,22 +54,22 @@ public class ServerManager
 		return instance;
 	}
 	
-	public boolean registerUser(String username, String passwordHash)
+	public synchronized boolean registerUser(String username, String passwordHash)
 	{
 		return users.register(username, passwordHash);
 	}
 	
-	public boolean userIsRegistered(String username)
+	public synchronized boolean userIsRegistered(String username)
 	{
 		return users.verifyUsername(username);
 	}
 	
-	public boolean passwordIsCorrect(String username, String passwordHash)
+	public synchronized boolean passwordIsCorrect(String username, String passwordHash)
 	{
 		return users.verifyPassword(username, passwordHash);
 	}
 	
-	public boolean loginUser(String username, String passwordHash, Socket socket)
+	public synchronized boolean loginUser(String username, String passwordHash, Socket socket)
 	{
 		if (onlineUsers.isOnline(username))
 			return false;
@@ -79,28 +79,28 @@ public class ServerManager
 		return true;
 	}
 	
-	public void logoutUser(String username)
+	public synchronized void logoutUser(String username)
 	{
 		onlineUsers.setUserOffline(username);
 	}
 	
-	public void saveTrack(String username, String title, byte[] data)
+	public synchronized void saveTrack(String username, String title, byte[] data)
 	{
 		users.addTrackToUser(username, title);
 		files.save(title, data);
 	}
 	
-	public ArrayList<String> searchTrack(String title)
+	public synchronized ArrayList<String> searchTrack(String title)
 	{
 		return files.search(title);
 	}
 	
-	public byte[] getTrack(String title)
+	public synchronized byte[] getTrack(String title)
 	{
 		return files.retrieve(title);
 	}
 
-	public void log(String s)
+	public synchronized void log(String s)
 	{
 		byte[] data = s.getBytes();
 		try
@@ -116,7 +116,7 @@ public class ServerManager
 			System.out.println(s);
 	}
 
-	public void setLogging(boolean enableStdoutLogging)
+	public synchronized void setLogging(boolean enableStdoutLogging)
 	{
 		this.enableStdoutLogging = enableStdoutLogging;
 		long unixTime = System.currentTimeMillis() / 1000L;
@@ -131,7 +131,7 @@ public class ServerManager
 		}
 	}
 	
-	public void saveState()
+	public synchronized void saveState()
 	{
 		String serName = STATEFILE;
 		try
@@ -145,5 +145,10 @@ public class ServerManager
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public synchronized ArrayList<Socket> getOnlineSockets(String excludeUser)
+	{
+		return onlineUsers.getAllUserSockets(excludeUser);
 	}
 }

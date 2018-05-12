@@ -19,8 +19,7 @@ public class ResponseHandlerDownload extends ResponseHandler
 	@Override
 	public void run()
 	{
-		// TODO Auto-generated method stub
-
+		//if status is ok, play track
 	}
 
 }

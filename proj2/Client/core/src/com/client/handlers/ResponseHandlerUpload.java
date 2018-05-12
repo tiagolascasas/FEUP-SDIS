@@ -6,15 +6,14 @@ public class ResponseHandlerUpload extends ResponseHandler
 
 	public ResponseHandlerUpload(String status, String message)
 	{
-		super("Upload", status);
+		super("RES_UPLOAD", status);
 		this.message = message;
 	}
 
 	@Override
 	public void run()
 	{
-		// TODO Auto-generated method stub
-
+		//show server message
 	}
 
 }

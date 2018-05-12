@@ -18,6 +18,6 @@ public class ResponseHandlerRegister extends ResponseHandler
 	public void run()
 	{
 		String res = new String(Base64.getDecoder().decode(this.msg));
-		ClientManager.getInstance().getConsole().log(res);
+		ClientManager.getInstance().log(res);
 	}
 }

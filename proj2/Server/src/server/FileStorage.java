@@ -11,8 +11,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import server.utils.PairList;
-
 public class FileStorage implements Serializable
 {
 	private static final long serialVersionUID = 4832308080638012451L;

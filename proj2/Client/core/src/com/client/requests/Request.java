@@ -25,7 +25,7 @@ public abstract class Request implements Runnable
 	{
 		if (!ClientManager.getInstance().getConnected())
 		{
-			ClientManager.getInstance().getConsole().log("You must be connected to a server in order to send requests");
+			ClientManager.getInstance().log("You must be connected to a server in order to send requests");
 		}
 		
 		Socket socket = ClientManager.getInstance().getSocket();
@@ -35,7 +35,7 @@ public abstract class Request implements Runnable
 		} 
 		catch (IOException e)
 		{
-			ClientManager.getInstance().getConsole().log("Error sending a request");
+			ClientManager.getInstance().log("Error sending a request");
 		}
 	}
 	
@@ -43,7 +43,7 @@ public abstract class Request implements Runnable
 	{
 		if (!ClientManager.getInstance().getLoggedIn())
 		{
-			ClientManager.getInstance().getConsole().log("You cannot use this functionality without authentication");
+			ClientManager.getInstance().log("You cannot use this functionality without authentication");
 			return false;
 		}
 		return true;

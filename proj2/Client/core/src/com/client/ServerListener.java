@@ -11,7 +11,10 @@ import java.util.concurrent.TimeUnit;
 import com.badlogic.gdx.Gdx;
 import com.client.handlers.ResponseHandlerDownload;
 import com.client.handlers.ResponseHandlerLogin;
+import com.client.handlers.ResponseHandlerNotification;
 import com.client.handlers.ResponseHandlerRegister;
+import com.client.handlers.ResponseHandlerSearch;
+import com.client.handlers.ResponseHandlerUpload;
 import com.client.requests.RequestConnect;
 import com.strongjoshua.console.GUIConsole;
 
@@ -36,7 +39,7 @@ public class ServerListener extends Thread
 	@Override
 	public void run()
 	{
-		ClientManager.getInstance().getConsole().log("Subscribed to push notifications");
+		ClientManager.getInstance().log("Subscribed to push notifications");
 		while(this.running)
 		{
 			ArrayList<Byte> message = new ArrayList<Byte>();
@@ -69,7 +72,7 @@ public class ServerListener extends Thread
 		try
 		{
 			this.socket.close();
-			ClientManager.getInstance().getConsole().log("The server terminated the connection");
+			ClientManager.getInstance().log("The server terminated the connection");
 			ClientManager.getInstance().setConnected(false);
 		}
 		catch (IOException e)
@@ -150,8 +153,7 @@ public class ServerListener extends Thread
 			case "RES_SEARCH":
 			{
 				if (elements.length == 4)
-					//(new HandlerSearch(socket, elements[1], elements[2], elements[3])).run();
-					break;
+					(new ResponseHandlerSearch(elements[1], elements[2])).run();
 				else
 					hasErrors = true;
 				break;
@@ -159,8 +161,15 @@ public class ServerListener extends Thread
 			case "RES_UPLOAD":
 			{
 				if (elements.length == 5)
-					//(new HandlerUpload(socket, elements[1], elements[2], elements[3], elements[4])).run();
-					break;
+					(new ResponseHandlerUpload(elements[1], elements[2])).run();
+				else
+					hasErrors = true;
+				break;
+			}
+			case "NOTIF":
+			{
+				if (elements.length == 2)
+					(new ResponseHandlerNotification(elements[1])).run();
 				else
 					hasErrors = true;
 				break;
