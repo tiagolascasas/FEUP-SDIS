@@ -1,19 +1,25 @@
 package com.client.handlers;
 
-public class ResponseHandlerUpload extends ResponseHandler
-{
+import java.util.Base64;
+
+import com.client.ClientManager;
+
+public class ResponseHandlerUpload extends ResponseHandler {
 	private String message;
 
-	public ResponseHandlerUpload(String status, String message)
-	{
+	public ResponseHandlerUpload(String status, String message) {
 		super("RES_UPLOAD", status);
 		this.message = message;
 	}
 
 	@Override
-	public void run()
+	public void run() 
 	{
-		//show server message
+		if (status == 0)
+			ClientManager.getInstance().setLoggedIn(true);
+
+		String res = new String(Base64.getDecoder().decode(this.message));
+		ClientManager.getInstance().log(res);
 	}
 
 }

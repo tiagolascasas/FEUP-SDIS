@@ -19,8 +19,7 @@ public class User implements Serializable
 
 	public void addTrack(String title)
 	{
-		// TODO Auto-generated method stub
-		
+		this.files.add(title);
 	}
 
 	public String getPassword()

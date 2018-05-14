@@ -91,6 +91,7 @@ public class ClientListener implements Runnable
 	protected void processMessage(String message)
 	{
 		String[] elements = message.split(" ");
+		System.out.println(elements);
 		if (elements.length < 1)
 		{
 			System.out.println("Dropped uncomprehensible message \"" + message + "\"");
@@ -111,7 +112,7 @@ public class ClientListener implements Runnable
 			case "DOWNLOAD":
 			{
 				if (elements.length == 4)
-					(new HandlerDownload(socket, elements[1], elements[2])).run();
+					(new HandlerDownload(socket, elements[1], elements[2], elements[3])).run();
 				else
 					hasErrors = true;
 				break;

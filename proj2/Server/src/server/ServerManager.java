@@ -87,10 +87,13 @@ public class ServerManager
 		onlineUsers.setUserOffline(username);
 	}
 	
-	public synchronized void saveTrack(String username, String title, byte[] data)
+	public synchronized boolean saveTrack(String username, String title, byte[] data)
 	{
-		users.addTrackToUser(username, title);
-		files.save(title, data);
+		if(files.save(title, data)) {
+			users.addTrackToUser(username, title);
+			return true;
+		}
+		return false;
 	}
 	
 	public synchronized ArrayList<String> searchTrack(String title)

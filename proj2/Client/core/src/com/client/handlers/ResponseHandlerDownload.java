@@ -1,25 +1,27 @@
 package com.client.handlers;
 
-import java.net.Socket;
+import java.util.Base64;
 
-import com.strongjoshua.console.Console;
+import com.client.ClientManager;
 
 public class ResponseHandlerDownload extends ResponseHandler
 {
-	private String body;
-	private String title;
+	private String message;
 
 	public ResponseHandlerDownload(String status, String title, String body)
 	{
 		super("RES_DOWNLOAD", status);
-		this.title = title;
-		this.body = body;
+		this.message = title + ' ' + body;
 	}
 
 	@Override
 	public void run()
 	{
-		//if status is ok, play track
+		if (status == 0)
+			ClientManager.getInstance().setLoggedIn(true);
+
+		String res = new String(Base64.getDecoder().decode(this.message));
+		ClientManager.getInstance().log(res);
 	}
 
 }

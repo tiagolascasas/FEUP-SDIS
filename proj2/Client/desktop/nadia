@@ -1,0 +1,34 @@
+1526310797412: Attempting to connect to localhost/127.0.0.1:30000
+1526310797455: Connection to localhost/127.0.0.1:30000 successfully established!
+1526310797583: Subscribed to push notifications
+1526310854247: > ls
+1526310854248: Error: No such method found.
+1526310875158: > connect
+1526310875159: Error: Bad parameters. Check your code.
+1526310898091: > getLoggedIn
+1526310898092: Error: No such method found.
+1526310911028: > getLoggedIn()
+1526310911028: Error: No such method found.
+1526310937227: > register
+1526310937230: Error: Bad parameters. Check your code.
+1526310945064: > register nadia 123456
+1526310945472: Successfully registered the new user
+1526310953294: > help
+1526310953400: exit : 
+1526310953401: register : String, String
+1526310953402: connect : String, int
+1526310953403: getThreads : 
+1526310953403: close : 
+1526310953404: search : String
+1526310953405: login : String, String
+1526310953405: upload : String
+1526310953407: play : String
+1526310953407: setThreads : ThreadPoolExecutor
+1526310953417: help : String
+1526310953418: help : 
+1526310953419: printLog : String
+1526310953419: exitApp : 
+1526310953420: logView : 
+1526310984172: > printLog
+1526310984173: Error: Bad parameters. Check your code.
+1526310987922: > printLog nadia
