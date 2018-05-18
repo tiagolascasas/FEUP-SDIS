@@ -25,9 +25,10 @@ public class HandlerDownload extends Handler
 
 		ServerManager manager = ServerManager.getInstance();
 		StringBuilder build = new StringBuilder();
-
-		byte data[] = manager.getTrack(track);
-		if (data.length == 0) {
+		build.append("RES_DOWNLOAD ");
+		
+		byte data[] = manager.getTrack(this.track);
+		if (data == null || data.length == 0 ) {
 			String message = Utils.encode("Error: Counldn't download file from server");
 			build.append(0).append(" ").append(message);
 		} else {
@@ -41,7 +42,7 @@ public class HandlerDownload extends Handler
 		build.append('\0');
 		String s = build.toString();
 		send(s);
-
+		
 		log("Exiting");
 	}
 

@@ -5,12 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousFileChannel;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -33,7 +28,7 @@ public class FileStorage implements Serializable
 		String path = STORAGE_DIR + "/" + title;
 		try
 		{	/*
-			//TODO: verificar se isto conta como I/O assíncrono
+			//TODO: verificar se isto conta como I/O assï¿½ncrono
 			AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(path, StandardOpenOption.WRITE);
 			ByteBuffer buffer = ByteBuffer.allocate(data.length);
 			buffer.put(data);
@@ -75,11 +70,27 @@ public class FileStorage implements Serializable
 
 	public byte[] retrieve(String title)
 	{
+		title = Utils.decode(title);
+		String path = STORAGE_DIR + "/" + title;
+
 		if (storedFiles.indexOf(title) == -1)
 			return null;
+
+		byte[] data = null;
+		
+		try {
+			File file = new File(path);	
+			if(!file.exists())
+				System.out.println("File doesn't Exist on storage!");
+			else if(!file.isFile())
+				System.out.println("File is not File on storage!");
+			data = Files.readAllBytes(file.toPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 			
-		//TODO: usar I/O assíncrono para ler o ficheiro
-		return null;
+		//TODO: usar I/O assï¿½ncrono para ler o ficheiro
+		return data;
 	}
 
 }
