@@ -22,8 +22,10 @@ public class RequestLogin extends Request
 			ClientManager.getInstance().log("You are already logged in");
 			return;
 		}
+		ClientManager.getInstance().setUsername(username);
+		ClientManager.getInstance().setPassword(password);
 		
-		String message = this.type + " " + username + " " + password + "\0"; 
+		String message = this.type + " " + username + " " + password + "\0";
 		send(message);
 	}
 }

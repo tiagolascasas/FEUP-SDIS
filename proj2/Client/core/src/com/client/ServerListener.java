@@ -161,7 +161,7 @@ public class ServerListener extends Thread
 			}
 			case "RES_UPLOAD":
 			{
-				if (elements.length == 5)
+				if (elements.length == 3)
 					(new ResponseHandlerUpload(elements[1], elements[2])).run();
 				else
 					hasErrors = true;

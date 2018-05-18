@@ -19,6 +19,12 @@ public class ResponseHandlerLogin extends ResponseHandler
 	{
 		if (status == 1)
 			ClientManager.getInstance().setLoggedIn(true);
+		else if (status == 0)
+		{
+			ClientManager.getInstance().setLoggedIn(false);
+			ClientManager.getInstance().setUsername(null);
+			ClientManager.getInstance().setPassword(null);
+		}
 		
 		String res = new String(Base64.getDecoder().decode(this.msg));
 		ClientManager.getInstance().log(res);

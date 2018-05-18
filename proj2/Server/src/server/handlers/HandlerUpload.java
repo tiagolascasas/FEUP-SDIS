@@ -29,7 +29,7 @@ public class HandlerUpload extends Handler
 
 		byte[] data = body.getBytes();
 		if (!manager.saveTrack(username, title, data)) {
-			String message = Utils.encode("Error: Counldn't upload file to server");
+			String message = Utils.encode("Error: Couldn't upload file to server");
 			build.append(0).append(" ").append(message);
 		} else
 		{

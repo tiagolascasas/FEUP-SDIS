@@ -14,9 +14,7 @@ public class ResponseHandlerUpload extends ResponseHandler {
 
 	@Override
 	public void run() 
-	{
-		System.out.println("|" + Base64.getDecoder().decode(this.message) + "|");
-		
+	{		
 		String res = new String(Base64.getDecoder().decode(this.message));
 		ClientManager.getInstance().log(res);
 	}

@@ -37,10 +37,11 @@ public class RequestUpload extends Request
 			return;
 		}
         
-        byte[] encodedName = Base64.getEncoder().encode(this.track.getBytes());
-        byte[] encodedFile = Base64.getEncoder().encode(fileData);
+        String encodedName = new String(Base64.getEncoder().encode(this.track.getBytes()));
+        String encodedFile = new String(Base64.getEncoder().encode(fileData));
         
         String message = getMessageHeader() + " " + encodedName + " " + encodedFile + "\0";
+        System.out.println(message);
         send(message);
 	}
 }
