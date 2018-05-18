@@ -150,9 +150,4 @@ public class ClientManager
 	{
 		this.drawingMutex = drawingMutex;
 	}
-
-	public Semaphore getDrawingMutex() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
