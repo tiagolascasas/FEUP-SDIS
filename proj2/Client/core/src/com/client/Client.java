@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.strongjoshua.console.GUIConsole;
+import java.util.concurrent.Semaphore;
 
 public class Client extends ApplicationAdapter 
 {
