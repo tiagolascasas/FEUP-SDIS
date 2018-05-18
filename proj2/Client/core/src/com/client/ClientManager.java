@@ -3,6 +3,8 @@ package com.client;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.Semaphore;
+
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -20,10 +22,12 @@ public class ClientManager
 	private boolean connected = false;
 	private FileHandle confFile;
 	private Queue<String> servers;
+	private Semaphore drawingMutex;
 
 	private ClientManager()
 	{
 		this.servers = new LinkedList<>();
+		this.drawingMutex = new Semaphore(1);
 	}
 	
 	public synchronized static ClientManager getInstance()
@@ -125,6 +129,25 @@ public class ClientManager
 	
 	public synchronized void log(String s)
 	{
-		this.console.log(s);
+		try 
+		{
+			this.drawingMutex.acquire();
+			this.console.log(s);
+			this.drawingMutex.release();
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public Semaphore getDrawingMutex() 
+	{
+		return drawingMutex;
+	}
+
+	public void setDrawingMutex(Semaphore drawingMutex) 
+	{
+		this.drawingMutex = drawingMutex;
 	}
 }

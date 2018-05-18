@@ -1,5 +1,7 @@
 package com.client;
 
+import java.util.concurrent.Semaphore;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -10,6 +12,7 @@ public class Client extends ApplicationAdapter
 {
 	private GUIConsole console;
 	private Services services;
+	private Semaphore drawingMutex;
 	
 	@Override
 	public void create()
@@ -23,14 +26,24 @@ public class Client extends ApplicationAdapter
 		
 		services = new Services(console, serverList);
 		console.setCommandExecutor(services);
+		drawingMutex = ClientManager.getInstance().getDrawingMutex();
 	}
 
 	@Override
 	public void render() 
 	{
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		this.console.draw(); 
+		try 
+		{
+			drawingMutex.acquire();
+			Gdx.gl.glClearColor(0, 0, 0, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			this.console.draw(); 
+			drawingMutex.release();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

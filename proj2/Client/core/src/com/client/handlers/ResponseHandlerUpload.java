@@ -15,9 +15,8 @@ public class ResponseHandlerUpload extends ResponseHandler {
 	@Override
 	public void run() 
 	{
-		if (status == 0)
-			ClientManager.getInstance().setLoggedIn(true);
-
+		System.out.println("|" + Base64.getDecoder().decode(this.message) + "|");
+		
 		String res = new String(Base64.getDecoder().decode(this.message));
 		ClientManager.getInstance().log(res);
 	}

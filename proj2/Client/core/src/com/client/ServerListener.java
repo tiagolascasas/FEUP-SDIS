@@ -74,6 +74,7 @@ public class ServerListener extends Thread
 			this.socket.close();
 			ClientManager.getInstance().log("The server terminated the connection");
 			ClientManager.getInstance().setConnected(false);
+			ClientManager.getInstance().setLoggedIn(false);
 		}
 		catch (IOException e)
 		{

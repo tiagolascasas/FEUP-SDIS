@@ -30,7 +30,7 @@ public class RequestUpload extends Request
         try
 		{
 			fileData = Files.readAllBytes(path);
-		} 
+		}
         catch (IOException e)
 		{
 			ClientManager.getInstance().log("Error accessing file " + this.track);

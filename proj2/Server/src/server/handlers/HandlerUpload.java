@@ -25,6 +25,7 @@ public class HandlerUpload extends Handler
 		
 		ServerManager manager = ServerManager.getInstance();
 		StringBuilder build = new StringBuilder();
+		build.append("RES_UPLOAD ");
 
 		byte[] data = body.getBytes();
 		if (!manager.saveTrack(username, title, data)) {

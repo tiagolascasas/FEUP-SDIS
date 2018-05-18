@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class OnlineUsers implements Serializable
 {
 	private static final long serialVersionUID = 8931759196661021575L;
+	private static final Object IGNORE = "_ignore";
 	private ArrayList<String> users;
 	private ArrayList<Socket> sockets;
 	
@@ -27,6 +28,8 @@ public class OnlineUsers implements Serializable
 	
 	public synchronized void setUserOffline(String username)
 	{
+		if (username.equals(IGNORE))
+			return;
 		int index = users.indexOf(username);
 		users.remove(index);
 		sockets.remove(index);	

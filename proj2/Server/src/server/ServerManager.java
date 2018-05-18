@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -111,7 +112,11 @@ public class ServerManager
 		byte[] data = s.getBytes();
 		try
 		{
-			this.fileChannel.write(ByteBuffer.wrap(data), 0).get();
+			ByteBuffer buffer = ByteBuffer.allocate(data.length);
+			buffer.put(data);
+			buffer.flip();
+			this.fileChannel.write(buffer, 0).get();
+			buffer.clear();
 		} 
 		catch (InterruptedException | ExecutionException e)
 		{

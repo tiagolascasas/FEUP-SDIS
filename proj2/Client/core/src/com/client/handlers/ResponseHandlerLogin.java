@@ -17,7 +17,7 @@ public class ResponseHandlerLogin extends ResponseHandler
 	@Override
 	public void run()
 	{
-		if (status == 0)
+		if (status == 1)
 			ClientManager.getInstance().setLoggedIn(true);
 		
 		String res = new String(Base64.getDecoder().decode(this.msg));
