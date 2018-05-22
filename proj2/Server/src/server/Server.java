@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 public class Server
 {
 	private ServerSocket socket;
-	private Notifier notifHandler;
 	private boolean running = true;
 	private ThreadPoolExecutor threads;
 	
@@ -49,12 +48,12 @@ public class Server
 		else
 		{
 			port = Integer.parseInt(args[0]);
-			if (args.length == 2)
-				enable = Integer.parseInt(args[1]) != 0;
+			if (args.length == 2 && args[1].equals("-d"))
+				enable = false;
 		}
 		if (!valid)
 		{
-			System.out.println("\nUsage: java -jar Client.jar <server port> [enable stdout logging 0..1]\n");
+			System.out.println("\nUsage: java -jar Client.jar <server port> [-d (disable stdout logging)]\n");
 			System.exit(-1);
 		}
 		else
