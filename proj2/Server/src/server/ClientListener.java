@@ -62,7 +62,9 @@ public class ClientListener implements Runnable
 				break;
 			
 			String messageStr = Utils.byteToString(message);
-			System.out.println("Received message: " + messageStr);
+			String outputMsg = messageStr.length() > 100 ? messageStr.substring(0, 99) : messageStr;
+			System.out.println("Received message: " + outputMsg);
+			
 			processMessage(messageStr);
 		}
 		try
@@ -91,7 +93,7 @@ public class ClientListener implements Runnable
 	protected void processMessage(String message)
 	{
 		String[] elements = message.split(" ");
-		System.out.println(elements);
+		
 		if (elements.length < 1)
 		{
 			System.out.println("Dropped uncomprehensible message \"" + message + "\"");
@@ -104,7 +106,7 @@ public class ClientListener implements Runnable
 			case "CLOSE":
 			{
 				if (elements.length == 3)
-					(new HandlerClose(socket, elements[1], elements[2])).run();
+					this.threads.execute(new HandlerClose(socket, elements[1], elements[2]));
 				else
 					hasErrors = true;
 				break;
@@ -112,7 +114,7 @@ public class ClientListener implements Runnable
 			case "DOWNLOAD":
 			{
 				if (elements.length == 4)
-					(new HandlerDownload(socket, elements[1], elements[2], elements[3])).run();
+					this.threads.execute(new HandlerDownload(socket, elements[1], elements[2], elements[3]));
 				else
 					hasErrors = true;
 				break;
@@ -120,7 +122,7 @@ public class ClientListener implements Runnable
 			case "LOGIN":
 			{
 				if (elements.length == 3)
-					(new HandlerLogin(socket, elements[1], elements[2])).run();
+					this.threads.execute(new HandlerLogin(socket, elements[1], elements[2]));
 				else
 					hasErrors = true;
 				break;
@@ -128,7 +130,7 @@ public class ClientListener implements Runnable
 			case "REGISTER":
 			{
 				if (elements.length == 3)
-					(new HandlerRegister(socket, elements[1], elements[2])).run();
+					this.threads.execute(new HandlerRegister(socket, elements[1], elements[2]));
 				else
 					hasErrors = true;
 				break;
@@ -136,7 +138,7 @@ public class ClientListener implements Runnable
 			case "SEARCH":
 			{
 				if (elements.length == 4)
-					(new HandlerSearch(socket, elements[1], elements[2], elements[3])).run();
+					this.threads.execute(new HandlerSearch(socket, elements[1], elements[2], elements[3]));
 				else
 					hasErrors = true;
 				break;
@@ -144,7 +146,7 @@ public class ClientListener implements Runnable
 			case "UPLOAD":
 			{
 				if (elements.length == 5)
-					(new HandlerUpload(socket, elements[1], elements[2], elements[3], elements[4])).run();
+					this.threads.execute(new HandlerUpload(socket, elements[1], elements[2], elements[3], elements[4]));
 				else
 					hasErrors = true;
 				break;

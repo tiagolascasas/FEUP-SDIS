@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 public class ServerManager
 {
 	private static final ServerManager instance = new ServerManager();
-	private static final String STATEFILE = ".state";
+	private static final String STATEFILE = "state";
 	
 	private UserRegistry users;
 	private OnlineUsers onlineUsers;
@@ -87,13 +87,12 @@ public class ServerManager
 		onlineUsers.setUserOffline(username);
 	}
 	
-	public synchronized boolean saveTrack(String username, String title, byte[] data)
+	public synchronized int saveTrack(String username, String title, byte[] data)
 	{
-		if(files.save(title, data)) {
+		int res = files.save(title, data);
+		if(res == 1)
 			users.addTrackToUser(username, title);
-			return true;
-		}
-		return false;
+		return res;
 	}
 	
 	public synchronized ArrayList<String> searchTrack(String title)

@@ -35,7 +35,8 @@ public abstract class Handler implements Runnable
 		out += " | ";
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         out += sdf.format(cal.getTime());
-        out +=" | " + s;
+        String outputMsg = s.length() > 50 ? s.substring(0, 49) : s;
+        out +=" | " + outputMsg;
 		
         ServerManager.getInstance().log(out);
 	}

@@ -20,21 +20,15 @@ public class FileStorage implements Serializable
 		this.storedFiles = new ArrayList<>();
 	}
 	
-	public boolean save(String title, byte[] data)
-	{
-		title = Utils.decode(title);
-		data = Utils.decode(new String(data)).getBytes();
-		
+	public int save(String title, byte[] data)
+	{	
 		String path = STORAGE_DIR + "/" + title;
 		try
-		{	/*
-			//TODO: verificar se isto conta como I/O ass�ncrono
-			AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(path, StandardOpenOption.WRITE);
-			ByteBuffer buffer = ByteBuffer.allocate(data.length);
-			buffer.put(data);
-			fileChannel.write(buffer, 0);*/
-			
+		{		
 			File file = new File(path);
+			if (file.exists() || this.storedFiles.contains(file))
+				return -1;
+				
 			if (data != null) 
 			{
 				DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
@@ -42,15 +36,15 @@ public class FileStorage implements Serializable
 				stream.close();
 			}
 			else
-				return false;
+				return 0;
 			
 			this.storedFiles.add(title);
-			return true;
+			return 1;
 		} 
 		catch (IOException e)
 		{
 			System.out.println("Error while writting to " + path);
-			return false;
+			return 0;
 		}
 	}
 
