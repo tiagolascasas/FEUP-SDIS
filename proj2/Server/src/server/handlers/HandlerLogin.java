@@ -20,6 +20,7 @@ public class HandlerLogin extends Handler
 		
 		ServerManager manager = ServerManager.getInstance();
 		
+		@SuppressWarnings("unused")
 		String hash = Utils.hashPassword(password);
 		
 		StringBuilder build = new StringBuilder();

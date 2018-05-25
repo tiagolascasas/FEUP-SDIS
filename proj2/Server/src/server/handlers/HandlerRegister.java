@@ -1,6 +1,5 @@
 package server.handlers;
 
-import java.io.IOException;
 import java.net.Socket;
 import server.ServerManager;
 import server.Utils;

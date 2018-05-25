@@ -1,9 +1,12 @@
 package com.client.handlers;
 
+import java.util.Base64;
+
+import com.client.ClientManager;
+
 public class ResponseHandlerSearch extends ResponseHandler
 {
 
-	@SuppressWarnings("unused")
 	private String message;
 
 	public ResponseHandlerSearch(String status, String message)
@@ -15,8 +18,8 @@ public class ResponseHandlerSearch extends ResponseHandler
 	@Override
 	public void run()
 	{
-		//parse message and show search results
-
+		String res = new String(Base64.getDecoder().decode(this.message));
+		ClientManager.getInstance().log(res);
 	}
 
 }
