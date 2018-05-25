@@ -130,7 +130,10 @@ public class ClientListener implements Runnable
 			case "REGISTER":
 			{
 				if (elements.length == 3)
+				{
 					this.threads.execute(new HandlerRegister(socket, elements[1], elements[2]));
+					ServerManager.getInstance().notifyBackups(message);
+				}
 				else
 					hasErrors = true;
 				break;
@@ -146,7 +149,10 @@ public class ClientListener implements Runnable
 			case "UPLOAD":
 			{
 				if (elements.length == 5)
+				{
 					this.threads.execute(new HandlerUpload(socket, elements[1], elements[2], elements[3], elements[4]));
+					ServerManager.getInstance().notifyBackups(message);
+				}
 				else
 					hasErrors = true;
 				break;

@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Path;
@@ -28,6 +30,13 @@ public class ServerManager
 	private FileStorage files;
 	private boolean enableStdoutLogging;
 	private AsynchronousFileChannel fileChannel;
+	private int id;
+	private String address;
+	private String leader;
+	private boolean leaderStatus;
+	private int port;
+	private int backupPort;
+	private ArrayList<Socket> backupServers;
 	
 	private ServerManager()
 	{
@@ -38,6 +47,7 @@ public class ServerManager
 			this.files = (FileStorage)objectStream.readObject();
 			this.users = (UserRegistry)objectStream.readObject();
 			this.onlineUsers = new OnlineUsers();
+			this.backupServers = new ArrayList<>();
 			objectStream.close();
 			System.out.println("Successfully accessed persistent data");
 		}
@@ -47,6 +57,7 @@ public class ServerManager
 			this.users = new UserRegistry();
 			this.onlineUsers = new OnlineUsers();
 			this.files = new FileStorage();
+			this.backupServers = new ArrayList<>();
 		}
 	}
 	
@@ -159,5 +170,110 @@ public class ServerManager
 	public synchronized ArrayList<Socket> getOnlineSockets(String excludeUser)
 	{
 		return onlineUsers.getAllUserSockets(excludeUser);
+	}
+
+	public int getId() 
+	{
+		return id;
+	}
+
+	public void setId(int id) 
+	{
+		this.id = id;
+	}
+
+	public String getAddress() 
+	{
+		String s = "";
+		try 
+		{
+			s = InetAddress.getLocalHost().toString().split("/")[1];
+			s += ":" + this.backupPort;
+		} 
+		catch (UnknownHostException e) 
+		{
+			e.printStackTrace();
+		}
+		return s;
+	}
+
+	public void setAddress(String address) 
+	{
+		this.address = address;
+	}
+
+	public String getLeader() 
+	{
+		return leader;
+	}
+
+	public void setLeader(String leader) 
+	{
+		this.leader = leader;
+	}
+
+	public boolean isLeaderStatus() 
+	{
+		return leaderStatus;
+	}
+
+	public void setLeaderStatus(boolean leaderStatus) 
+	{
+		this.leaderStatus = leaderStatus;
+	}
+
+	public int getPort() 
+	{
+		return port;
+	}
+
+	public void setPort(int port) 
+	{
+		this.port = port;
+	}
+
+	public int getBackupPort() 
+	{
+		return backupPort;
+	}
+
+	public void setBackupPort(int backupPort) 
+	{
+		this.backupPort = backupPort;
+	}
+
+	public void addBackupServer(Socket socket)
+	{
+		this.backupServers.add(socket);
+	}
+	
+	public void deleteBackupSocket(Socket socket)
+	{
+		try 
+		{
+			if (!socket.isClosed())
+				socket.close();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		this.backupServers.remove(socket);
+	}
+	
+	public void notifyBackups(String message) 
+	{
+		byte[] msg = Utils.byteArrayAppend(message.getBytes(), new byte[]{'\0'});
+		for (Socket socket : this.backupServers)
+		{
+			try 
+			{
+				socket.getOutputStream().write(msg);
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }
