@@ -14,6 +14,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ServerManager
 {
@@ -239,19 +242,42 @@ public class ServerManager
 		this.backupServers.remove(socket);
 	}
 	
-	public void notifyBackups(String message) 
+	public synchronized void notifyBackups(String message) 
 	{
 		byte[] msg = Utils.byteArrayAppend(message.getBytes(), new byte[]{'\0'});
+		
+		ExecutorService es = Executors.newCachedThreadPool();
+
 		for (Socket socket : this.backupServers)
 		{
-			try 
+			es.execute(new Runnable() 
 			{
-				socket.getOutputStream().write(msg);
-			} 
-			catch (IOException e) 
+				public void run() 
+				{
+					try 
+					{
+						socket.getOutputStream().write(msg);
+					} 
+					catch (IOException e) 
+					{
+					e.printStackTrace();
+					}
+				}
+			});
+		}
+		
+		es.shutdown();
+		try 
+		{
+			boolean finished;
+			do
 			{
-				e.printStackTrace();
-			}
+				finished = es.awaitTermination(1, TimeUnit.MINUTES);
+			} while (!finished);
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
 		}
 	}
 }

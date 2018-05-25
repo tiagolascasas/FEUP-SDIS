@@ -70,7 +70,7 @@ public class FileStorage implements Serializable
 	public byte[] retrieve(String title)
 	{
 		title = Utils.decode(title);
-		String path = storageDir + "_" + ServerManager.getInstance().getId() + "/" + title;
+		String path = storageDir + ServerManager.getInstance().getId() + "/" + title;
 
 		if (storedFiles.indexOf(title) == -1)
 			return null;

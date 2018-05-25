@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -23,11 +24,13 @@ public class ClientManager
 	private FileHandle confFile;
 	private Queue<String> servers;
 	private Semaphore drawingMutex;
+	private Music currentTrack;
 
 	private ClientManager()
 	{
 		this.servers = new LinkedList<>();
 		this.drawingMutex = new Semaphore(1);
+		this.currentTrack = null;
 	}
 	
 	public synchronized static ClientManager getInstance()
@@ -149,5 +152,16 @@ public class ClientManager
 	public void setDrawingMutex(Semaphore drawingMutex) 
 	{
 		this.drawingMutex = drawingMutex;
+	}
+
+	public void setActiveTrack(Music track) 
+	{
+		if (this.currentTrack == null)
+			this.currentTrack = track;
+		else
+		{
+			this.currentTrack.stop();
+			this.currentTrack = track;
+		}
 	}
 }

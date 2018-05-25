@@ -11,6 +11,8 @@ import com.client.ClientManager;
 public class RequestUpload extends Request
 {
 	private String track;
+	private static final String[] FORMATS = {".mp3", ".ogg", ".wav"};
+	private static final String LOCAL_LIB = "local_library";
 
 	public RequestUpload(String track)
 	{
@@ -24,7 +26,22 @@ public class RequestUpload extends Request
 		if (!checkAuthenticated())
 			return;
 		
-		Path path = FileSystems.getDefault().getPath("", this.track);
+		boolean validFormat = false;
+		for (String format : FORMATS)
+		{
+			if (this.track.toLowerCase().endsWith(format))
+			{
+				validFormat = true;
+				break;
+			}
+		}
+		if (!validFormat)
+		{
+			ClientManager.getInstance().log("Error: specified file is not an audio file. Accepted formats are .mp3, .ogg and .wav.");
+			return;
+		}
+		
+		Path path = FileSystems.getDefault().getPath(LOCAL_LIB + "/", this.track);
 		
 		String paths[] = this.track.split("/");
 		String filename = paths[paths.length-1];
@@ -41,13 +58,10 @@ public class RequestUpload extends Request
 			return;
 		}
         
-        System.out.println(fileData);
-        
         String encodedName = new String(Base64.getEncoder().encode(filename.getBytes()));
         String encodedFile = new String(Base64.getEncoder().encode(fileData));
         
         String message = getMessageHeader() + " " + encodedName + " " + encodedFile + "\0";
-        System.out.println(message);
         send(message);
 	}
 }
