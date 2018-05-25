@@ -30,6 +30,12 @@ public class HandlerUpload extends Handler
 
 		byte[] data = Base64.getDecoder().decode(this.body);
 		int res = manager.saveTrack(username, title, data);
+		
+		if (this.socket == null)
+		{
+			log("Backed up track " + title + " with success code " + res);
+			return;
+		}
 				
 		String message = "";
 		if (res == -1)

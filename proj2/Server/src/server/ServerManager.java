@@ -9,16 +9,11 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousFileChannel;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class ServerManager
 {
@@ -29,14 +24,13 @@ public class ServerManager
 	private OnlineUsers onlineUsers;
 	private FileStorage files;
 	private boolean enableStdoutLogging;
-	private AsynchronousFileChannel fileChannel;
 	private int id;
-	private String address;
 	private String leader;
 	private boolean leaderStatus;
 	private int port;
 	private int backupPort;
 	private ArrayList<Socket> backupServers;
+	private PrintWriter logFile;
 	
 	private ServerManager()
 	{
@@ -118,19 +112,8 @@ public class ServerManager
 
 	public synchronized void log(String s)
 	{
-		byte[] data = s.getBytes();
-		try
-		{
-			ByteBuffer buffer = ByteBuffer.allocate(data.length);
-			buffer.put(data);
-			buffer.flip();
-			this.fileChannel.write(buffer, 0).get();
-			buffer.clear();
-		} 
-		catch (InterruptedException | ExecutionException e)
-		{
-			e.printStackTrace();
-		}
+		this.logFile.write(s);
+		this.logFile.write("\n");
 
 		if (enableStdoutLogging)
 			System.out.println(s);
@@ -140,10 +123,10 @@ public class ServerManager
 	{
 		this.enableStdoutLogging = enableStdoutLogging;
 		long unixTime = System.currentTimeMillis() / 1000L;
-		Path logPath = Paths.get("log_" + unixTime + ".txt");
 		try
 		{
-			this.fileChannel = AsynchronousFileChannel.open(logPath, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+			String fileName = ("log_" + unixTime + "_" + this.id + ".txt");
+			this.logFile = new PrintWriter(fileName, "UTF-8");
 		} 
 		catch (IOException e)
 		{
@@ -153,7 +136,7 @@ public class ServerManager
 	
 	public synchronized void saveState()
 	{
-		String serName = STATEFILE;
+		String serName = STATEFILE + "_" + this.id;
 		try
 		{
 			ObjectOutputStream outStr = new ObjectOutputStream(new FileOutputStream(new File(serName)));
@@ -195,11 +178,6 @@ public class ServerManager
 			e.printStackTrace();
 		}
 		return s;
-	}
-
-	public void setAddress(String address) 
-	{
-		this.address = address;
 	}
 
 	public String getLeader() 

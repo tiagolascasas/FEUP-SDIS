@@ -11,8 +11,6 @@ public class BackupServer extends Thread
 {
 	private ServerSocket socket;
 	private boolean running = true;
-	private ThreadPoolExecutor threads;
-
 	public BackupServer(int backupPort) 
 	{
 		try 
@@ -23,7 +21,7 @@ public class BackupServer extends Thread
 		{
 			e.printStackTrace();
 		}
-		this.threads = new ThreadPoolExecutor(
+		new ThreadPoolExecutor(
 	            200,
 	            400,
 	            10000,

@@ -25,10 +25,10 @@ public class Server
 	
 	public Server(int port, int id, int backupPort, boolean enableStdoutLogging)
 	{
-		ServerManager.getInstance().setLogging(enableStdoutLogging);
 		ServerManager.getInstance().setId(id);
 		ServerManager.getInstance().setPort(port);
 		ServerManager.getInstance().setBackupPort(backupPort);
+		ServerManager.getInstance().setLogging(enableStdoutLogging);
 		
 		this.threads = new ThreadPoolExecutor(
 	            200,
@@ -85,6 +85,9 @@ public class Server
 		boolean isLeader = setLeader();
 		ServerManager.getInstance().setLeaderStatus(isLeader);
 		
+		StateSaver saver = new StateSaver();
+		saver.start();
+		
 		if (isLeader)
 			runServer();
 		else
@@ -93,10 +96,7 @@ public class Server
 
 	private void runServer() 
 	{
-		System.out.println("Server is the current leader");
-		
-		StateSaver saver = new StateSaver();
-		saver.start();
+		System.out.println("This server is the current leader");
 		
 		BackupServer backup = new BackupServer(ServerManager.getInstance().getBackupPort());
 		backup.start();
@@ -122,8 +122,8 @@ public class Server
 	private void runBackup() 
 	{
 		String leader = ServerManager.getInstance().getLeader();
-		System.out.println("Server is a primary backup");
-		System.out.println("Leader is " + leader);
+		System.out.println("This server is a primary backup");
+		System.out.println("Leader is server " + leader);
 		
 		String leaderIP = leader.split(":")[0];
 		int leaderPort = Integer.parseInt(leader.split(":")[1]);

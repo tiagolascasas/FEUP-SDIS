@@ -18,6 +18,12 @@ public class HandlerRegister extends Handler
 		String hash = Utils.hashPassword(password);
 		boolean ok = ServerManager.getInstance().registerUser(username, hash);
 		
+		if (this.socket == null)
+		{
+			log("Backed up user " + username + " with success code " + ok);
+			return;
+		}
+		
 		StringBuilder build = new StringBuilder();
 		build.append("RES_REGISTER ");
 		if (ok)

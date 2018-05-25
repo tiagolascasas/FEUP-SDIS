@@ -3,15 +3,29 @@ package server;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import server.handlers.HandlerRegister;
+import server.handlers.HandlerUpload;
 
 public class LeaderListener 
 {
 	private boolean running = true;
 	private Socket leaderSocket;
-
+	private ThreadPoolExecutor threads;
+	
 	public LeaderListener(Socket leaderSocket)
 	{
 		this.leaderSocket = leaderSocket;
+		this.threads = new ThreadPoolExecutor(
+	            200,
+	            400,
+	            10000,
+	            TimeUnit.MILLISECONDS,
+	            new LinkedBlockingQueue<Runnable>()
+				);
 	}
 	
 	public int listen() 
@@ -49,8 +63,42 @@ public class LeaderListener
 		return 0;
 	}
 
-	private void processMessage(String messageStr) 
+	private void processMessage(String message) 
 	{
-
+		String[] elements = message.split(" ");
+		
+		if (elements.length < 1)
+		{
+			System.out.println("Dropped uncomprehensible message \"" + message + "\"");
+			return;
+		}
+		boolean hasErrors = false;
+		
+		switch(elements[0])
+		{
+			case "REGISTER":
+			{
+				if (elements.length == 3)
+					this.threads.execute(new HandlerRegister(null, elements[1], elements[2]));
+				else
+					hasErrors = true;
+				break;
+			}
+			case "UPLOAD":
+			{
+				if (elements.length == 5)
+					this.threads.execute(new HandlerUpload(null, elements[1], elements[2], elements[3], elements[4]));
+				else
+					hasErrors = true;
+				break;
+			}
+			default:
+			{
+				hasErrors = true;
+				break;
+			}
+		}
+		if (hasErrors)
+			System.out.println("Dropped uncomprehensible message \"" + message + "\"");
 	}
 }

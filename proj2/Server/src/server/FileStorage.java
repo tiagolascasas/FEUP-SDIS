@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class FileStorage implements Serializable
 {
 	private static final long serialVersionUID = 4832308080638012451L;
-	private static final String STORAGE_DIR = "storage";
+	private String storageDir = "storage_";
 	private ArrayList<String> storedFiles;
 
 	public FileStorage()
@@ -22,7 +22,12 @@ public class FileStorage implements Serializable
 	
 	public int save(String title, byte[] data)
 	{	
-		String path = STORAGE_DIR + "/" + title;
+		String path = storageDir + ServerManager.getInstance().getId();
+	    File directory = new File(path);
+	    if (!directory.exists())
+	        directory.mkdir();
+	    
+	    path += "/" + title;
 		try
 		{		
 			File file = new File(path);
@@ -65,7 +70,7 @@ public class FileStorage implements Serializable
 	public byte[] retrieve(String title)
 	{
 		title = Utils.decode(title);
-		String path = STORAGE_DIR + "/" + title;
+		String path = storageDir + "_" + ServerManager.getInstance().getId() + "/" + title;
 
 		if (storedFiles.indexOf(title) == -1)
 			return null;

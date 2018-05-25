@@ -30,7 +30,11 @@ public abstract class Handler implements Runnable
 	
 	protected void log(String s)
 	{
-		String out = "Client " + socket.getRemoteSocketAddress();
+		String out = "";
+		if (this.socket != null)
+			out += "Client " + socket.getRemoteSocketAddress();
+		else
+			out += "Backup message";
 		out += " | " + type;
 		out += " | ";
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
