@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 public class BackupServer extends Thread 
 {
-
 	private ServerSocket socket;
 	private boolean running = true;
 	private ThreadPoolExecutor threads;
@@ -34,7 +33,7 @@ public class BackupServer extends Thread
 	}
 	
 	@Override
-	public void start()
+	public void run()
 	{
 		while (this.running)
 		{
@@ -42,14 +41,13 @@ public class BackupServer extends Thread
 			try
 			{
 				backupSocket = this.socket.accept();
+				ServerManager.getInstance().addBackupServer(backupSocket);
 				System.out.println("Accepted a connection from backup server" + backupSocket.getRemoteSocketAddress());
 			} 
 			catch (IOException e)
 			{
 				System.out.println("Unable to accept a socket connection");
 			}
-			ClientListener client = new ClientListener(backupSocket);
-			this.threads.execute(client);
 		}
 	}
 }

@@ -52,4 +52,12 @@ public class Utils
 		byte[] en = Base64.getEncoder().encode(decoded.getBytes());
 		return new String(en, StandardCharsets.US_ASCII);
 	}
+	
+	static public byte[] byteArrayAppend(byte[] a1, byte[] a2)
+	{
+		byte[] a3 = new byte[a1.length + a2.length];
+		System.arraycopy(a1, 0, a3, 0, a1.length);
+		System.arraycopy(a2, 0, a3, a1.length, a2.length);
+		return a3;
+	}
 }

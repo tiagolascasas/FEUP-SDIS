@@ -14,8 +14,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import server.handlers.LeaderListener;
-
 public class Server
 {
 	private static final String SERVERS_FILE = "servers.txt";

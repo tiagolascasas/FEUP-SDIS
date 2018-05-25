@@ -36,6 +36,7 @@ public class ServerManager
 	private boolean leaderStatus;
 	private int port;
 	private int backupPort;
+	private ArrayList<Socket> backupServers;
 	
 	private ServerManager()
 	{
@@ -46,6 +47,7 @@ public class ServerManager
 			this.files = (FileStorage)objectStream.readObject();
 			this.users = (UserRegistry)objectStream.readObject();
 			this.onlineUsers = new OnlineUsers();
+			this.backupServers = new ArrayList<>();
 			objectStream.close();
 			System.out.println("Successfully accessed persistent data");
 		}
@@ -55,6 +57,7 @@ public class ServerManager
 			this.users = new UserRegistry();
 			this.onlineUsers = new OnlineUsers();
 			this.files = new FileStorage();
+			this.backupServers = new ArrayList<>();
 		}
 	}
 	
@@ -237,5 +240,40 @@ public class ServerManager
 	public void setBackupPort(int backupPort) 
 	{
 		this.backupPort = backupPort;
+	}
+
+	public void addBackupServer(Socket socket)
+	{
+		this.backupServers.add(socket);
+	}
+	
+	public void deleteBackupSocket(Socket socket)
+	{
+		try 
+		{
+			if (!socket.isClosed())
+				socket.close();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		this.backupServers.remove(socket);
+	}
+	
+	public void notifyBackups(String message) 
+	{
+		byte[] msg = Utils.byteArrayAppend(message.getBytes(), new byte[]{'\0'});
+		for (Socket socket : this.backupServers)
+		{
+			try 
+			{
+				socket.getOutputStream().write(msg);
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }
