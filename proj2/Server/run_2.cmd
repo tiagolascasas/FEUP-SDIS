@@ -1,1 +1,1 @@
-java -cp bin/ server.Server 30001
+java -cp bin/ server.Server 30001 2

@@ -1,21 +1,32 @@
 package server;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.FileLock;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class Server
 {
+	private static final String SERVERS_FILE = "servers.txt";
+	private static final String LEADER_FILE = "leader";
 	private ServerSocket socket;
 	private boolean running = true;
 	private ThreadPoolExecutor threads;
 	
-	public Server(int port, boolean enableStdoutLogging)
+	public Server(int port, int id, boolean enableStdoutLogging)
 	{
 		ServerManager.getInstance().setLogging(enableStdoutLogging);
+		ServerManager.getInstance().setId(id);
+		ServerManager.getInstance().setPort(port);
 		
 		this.threads = new ThreadPoolExecutor(
 	            200,
@@ -41,30 +52,44 @@ public class Server
 	{
 		boolean valid = true;
 		Integer port = null;
+		Integer id = null;
 		boolean enable = true;
 		
-		if (args.length != 1 && args.length != 2)
+		if (args.length != 2 && args.length != 3)
 			valid = false;
 		else
 		{
 			port = Integer.parseInt(args[0]);
-			if (args.length == 2 && args[1].equals("-d"))
+			id = Integer.parseInt(args[1]);
+			if (args.length == 3 && args[1].equals("-d"))
 				enable = false;
 		}
 		if (!valid)
 		{
-			System.out.println("\nUsage: java -jar Client.jar <server port> [-d (disable stdout logging)]\n");
+			System.out.println("\nUsage: java -jar Client.jar <server port> <server id> [-d (disable stdout logging)]\n");
 			System.exit(-1);
 		}
 		else
 		{
-			Server server = new Server(port, enable);
+			Server server = new Server(port, id, enable);
 			server.run();
 		}
 	}
 
 	public void run()
 	{	
+		boolean isLeader = setLeader();
+		ServerManager.getInstance().setLeaderStatus(isLeader);
+		
+		if (isLeader)
+			runServer();
+		else
+			runBackup();
+	}
+
+	private void runServer() 
+	{
+		System.out.println("Server is the current leader");
 		StateSaver saver = new StateSaver();
 		saver.start();
 		
@@ -84,5 +109,79 @@ public class Server
 			this.threads.execute(client);
 		}
 		System.exit(0);
+	}
+
+	private void runBackup() 
+	{
+		System.out.println("Server is a primary backup");
+		System.out.println("Leader is " + ServerManager.getInstance().getLeader());
+		while (this.running)
+		{
+			
+		}
+		System.exit(0);
+	}
+
+	private boolean setLeader() 
+	{
+		boolean isLeader = false;
+	    File file = new File(LEADER_FILE);
+	    RandomAccessFile in = null;
+	    try 
+	    {
+	        in = new RandomAccessFile(file, "rw");
+	        FileLock lock = null;
+	        do
+	        {
+	        	lock = in.getChannel().tryLock();
+	        	Thread.sleep(500);
+	        }
+	        while (lock == null);
+	        
+            String leader = in.readLine();
+            if (leader == null)
+            {
+            	String thisServer = ServerManager.getInstance().getAddress();
+            	in.write(thisServer.getBytes());
+            	ServerManager.getInstance().setLeader(thisServer);
+            	isLeader = true;
+            }
+            else
+            {
+            	ServerManager.getInstance().setLeader(leader);
+            	isLeader = false;
+            }
+            lock.release();
+            in.close();
+	    }
+	    catch(Exception e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return isLeader;
+	}
+	
+	private ArrayList<String> getServerList()
+	{
+		ArrayList<String> servers = new ArrayList<>();
+		
+		FileInputStream fstream;
+		try 
+		{
+			fstream = new FileInputStream(SERVERS_FILE);
+			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+			String strLine;
+			while ((strLine = br.readLine()) != null)   
+			{
+				servers.add(strLine);
+			}
+			br.close();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		return servers;
 	}
 }

@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Path;
@@ -28,6 +30,11 @@ public class ServerManager
 	private FileStorage files;
 	private boolean enableStdoutLogging;
 	private AsynchronousFileChannel fileChannel;
+	private int id;
+	private String address;
+	private String leader;
+	private boolean leaderStatus;
+	private int port;
 	
 	private ServerManager()
 	{
@@ -159,5 +166,65 @@ public class ServerManager
 	public synchronized ArrayList<Socket> getOnlineSockets(String excludeUser)
 	{
 		return onlineUsers.getAllUserSockets(excludeUser);
+	}
+
+	public int getId() 
+	{
+		return id;
+	}
+
+	public void setId(int id) 
+	{
+		this.id = id;
+	}
+
+	public String getAddress() 
+	{
+		String s = "";
+		try 
+		{
+			s = InetAddress.getLocalHost().toString().split("/")[1];
+			s += ":" + this.port;
+		} 
+		catch (UnknownHostException e) 
+		{
+			e.printStackTrace();
+		}
+		return s;
+	}
+
+	public void setAddress(String address) 
+	{
+		this.address = address;
+	}
+
+	public String getLeader() 
+	{
+		return leader;
+	}
+
+	public void setLeader(String leader) 
+	{
+		this.leader = leader;
+	}
+
+	public boolean isLeaderStatus() 
+	{
+		return leaderStatus;
+	}
+
+	public void setLeaderStatus(boolean leaderStatus) 
+	{
+		this.leaderStatus = leaderStatus;
+	}
+
+	public int getPort() 
+	{
+		return port;
+	}
+
+	public void setPort(int port) 
+	{
+		this.port = port;
 	}
 }
