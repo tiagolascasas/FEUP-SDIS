@@ -35,6 +35,7 @@ public class ServerManager
 	private String leader;
 	private boolean leaderStatus;
 	private int port;
+	private int backupPort;
 	
 	private ServerManager()
 	{
@@ -184,7 +185,7 @@ public class ServerManager
 		try 
 		{
 			s = InetAddress.getLocalHost().toString().split("/")[1];
-			s += ":" + this.port;
+			s += ":" + this.backupPort;
 		} 
 		catch (UnknownHostException e) 
 		{
@@ -226,5 +227,15 @@ public class ServerManager
 	public void setPort(int port) 
 	{
 		this.port = port;
+	}
+
+	public int getBackupPort() 
+	{
+		return backupPort;
+	}
+
+	public void setBackupPort(int backupPort) 
+	{
+		this.backupPort = backupPort;
 	}
 }

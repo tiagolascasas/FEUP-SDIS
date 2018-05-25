@@ -14,6 +14,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import server.handlers.LeaderListener;
+
 public class Server
 {
 	private static final String SERVERS_FILE = "servers.txt";
@@ -21,12 +23,14 @@ public class Server
 	private ServerSocket socket;
 	private boolean running = true;
 	private ThreadPoolExecutor threads;
+	private Socket leaderSocket;
 	
-	public Server(int port, int id, boolean enableStdoutLogging)
+	public Server(int port, int id, int backupPort, boolean enableStdoutLogging)
 	{
 		ServerManager.getInstance().setLogging(enableStdoutLogging);
 		ServerManager.getInstance().setId(id);
 		ServerManager.getInstance().setPort(port);
+		ServerManager.getInstance().setBackupPort(backupPort);
 		
 		this.threads = new ThreadPoolExecutor(
 	            200,
@@ -53,25 +57,27 @@ public class Server
 		boolean valid = true;
 		Integer port = null;
 		Integer id = null;
+		Integer backupPort = null;
 		boolean enable = true;
 		
-		if (args.length != 2 && args.length != 3)
+		if (args.length != 3 && args.length != 4)
 			valid = false;
 		else
 		{
 			port = Integer.parseInt(args[0]);
 			id = Integer.parseInt(args[1]);
+			backupPort = Integer.parseInt(args[2]);
 			if (args.length == 3 && args[1].equals("-d"))
 				enable = false;
 		}
 		if (!valid)
 		{
-			System.out.println("\nUsage: java -jar Client.jar <server port> <server id> [-d (disable stdout logging)]\n");
+			System.out.println("\nUsage: java -jar Client.jar <server port> <server id> <backup port> [-d (disable stdout logging)]\n");
 			System.exit(-1);
 		}
 		else
 		{
-			Server server = new Server(port, id, enable);
+			Server server = new Server(port, id, backupPort, enable);
 			server.run();
 		}
 	}
@@ -90,8 +96,12 @@ public class Server
 	private void runServer() 
 	{
 		System.out.println("Server is the current leader");
+		
 		StateSaver saver = new StateSaver();
 		saver.start();
+		
+		BackupServer backup = new BackupServer(ServerManager.getInstance().getBackupPort());
+		backup.start();
 		
 		while (this.running)
 		{
@@ -113,12 +123,25 @@ public class Server
 
 	private void runBackup() 
 	{
+		String leader = ServerManager.getInstance().getLeader();
 		System.out.println("Server is a primary backup");
-		System.out.println("Leader is " + ServerManager.getInstance().getLeader());
-		while (this.running)
+		System.out.println("Leader is " + leader);
+		
+		String leaderIP = leader.split(":")[0];
+		int leaderPort = Integer.parseInt(leader.split(":")[1]);
+		
+		try 
 		{
-			
+			this.leaderSocket = new Socket(leaderIP, leaderPort);
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
 		}
+		
+		LeaderListener listener = new LeaderListener(leaderSocket);
+		listener.listen();
+		
 		System.exit(0);
 	}
 
