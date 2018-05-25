@@ -15,8 +15,6 @@ import com.client.handlers.ResponseHandlerNotification;
 import com.client.handlers.ResponseHandlerRegister;
 import com.client.handlers.ResponseHandlerSearch;
 import com.client.handlers.ResponseHandlerUpload;
-import com.client.requests.RequestConnect;
-import com.strongjoshua.console.GUIConsole;
 
 public class ServerListener extends Thread
 {
@@ -129,8 +127,8 @@ public class ServerListener extends Thread
 			}
 			case "RES_DOWNLOAD":
 			{
-				if (elements.length == 4)
-					threads.execute(new ResponseHandlerDownload(elements[1], elements[2], elements[3]));
+				if (elements.length == 3)
+					threads.execute(new ResponseHandlerDownload(elements[1], elements[2]));
 				else
 					hasErrors = true;
 				break;

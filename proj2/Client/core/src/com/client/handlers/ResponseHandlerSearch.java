@@ -3,6 +3,7 @@ package com.client.handlers;
 public class ResponseHandlerSearch extends ResponseHandler
 {
 
+	@SuppressWarnings("unused")
 	private String message;
 
 	public ResponseHandlerSearch(String status, String message)

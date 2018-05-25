@@ -1,6 +1,7 @@
 package server.handlers;
 
 import java.net.Socket;
+import java.util.Base64;
 
 import server.Notifier;
 import server.ServerManager;
@@ -15,7 +16,7 @@ public class HandlerUpload extends Handler
 	{
 		super("UPLOAD", username, password, socket);
 		this.title = Utils.decode(title);
-		this.body = Utils.decode(body);
+		this.body = body;
 	}
 
 	@Override
@@ -27,9 +28,9 @@ public class HandlerUpload extends Handler
 		StringBuilder build = new StringBuilder();
 		build.append("RES_UPLOAD ");
 
-		byte[] data = body.getBytes();
+		byte[] data = Base64.getDecoder().decode(this.body);
 		int res = manager.saveTrack(username, title, data);
-		
+				
 		String message = "";
 		if (res == -1)
 		{

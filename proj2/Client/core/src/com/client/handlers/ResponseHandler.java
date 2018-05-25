@@ -2,6 +2,7 @@ package com.client.handlers;
 
 public abstract class ResponseHandler implements Runnable
 {
+	@SuppressWarnings("unused")
 	private String type;
 	protected int status;
 

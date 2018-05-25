@@ -59,6 +59,7 @@ public class OnlineUsers implements Serializable
 		return users.indexOf(username) > -1 && sockets.indexOf(socket) > -1;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ArrayList<Socket> getAllUserSockets(String excludeUser)
 	{
 		ArrayList<Socket> res = (ArrayList<Socket>) this.sockets.clone();

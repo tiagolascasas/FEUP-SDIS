@@ -25,11 +25,15 @@ public class RequestUpload extends Request
 			return;
 		
 		Path path = FileSystems.getDefault().getPath("", this.track);
+		
+		String paths[] = this.track.split("/");
+		String filename = paths[paths.length-1];
 
 		byte[] fileData = null;
         try
 		{
 			fileData = Files.readAllBytes(path);
+			
 		}
         catch (IOException e)
 		{
@@ -37,7 +41,9 @@ public class RequestUpload extends Request
 			return;
 		}
         
-        String encodedName = new String(Base64.getEncoder().encode(this.track.getBytes()));
+        System.out.println(fileData);
+        
+        String encodedName = new String(Base64.getEncoder().encode(filename.getBytes()));
         String encodedFile = new String(Base64.getEncoder().encode(fileData));
         
         String message = getMessageHeader() + " " + encodedName + " " + encodedFile + "\0";

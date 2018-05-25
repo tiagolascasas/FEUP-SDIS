@@ -26,9 +26,9 @@ public class FileStorage implements Serializable
 		try
 		{		
 			File file = new File(path);
-			if (file.exists() || this.storedFiles.contains(file))
+			if (file.exists() || this.storedFiles.contains(file.getName()))
 				return -1;
-				
+			
 			if (data != null) 
 			{
 				DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
