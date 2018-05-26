@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
+import javax.net.ssl.SSLSocket;
+
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
@@ -14,7 +16,7 @@ import com.strongjoshua.console.GUIConsole;
 public class ClientManager
 {
 	private static ClientManager instance = null;
-	private Socket socket;
+	private SSLSocket socket;
 	private String username;
 	private String password;
 	private GUIConsole console;
@@ -60,12 +62,12 @@ public class ClientManager
 		this.username = username;
 	}
 
-	public synchronized Socket getSocket()
+	public synchronized SSLSocket getSocket()
 	{
 		return socket;
 	}
 
-	public synchronized void setSocket(Socket socket)
+	public synchronized void setSocket(SSLSocket socket)
 	{
 		this.socket = socket;
 	}

@@ -7,15 +7,27 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+
 public class BackupServer extends Thread 
 {
-	private ServerSocket socket;
+	private SSLServerSocket socket;
 	private boolean running = true;
 	public BackupServer(int backupPort) 
 	{
+		
+		System.setProperty("javax.net.ssl.trustStore", "truststore");
+		System.setProperty("javax.net.ssl.keyStore", "server.keys"); //TODO ssl create certificate
+		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+		
 		try 
 		{
-			this.socket = new ServerSocket(backupPort);
+			SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+			this.socket = (SSLServerSocket) ssf.createServerSocket(backupPort);
+			this.socket.setNeedClientAuth(true);
+			//this.socket = new ServerSocket(backupPort);
+			
 		} 
 		catch (IOException e) 
 		{

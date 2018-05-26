@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
@@ -14,14 +13,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 public class Server
 {
 	private static final String SERVERS_FILE = "servers.txt";
 	private static final String LEADER_FILE = "leader";
-	private ServerSocket socket;
+	private SSLServerSocket socket;
 	private boolean running = true;
 	private ThreadPoolExecutor threads;
-	private Socket leaderSocket;
+	private SSLSocket leaderSocket;
 	
 	public Server(int port, int id, int backupPort, boolean enableStdoutLogging)
 	{
@@ -38,9 +42,14 @@ public class Server
 	            new LinkedBlockingQueue<Runnable>()
 				);
 		
+		System.setProperty("javax.net.ssl.keyStore", "server.keys"); //TODO ssl create certificate
+		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+		
 		try
-		{
-			this.socket = new ServerSocket(port);
+		{//TODO ssl server socket
+			SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+			this.socket = (SSLServerSocket) ssf.createServerSocket(port);
+			this.socket.setNeedClientAuth(false);
 		} 
 		catch (IOException e)
 		{
@@ -130,7 +139,10 @@ public class Server
 		
 		try 
 		{
-			this.leaderSocket = new Socket(leaderIP, leaderPort);
+			SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();  
+			this.leaderSocket = (SSLSocket) ssf.createSocket(leaderIP, leaderPort);
+			this.leaderSocket.startHandshake();
+			//this.leaderSocket = new Socket(leaderIP, leaderPort);
 		} 
 		catch (IOException e) 
 		{

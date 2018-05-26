@@ -1,7 +1,8 @@
 package com.client.requests;
 
 import java.io.IOException;
-import java.net.Socket;
+
+import javax.net.ssl.SSLSocket;
 
 import com.client.ClientManager;
 
@@ -28,7 +29,7 @@ public abstract class Request implements Runnable
 			ClientManager.getInstance().log("You must be connected to a server in order to send requests");
 		}
 		
-		Socket socket = ClientManager.getInstance().getSocket();
+		SSLSocket socket = ClientManager.getInstance().getSocket(); // TODO SSL socket
 		try
 		{
 			socket.getOutputStream().write(message.getBytes());

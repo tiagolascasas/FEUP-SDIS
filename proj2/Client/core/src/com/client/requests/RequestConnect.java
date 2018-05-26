@@ -2,8 +2,11 @@ package com.client.requests;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
+
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 import com.client.ClientManager;
 
@@ -39,17 +42,24 @@ public class RequestConnect extends Request
 			return;
 		}
 		
+		System.setProperty("javax.net.ssl.trustStore", "truststore");
+		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+		
 		ClientManager.getInstance().log("Attempting to connect to " + ip + ":" + port);
 		try
 		{
-			Socket socket = new Socket(ip, this.port);
+			SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();  
+			SSLSocket socket = (SSLSocket) ssf.createSocket(ip, port);
+			socket.startHandshake();
+			//Socket socket = new Socket(ip, this.port); //TODO ssl socket
 			ClientManager.getInstance().setSocket(socket);
-		} 
+		}
 		catch (IOException e)
 		{
 			ClientManager.getInstance().log("Error connecting to " + ip + ":" + port);
 			return;
 		}
+		
 		ClientManager.getInstance().log("Connection to " + ip + ":" + port + " successfully established!");
 		
 		ClientManager.getInstance().initListener();

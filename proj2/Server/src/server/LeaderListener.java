@@ -1,11 +1,12 @@
 package server;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLSocket;
 
 import server.handlers.HandlerRegister;
 import server.handlers.HandlerUpload;
@@ -13,10 +14,10 @@ import server.handlers.HandlerUpload;
 public class LeaderListener 
 {
 	private boolean running = true;
-	private Socket leaderSocket;
+	private SSLSocket leaderSocket;
 	private ThreadPoolExecutor threads;
 	
-	public LeaderListener(Socket leaderSocket)
+	public LeaderListener(SSLSocket leaderSocket)
 	{
 		this.leaderSocket = leaderSocket;
 		this.threads = new ThreadPoolExecutor(
