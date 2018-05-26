@@ -1,6 +1,7 @@
 package server.handlers;
 
 import java.net.Socket;
+import java.util.ArrayList;
 
 import server.Notifier;
 import server.ServerManager;
@@ -25,17 +26,21 @@ public class HandlerSearch extends Handler
 		ServerManager manager = ServerManager.getInstance();
 		StringBuilder build = new StringBuilder();
 		build.append("RES_SEARCH ");
-				
-		byte data[] = manager.getTrack(this.searchTerm);
-		if (data == null) {
+		
+		String searchTerm = Utils.decode(this.searchTerm);
+		ArrayList<String> searchResults = manager.searchTrack(searchTerm);
+		if (searchResults.isEmpty()) {
 			message = Utils.encode("File is not on server.");
 			build.append(0);
 		} else {
-			
-			message = Utils.encode("Encountered file" + this.searchTerm + "is on server.");
+			String msg = "Encountered file " + searchTerm + " on server as:\n";
+			for(String file : searchResults) {
+				msg += file + '\n';
+			}
+			message = Utils.encode(msg);
 			build.append(1);
 			
-			String notify = "File " + this.searchTerm + " is on from server";
+			String notify = "File " + searchTerm + " on from server";
 			Notifier notif = new Notifier(username, notify);
 			notif.start();
 		}

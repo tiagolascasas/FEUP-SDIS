@@ -151,7 +151,7 @@ public class ServerListener extends Thread
 			}
 			case "RES_SEARCH":
 			{
-				if (elements.length == 4)
+				if (elements.length == 3)
 					(new ResponseHandlerSearch(elements[1], elements[2])).run();
 				else
 					hasErrors = true;

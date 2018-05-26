@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileStorage implements Serializable
@@ -17,7 +18,18 @@ public class FileStorage implements Serializable
 
 	public FileStorage()
 	{
-		this.storedFiles = new ArrayList<>();
+		this.storedFiles = new ArrayList<>();	
+	}
+	
+	public void getExistantFilesInStorage() {
+		String path = storageDir + ServerManager.getInstance().getId();
+		
+	    File directory = new File(path);
+	    if (!directory.exists())
+	        directory.mkdir();
+	    else {
+	    	System.out.println(directory.listFiles());
+	    }
 	}
 	
 	public int save(String title, byte[] data)
@@ -55,14 +67,26 @@ public class FileStorage implements Serializable
 
 	//TODO: melhorar a pesquisa
 	public ArrayList<String> search(String title)
-	{
+	{	
 		String regex = Pattern.quote(title);
+		
+		String pattern = "(.*)" + title.subSequence(0, title.length()-4) + "(.*)";
+		Pattern regex2 = Pattern.compile(pattern);
+		
 		ArrayList<String> list = new ArrayList<>();
+		
 		
 		for (String file : this.storedFiles)
 		{
 			if (file.matches(regex))
 				list.add(file);
+			/*else
+			{
+				Matcher m = regex2.matcher(file);
+				if(m.lookingAt())
+					list.add(file);
+			}*/
+			
 		}
 		return list;
 	}
