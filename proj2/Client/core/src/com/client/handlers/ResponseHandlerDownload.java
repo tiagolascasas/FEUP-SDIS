@@ -46,8 +46,22 @@ public class ResponseHandlerDownload extends ResponseHandler
 		
 		save(title, data, this.path);
 		
-		ClientManager.getInstance().log("Track " + title + " successfully downloaded, now playing...");
-		play(title, this.path);
+		switch (onSave) {
+		case 1:
+			res = "Track " + title + " successfully downloaded, now playing...";
+			break;
+		case -1:
+			res = "File " + title + " has already been downloaded, now playing...";
+			break;
+		default:
+			res = "There was an error processing the track " + title;
+			break;
+		}
+		
+		ClientManager.getInstance().log(res);
+		
+		if(onSave != 0) 
+			play(title);
 	}
 
 	public static int save(String title, byte[] data, String path)
