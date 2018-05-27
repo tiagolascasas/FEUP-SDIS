@@ -1,5 +1,8 @@
 package com.client.requests;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -41,7 +44,13 @@ public class RequestUpload extends Request
 			return;
 		}
 		
-		Path path = FileSystems.getDefault().getPath(LOCAL_LIB + "/", this.track);
+		Path path;
+		
+		if(!(new File(this.track)).exists()) 
+			path = FileSystems.getDefault().getPath(LOCAL_LIB + "/", this.track);
+		else 
+			path = FileSystems.getDefault().getPath(this.track);	
+		
 		
 		String paths[] = this.track.split("/");
 		String filename = paths[paths.length-1];
@@ -51,6 +60,8 @@ public class RequestUpload extends Request
 		{
 			fileData = Files.readAllBytes(path);
 			
+			if(!path.startsWith(LOCAL_LIB + "/"))
+				save_to_local(filename, fileData);
 		}
         catch (IOException e)
 		{
@@ -64,4 +75,32 @@ public class RequestUpload extends Request
         String message = getMessageHeader() + " " + encodedName + " " + encodedFile + "\0";
         send(message);
 	}
+
+	private int save_to_local(String title, byte[] data) {
+		
+		try
+		{		
+			File file = new File(LOCAL_LIB + "/" + title);
+			if (file.exists())
+				return -1;
+			
+			if (data != null) 
+			{
+				DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
+				stream.write(data, 0, data.length);
+				stream.close();
+			}
+			else
+				return 0;
+			
+			return 1;
+		} 
+		catch (IOException e)
+		{
+			System.out.println("Error while writting to " + LOCAL_LIB + "/" + title);
+			return 0;
+		}
+		
+	}
+	
 }
