@@ -1,3 +1,10 @@
+localhost:40000
 localhost:40001
 localhost:40002
 localhost:40003
+localhost:40004
+localhost:40005
+localhost:40006
+localhost:40007
+localhost:40008
+localhost:40009

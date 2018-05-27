@@ -87,7 +87,7 @@ public class Server
 	{
 		while (this.running)
 		{
-			boolean isLeader = setLeader();
+			boolean isLeader = electLeader();
 			ServerManager.getInstance().setLeaderStatus(isLeader);
 	
 			StateSaver saver = new StateSaver();
@@ -135,7 +135,7 @@ public class Server
 		listener.listen();
 	}
 
-	private boolean setLeader()
+	private boolean electLeader()
 	{
 		System.out.println("Choosing a leader...");
 
@@ -149,21 +149,37 @@ public class Server
 			ips.add(elements[0]);
 			ports.add(Integer.parseInt(elements[1]));
 		}
+		
+		SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 
-		Random r = new Random();
-		int sleepTime = r.nextInt(1000) + this.id * 1000;
+		for (int i = 0; i < ports.size(); i++)
+		{
+			try
+			{
+				this.leaderSocket = (SSLSocket) ssf.createSocket(ips.get(i), ports.get(i));
+				System.out.println("Server " + ips.get(i) + ":" + ports.get(i) + " is the leader");
+				return false;
+			}
+			catch (ConnectException e)
+			{
+				this.leaderSocket = null;
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
 		try
 		{
-			Thread.sleep(sleepTime);
+			Thread.sleep(this.id * 100);
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}
 
-		SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-
-		for (int i = 0; i < ips.size(); i++)
+		for (int i = 0; i < this.id; i++)
 		{
 			try
 			{
