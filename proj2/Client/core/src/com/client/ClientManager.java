@@ -28,6 +28,7 @@ public class ClientManager
 	private Semaphore drawingMutex;
 	private Music currentTrack;
 	private CountDownLatch latch;
+	private int peerPort;
 
 	private ClientManager()
 	{
@@ -183,5 +184,15 @@ public class ClientManager
 		}
 		else
 			log("No track is currently being played");
+	}
+
+	public void setP2PPort(int port) 
+	{
+		this.peerPort = port;
+	}
+	
+	public int getP2PPort()
+	{
+		return this.peerPort;
 	}
 }

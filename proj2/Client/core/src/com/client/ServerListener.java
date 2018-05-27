@@ -98,7 +98,7 @@ public class ServerListener extends Thread
 	 * RES_REGISTER <status> <message>
 	 * RES_SEARCH <status> <results>
 	 * RES_UPLOAD <status> <message>
-	 * TRANSMIT <track> <ip:port>
+	 * TRANSMIT <peer port> <track> <peer ip>
 	 * NOTIF <content>
 	 * 
 	 * @param message
@@ -176,8 +176,8 @@ public class ServerListener extends Thread
 			}
 			case "TRANSMIT":
 			{
-				if (elements.length == 3)
-					(new ResponseHandlerTransmit(elements[1], elements[2])).run();
+				if (elements.length == 4)
+					(new ResponseHandlerTransmit(elements[1], elements[2], elements[3])).run();
 				else
 					hasErrors = true;
 				break;

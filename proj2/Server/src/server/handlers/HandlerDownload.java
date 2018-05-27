@@ -10,7 +10,6 @@ import server.Utils;
 
 public class HandlerDownload extends Handler
 {
-
 	private String track;
 
 	public HandlerDownload(Socket socket, String username, String password, String track)
@@ -28,7 +27,7 @@ public class HandlerDownload extends Handler
 		
 		if (ownerIsOnline())
 		{
-			log("Owner of track " + track + " is online; forwarded request to him instead.");
+			log("Owner of track " + Utils.decode(track) + " is online; forwarded request to him instead.");
 			return;
 		}
 
@@ -62,14 +61,22 @@ public class HandlerDownload extends Handler
 
 	private boolean ownerIsOnline() 
 	{
-		String user = ServerManager.getInstance().getOwnerOfTrack(track);
+		String decoded = Utils.decode(track);
+		String user = ServerManager.getInstance().getOwnerOfTrack(decoded);
 		if (user == null)
 			return false;
+
+		if (user == this.username)
+			return false;
+		
 		Socket s = ServerManager.getInstance().getSocketOfOnlineUser(user);
 		if (s == null)
 			return false;
+		System.out.println("User is online on " + s.getRemoteSocketAddress());
 		
-		String strMsg = "TRANSMIT " + this.track + " " + socket.getRemoteSocketAddress();
+		int peerPort = ServerManager.getInstance().getPeerPort(this.username);
+		
+		String strMsg = "TRANSMIT " + peerPort + " " + this.track + " " + socket.getRemoteSocketAddress();
 		byte[] message = Utils.byteArrayAppend(strMsg.getBytes(), new byte[] {'\0'});
 		try 
 		{

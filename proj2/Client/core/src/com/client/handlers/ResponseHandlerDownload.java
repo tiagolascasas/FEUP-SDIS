@@ -40,17 +40,17 @@ public class ResponseHandlerDownload extends ResponseHandler
 
 		byte[] data = Base64.getDecoder().decode(split[1]);
 		
-		save(title, data);
-		
-		ClientManager.getInstance().log("Track " + title + " successfully downloaded, now playing...");
-		play(title);
-	}
-
-	public int save(String title, byte[] data)
-	{
         String tempDir = System.getProperty("java.io.tmpdir");
 		this.path = tempDir + "/" + title;
 		
+		save(title, data, this.path);
+		
+		ClientManager.getInstance().log("Track " + title + " successfully downloaded, now playing...");
+		play(title, this.path);
+	}
+
+	public static int save(String title, byte[] data, String path)
+	{	
 		try
 		{		
 			File file = new File(path);
@@ -75,9 +75,9 @@ public class ResponseHandlerDownload extends ResponseHandler
 		}
 	}
 
-	private void play(String title) 
+	public static void play(String title, String path) 
 	{
-		Music track = Gdx.audio.newMusic(Gdx.files.internal(this.path));
+		Music track = Gdx.audio.newMusic(Gdx.files.internal(path));
 		if (track == null)
 		{
 			ClientManager.getInstance().log("There was an error playing the track");

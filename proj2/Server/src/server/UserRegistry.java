@@ -54,7 +54,8 @@ public class UserRegistry implements Serializable
 	{
 		for (String username : this.users.keySet()) 
 		{
-		    if (this.users.get(username).hasTrack(track))
+			boolean hasTrack = this.users.get(username).hasTrack(track);
+		    if (hasTrack)
 		    	return username;
 		}
 		return null;

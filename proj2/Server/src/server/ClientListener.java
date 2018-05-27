@@ -83,7 +83,7 @@ public class ClientListener implements Runnable
 	 * 
 	 * CLOSE
 	 * DOWNLOAD <username> <password> <title>
-	 * LOGIN <username> <password>
+	 * LOGIN <username> <password> <P2P port>
 	 * REGISTER <username> <password>
 	 * SEARCH <username> <password> <search term>
 	 * UPLOAD <username> <password> <title> <body>
@@ -121,8 +121,8 @@ public class ClientListener implements Runnable
 			}
 			case "LOGIN":
 			{
-				if (elements.length == 3)
-					this.threads.execute(new HandlerLogin(socket, elements[1], elements[2]));
+				if (elements.length == 4)
+					this.threads.execute(new HandlerLogin(socket, elements[1], elements[2], elements[3]));
 				else
 					hasErrors = true;
 				break;

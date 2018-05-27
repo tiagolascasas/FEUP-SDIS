@@ -24,8 +24,9 @@ public class RequestLogin extends Request
 		}
 		ClientManager.getInstance().setUsername(username);
 		ClientManager.getInstance().setPassword(password);
+		int peerPort = ClientManager.getInstance().getP2PPort();
 		
-		String message = this.type + " " + username + " " + password + "\0";
+		String message = this.type + " " + username + " " + password + " " + peerPort + "\0";
 		send(message);
 	}
 }

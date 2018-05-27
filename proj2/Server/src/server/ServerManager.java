@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +36,7 @@ public class ServerManager
 	private int backupPort;
 	private ArrayList<Socket> backupServers;
 	private PrintWriter logFile;
+	private ConcurrentHashMap<String, Integer> peerPorts;
 	
 	private ServerManager(){}
 	
@@ -53,6 +55,7 @@ public class ServerManager
 			this.users = (UserRegistry)objectStream.readObject();
 			this.onlineUsers = new OnlineUsers();
 			this.backupServers = new ArrayList<>();
+			this.peerPorts = new ConcurrentHashMap<String, Integer>();
 			objectStream.close();
 			System.out.println("Successfully accessed persistent data on file " + STATEFILE + "_" + id);
 		}
@@ -63,6 +66,7 @@ public class ServerManager
 			this.onlineUsers = new OnlineUsers();
 			this.files = new FileStorage();
 			this.backupServers = new ArrayList<>();
+			this.peerPorts = new ConcurrentHashMap<String, Integer>();
 		}
 	}
 	
@@ -81,13 +85,19 @@ public class ServerManager
 		return users.verifyPassword(username, passwordHash);
 	}
 	
-	public synchronized boolean loginUser(String username, String passwordHash, Socket socket)
+	public synchronized boolean loginUser(String username, String passwordHash, Socket socket, int peerPort)
 	{
 		if (onlineUsers.isOnline(username, socket))
 			return false;
 		
 		onlineUsers.setUserOnline(username, socket);
+		peerPorts.put(username, peerPort);
 		return true;
+	}
+	
+	public synchronized int getPeerPort(String username)
+	{
+		return peerPorts.get(username);
 	}
 	
 	public synchronized void logoutUser(String username)

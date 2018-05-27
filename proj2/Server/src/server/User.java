@@ -24,7 +24,12 @@ public class User implements Serializable
 	
 	public boolean hasTrack(String title)
 	{
-		return files.contains(title);
+		for (String s : files)
+		{
+			if (s.equals(title))
+				return true;
+		}
+		return false;
 	}
 
 	public String getPassword()

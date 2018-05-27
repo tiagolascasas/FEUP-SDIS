@@ -8,9 +8,12 @@ import server.Utils;
 
 public class HandlerLogin extends Handler
 {
-	public HandlerLogin(Socket socket, String username, String password)
+	private int peerPort;
+
+	public HandlerLogin(Socket socket, String username, String password, String p2pPort)
 	{
 		super("LOGIN", username, password, socket);
+		this.peerPort = Integer.parseInt(p2pPort);
 	}
 
 	@Override
@@ -20,9 +23,6 @@ public class HandlerLogin extends Handler
 		
 		ServerManager manager = ServerManager.getInstance();
 		
-		@SuppressWarnings("unused")
-		String hash = Utils.hashPassword(password);
-		
 		StringBuilder build = new StringBuilder();
 		build.append("RES_LOGIN ");
 		if (!verifyCredentials())
@@ -30,7 +30,7 @@ public class HandlerLogin extends Handler
 			String message = Utils.encode("Error: the username and/or password are incorrect");
 			build.append(0).append(" ").append(message);
 		}
-		else if (!manager.loginUser(username, password, socket))
+		else if (!manager.loginUser(username, password, socket, peerPort))
 		{
 			String message = Utils.encode("Error: you are already logged in");
 			build.append(0).append(" ").append(message);

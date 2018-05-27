@@ -33,6 +33,7 @@ public class Services extends CommandExecutor
 	            new LinkedBlockingQueue<Runnable>()
 				);
 		
+		this.threads.execute(new PeerListener());
 		this.threads.execute(new RequestConnect());
 	}
 	
