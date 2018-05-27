@@ -44,16 +44,23 @@ public class ResponseHandlerDownload extends ResponseHandler
 		int onSave = this.save(title, data);
 		
 		String res = ""; 
-		if(onSave == 1)
+		
+		switch (onSave) {
+		case 0:
 			res = "Track " + title + " successfully downloaded, now playing...";
-		else 
+			break;
+		case -1:
+			res = "File " + title + " has already been downloaded, now playing...";
+			break;
+		default:
 			res = "There was an error processing the track " + title;
+			break;
+		}
 		
 		ClientManager.getInstance().log(res);
 		
-		if(onSave == 1) 
+		if(onSave != 0) 
 			play(title);
-		
 	}
 
 	public int save(String title, byte[] data)
@@ -64,6 +71,9 @@ public class ResponseHandlerDownload extends ResponseHandler
 		try
 		{		
 			File file = new File(path);
+			
+			if(file.exists())
+				return -1;
 			
 			if (data != null) 
 			{
