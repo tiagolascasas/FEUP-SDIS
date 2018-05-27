@@ -1,19 +1,17 @@
 package server;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -23,21 +21,16 @@ import javax.net.ssl.SSLSocketFactory;
 public class Server
 {
 	private static final String SERVERS_FILE = "servers.txt";
-	private static final String LEADER_FILE = "leader";
 	private SSLServerSocket socket;
 	private boolean running = true;
 	private ThreadPoolExecutor threads;
 	private SSLSocket leaderSocket;
 	private int port;
 	private int id;
-	private int backupPort;
-	
 	public Server(int port, int id, int backupPort, boolean enableStdoutLogging)
 	{
 		this.port = port;
 		this.id = id;
-		this.backupPort = backupPort;
-		
 		ServerManager.getInstance().setId(id);
 		ServerManager.getInstance().setPort(port);
 		ServerManager.getInstance().setBackupPort(backupPort);
@@ -125,7 +118,7 @@ public class Server
 
 	private void runBackup() 
 	{
-		String leader = ServerManager.getInstance().getLeader();
+		ServerManager.getInstance().getLeader();
 		System.out.println("This server is a primary backup");
 		
 		LeaderListener listener = new LeaderListener(leaderSocket);
@@ -159,8 +152,9 @@ public class Server
 		{
 			e.printStackTrace();
 		}
-		
+
 		SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();  
+		
 		for (int i = 0; i < ips.size(); i++)
 		{
 			try 

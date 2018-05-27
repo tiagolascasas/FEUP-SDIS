@@ -1,10 +1,8 @@
 package com.client.requests;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.util.ArrayList;
 
-import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -13,35 +11,33 @@ import com.client.ClientManager;
 
 public class RequestConnect extends Request
 {
-	private String ip;
-	private int port;
+	private ArrayList<String> servers;
+	int currentServer = 0;
+	private boolean keepConnecting = true;
 	
-	public RequestConnect(String ip, int port)
+	public RequestConnect()
 	{
 		super("CONNECT");
-		this.ip = ip; 
-		this.port = port;
+		this.servers = ClientManager.getInstance().getServers();
 	}
 	
 	@Override
 	public void run()
-	{
-		if (ClientManager.getInstance().getConnected() == true)
+	{		
+		while(this.keepConnecting)
 		{
-			ClientManager.getInstance().log("You are already connected");
-			return;
+			String server = getNextServer();
+			String[] elements = server.split(":");
+			int port = Integer.parseInt(elements[1]);
+			
+			connect(elements[0], port);
+			
+			while (ClientManager.getInstance().getConnected()) {}
 		}
-		InetAddress ip = null;
-		try
-		{
-			ip = InetAddress.getByName(this.ip);
-		} 
-		catch (UnknownHostException e)
-		{
-			ClientManager.getInstance().log("Unable to resolve specified IP " + ip);
-			return;
-		}
-		
+	}
+	
+	private void connect(String ip, int port)
+	{		
 		System.setProperty("javax.net.ssl.trustStore", "truststore");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		
@@ -64,5 +60,14 @@ public class RequestConnect extends Request
 		
 		ClientManager.getInstance().initListener();
 		ClientManager.getInstance().setConnected(true);
+	}
+	
+	private String getNextServer()
+	{
+		if (this.currentServer == this.servers.size())
+			this.currentServer = 0;
+		String server = this.servers.get(this.currentServer);
+		this.currentServer++;
+		return server;
 	}
 }

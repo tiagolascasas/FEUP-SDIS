@@ -1,8 +1,7 @@
 package com.client;
 
-import java.net.Socket;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
 import javax.net.ssl.SSLSocket;
@@ -24,15 +23,17 @@ public class ClientManager
 	private boolean loggedIn;
 	private boolean connected = false;
 	private FileHandle confFile;
-	private Queue<String> servers;
+	private ArrayList<String> servers;
 	private Semaphore drawingMutex;
 	private Music currentTrack;
+	private CountDownLatch latch;
 
 	private ClientManager()
 	{
-		this.servers = new LinkedList<>();
+		this.servers = new ArrayList<>();
 		this.drawingMutex = new Semaphore(1);
 		this.currentTrack = null;
+		this.latch = new CountDownLatch(1);
 	}
 	
 	public synchronized static ClientManager getInstance()
@@ -127,11 +128,6 @@ public class ClientManager
 		return this.confFile;
 	}
 	
-	public synchronized String getNextServer()
-	{
-		return servers.poll();
-	}
-	
 	public synchronized void log(String s)
 	{
 		try 
@@ -165,5 +161,15 @@ public class ClientManager
 			this.currentTrack.stop();
 			this.currentTrack = track;
 		}
+	}
+
+	public ArrayList<String> getServers() 
+	{
+		return servers;
+	}
+
+	public CountDownLatch getConnectedLatch() 
+	{
+		return this.latch;
 	}
 }

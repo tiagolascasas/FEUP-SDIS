@@ -33,15 +33,7 @@ public class Services extends CommandExecutor
 	            new LinkedBlockingQueue<Runnable>()
 				);
 		
-		String[] serverAddr = ClientManager.getInstance().getNextServer().split(":");
-		connect(serverAddr[0], Integer.parseInt(serverAddr[1]));
-	}
-	
-	@ConsoleDoc(description = "Establishes a connection to the server")
-	public void connect(String ip, int port)
-	{
-		RequestConnect request = new RequestConnect(ip, port);
-		threads.execute(request);
+		this.threads.execute(new RequestConnect());
 	}
 	
 	@ConsoleDoc(description = "Registers the user")
