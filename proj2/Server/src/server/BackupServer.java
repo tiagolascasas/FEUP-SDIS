@@ -10,26 +10,23 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
-public class BackupServer extends Thread 
+public class BackupServer extends Thread
 {
 	private SSLServerSocket socket;
 	private boolean running = true;
-	public BackupServer(int backupPort) 
+	public BackupServer(int backupPort)
 	{
-		
+
 		System.setProperty("javax.net.ssl.trustStore", "truststore");
 		System.setProperty("javax.net.ssl.keyStore", "server.keys"); //TODO ssl create certificate
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-		
-		try 
+
+		try
 		{
 			SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			this.socket = (SSLServerSocket) ssf.createServerSocket(backupPort);
-			this.socket.setNeedClientAuth(true);
-			//this.socket = new ServerSocket(backupPort);
-			
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -41,7 +38,7 @@ public class BackupServer extends Thread
 	            new LinkedBlockingQueue<Runnable>()
 				);
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -53,7 +50,7 @@ public class BackupServer extends Thread
 				backupSocket = this.socket.accept();
 				ServerManager.getInstance().addBackupServer(backupSocket);
 				System.out.println("Accepted a connection from backup server " + backupSocket.getRemoteSocketAddress());
-			} 
+			}
 			catch (IOException e)
 			{
 				System.out.println("Unable to accept a socket connection from a backup server");

@@ -31,18 +31,22 @@ public class Server
 	private int port;
 	private int id;
 	private int backupPort;
-	
+
 	public Server(int port, int id, int backupPort, boolean enableStdoutLogging)
 	{
+		System.setProperty("javax.net.ssl.keyStore", "server.keys"); //TODO ssl create certificate
+		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+		System.setProperty("javax.net.ssl.trustStore", "truststore");
+
 		this.port = port;
 		this.id = id;
 		this.backupPort = backupPort;
-		
+
 		ServerManager.getInstance().setId(id);
 		ServerManager.getInstance().setPort(port);
 		ServerManager.getInstance().setBackupPort(backupPort);
 		ServerManager.getInstance().setLogging(enableStdoutLogging);
-		
+
 		this.threads = new ThreadPoolExecutor(
 	            200,
 	            400,
@@ -59,7 +63,7 @@ public class Server
 		Integer id = null;
 		Integer backupPort = null;
 		boolean enable = true;
-		
+
 		if (args.length != 3 && args.length != 4)
 			valid = false;
 		else
@@ -83,28 +87,28 @@ public class Server
 	}
 
 	public void run()
-	{	
+	{
 		boolean isLeader = setLeader();
 		ServerManager.getInstance().setLeaderStatus(isLeader);
-		
+
 		StateSaver saver = new StateSaver();
 		saver.start();
-		
+
 		if (isLeader)
 			runServer();
 		else
 			runBackup();
 	}
 
-	private void runServer() 
+	private void runServer()
 	{
 		System.out.println("This server is the current leader");
-		
+
 		initServingSocket();
-		
+
 		BackupServer backup = new BackupServer(ServerManager.getInstance().getBackupPort());
 		backup.start();
-		
+
 		while (this.running)
 		{
 			Socket clSocket = null;
@@ -112,7 +116,7 @@ public class Server
 			{
 				clSocket = this.socket.accept();
 				System.out.println("Accepted a connection from client " + clSocket.getRemoteSocketAddress());
-			} 
+			}
 			catch (IOException e)
 			{
 				System.out.println("Unable to accept a socket connection");
@@ -123,100 +127,97 @@ public class Server
 		System.exit(0);
 	}
 
-	private void runBackup() 
+	private void runBackup()
 	{
 		String leader = ServerManager.getInstance().getLeader();
 		System.out.println("This server is a primary backup");
-		
+
 		LeaderListener listener = new LeaderListener(leaderSocket);
 		listener.listen();
-		
+
 		System.exit(0);
 	}
 
-	private boolean setLeader() 
+	private boolean setLeader()
 	{
 		System.out.println("Choosing a leader...");
-		
+
 		ArrayList<String> servers = getServerList();
 		ArrayList<Integer> ports = new ArrayList<>();
 		ArrayList<String> ips = new ArrayList<>();
-		
+
 		for (int i = 0; i < servers.size(); i++)
 		{
 			String[] elements = servers.get(i).split(":");
 			ips.add(elements[0]);
 			ports.add(Integer.parseInt(elements[1]));
 		}
-		
+
 		Random r = new Random();
 		int sleepTime = r.nextInt(1000) + this.id * 1000;
-		try 
+		try
 		{
 			Thread.sleep(sleepTime);
 		}
-		catch (InterruptedException e) 
+		catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}
-		
-		SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();  
+
+		SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		for (int i = 0; i < ips.size(); i++)
 		{
-			try 
+			try
 			{
 				this.leaderSocket = (SSLSocket) ssf.createSocket(ips.get(i), ports.get(i));
-				this.leaderSocket.startHandshake();
 				System.out.println("Server " + ips.get(i) + ":" + ports.get(i) + " is the leader");
 				return false;
-			} 
-			catch (ConnectException e) 
+			}
+			catch (ConnectException e)
 			{
 				this.leaderSocket = null;
-			} 
-			catch (IOException e) 
+			}
+			catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		return true;
 	}
-	
+
 	private ArrayList<String> getServerList()
 	{
 		ArrayList<String> servers = new ArrayList<>();
-		
+
 		FileInputStream fstream;
-		try 
+		try
 		{
 			fstream = new FileInputStream(SERVERS_FILE);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 			String strLine;
-			while ((strLine = br.readLine()) != null)   
+			while ((strLine = br.readLine()) != null)
 			{
 				servers.add(strLine);
 			}
 			br.close();
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 			System.exit(-1);
 		}
 		return servers;
 	}
-	
+
 	private void initServingSocket()
 	{
-		System.setProperty("javax.net.ssl.keyStore", "server.keys"); //TODO ssl create certificate
-		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-		
+
 		try
 		{//TODO ssl server socket
 			SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			this.socket = (SSLServerSocket) ssf.createServerSocket(port);
 			this.socket.setNeedClientAuth(false);
-		} 
+		}
 		catch (IOException e)
 		{
 			System.out.println("Unable to create socket on port " + port);
