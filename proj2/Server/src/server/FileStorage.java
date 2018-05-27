@@ -66,11 +66,11 @@ public class FileStorage implements Serializable
 	}
 
 	//TODO: melhorar a pesquisa
-	public ArrayList<String> search(String title)
+	public ArrayList<String> search(String searchTerm)
 	{	
-		String regex = Pattern.quote(title);
+		String regex = Pattern.quote(searchTerm);
 		
-		String pattern = "(.*)" + title.subSequence(0, title.length()-4) + "(.*)";
+		String pattern = "(.*)" + searchTerm + "(.*)";
 		Pattern regex2 = Pattern.compile(pattern);
 		
 		ArrayList<String> list = new ArrayList<>();
@@ -80,12 +80,12 @@ public class FileStorage implements Serializable
 		{
 			if (file.matches(regex))
 				list.add(file);
-			/*else
+			else
 			{
 				Matcher m = regex2.matcher(file);
 				if(m.lookingAt())
 					list.add(file);
-			}*/
+			}
 			
 		}
 		return list;

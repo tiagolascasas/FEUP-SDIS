@@ -9,6 +9,7 @@ import java.util.Base64;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.client.ClientManager;
 
 
@@ -45,12 +46,14 @@ public class ResponseHandlerDownload extends ResponseHandler
 		String res = ""; 
 		if(onSave == 1)
 			res = "Track " + title + " successfully downloaded, now playing...";
-		else
+		else 
 			res = "There was an error processing the track " + title;
 		
-		play(title);
-		
 		ClientManager.getInstance().log(res);
+		
+		if(onSave == 1) 
+			play(title);
+		
 	}
 
 	public int save(String title, byte[] data)
@@ -61,8 +64,6 @@ public class ResponseHandlerDownload extends ResponseHandler
 		try
 		{		
 			File file = new File(path);
-			if (file.exists())
-				return -1;
 			
 			if (data != null) 
 			{
@@ -84,19 +85,24 @@ public class ResponseHandlerDownload extends ResponseHandler
 
 	private void play(String title) 
 	{
-		Music track = Gdx.audio.newMusic(Gdx.files.internal(this.path));
-		ClientManager.getInstance().setActiveTrack(track);
-		track.play();
-		track.setOnCompletionListener(new Music.OnCompletionListener() 
-		{
-            @Override
-            public void onCompletion(Music track) 
-            {
-               track.stop();
-               ClientManager.getInstance().log(title + " has finished playing");
-               track.dispose();
-            }
-        });
+		try{
+			Music track = Gdx.audio.newMusic(Gdx.files.internal(this.path));
+			ClientManager.getInstance().setActiveTrack(track);
+			track.play();
+			track.setOnCompletionListener(new Music.OnCompletionListener() {
+
+				@Override
+				public void onCompletion(Music track) {
+					track.stop();
+					ClientManager.getInstance().log(title + " has finished playing");
+					track.dispose();
+				}
+
+			});
+			
+		} catch(GdxRuntimeException e) {
+			ClientManager.getInstance().log("The track " + title + " can't be played. Maybe it's not in the right format!");
+		}
 	}
 
 }
