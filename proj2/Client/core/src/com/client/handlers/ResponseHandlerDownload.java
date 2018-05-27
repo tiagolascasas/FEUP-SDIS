@@ -9,6 +9,7 @@ import java.util.Base64;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.client.ClientManager;
 
 
@@ -54,7 +55,8 @@ public class ResponseHandlerDownload extends ResponseHandler
 		try
 		{		
 			File file = new File(path);
-			if (file.exists())
+			
+			if(file.exists())
 				return -1;
 			
 			if (data != null) 
@@ -77,24 +79,25 @@ public class ResponseHandlerDownload extends ResponseHandler
 
 	public static void play(String title, String path) 
 	{
-		Music track = Gdx.audio.newMusic(Gdx.files.internal(path));
-		if (track == null)
+		try
 		{
-			ClientManager.getInstance().log("There was an error playing the track");
-			return;
+			Music track = Gdx.audio.newMusic(Gdx.files.internal(path));
+			ClientManager.getInstance().setActiveTrack(track);
+			track.play();
+			track.setOnCompletionListener(new Music.OnCompletionListener() {
+
+				@Override
+				public void onCompletion(Music track) {
+					track.stop();
+					ClientManager.getInstance().log(title + " has finished playing");
+					track.dispose();
+				}
+
+			});
+			
+		} catch(GdxRuntimeException e) {
+			ClientManager.getInstance().log("The track " + title + " can't be played. Maybe it's not in the right format!");
 		}
-		ClientManager.getInstance().setActiveTrack(track);
-		track.play();
-		track.setOnCompletionListener(new Music.OnCompletionListener() 
-		{
-            @Override
-            public void onCompletion(Music track) 
-            {
-               track.stop();
-               ClientManager.getInstance().log(title + " has finished playing");
-               track.dispose();
-            }
-        });
 	}
 
 }

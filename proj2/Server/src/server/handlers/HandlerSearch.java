@@ -37,7 +37,7 @@ public class HandlerSearch extends Handler
 			for(String file : searchResults) {
 				msg += file + '\n';
 			}
-			message = Utils.encode(msg);
+			message = Utils.encode(msg.substring(0, msg.length()-1));
 			build.append(1);
 			
 			String notify = "File " + searchTerm + " on from server";
