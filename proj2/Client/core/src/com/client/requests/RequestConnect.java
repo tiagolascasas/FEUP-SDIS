@@ -2,6 +2,8 @@ package com.client.requests;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -60,6 +62,13 @@ public class RequestConnect extends Request
 		
 		ClientManager.getInstance().initListener();
 		ClientManager.getInstance().setConnected(true);
+		
+		if (ClientManager.getInstance().getPassword() != null)
+		{
+			ExecutorService es = Executors.newCachedThreadPool();
+			es.execute(new RequestLogin(ClientManager.getInstance().getUsername(),
+										ClientManager.getInstance().getPassword()));	
+		}
 	}
 	
 	private String getNextServer()

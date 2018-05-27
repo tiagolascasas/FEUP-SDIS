@@ -85,16 +85,19 @@ public class Server
 
 	public void run()
 	{
-		boolean isLeader = setLeader();
-		ServerManager.getInstance().setLeaderStatus(isLeader);
-
-		StateSaver saver = new StateSaver();
-		saver.start();
-
-		if (isLeader)
-			runServer();
-		else
-			runBackup();
+		while (this.running)
+		{
+			boolean isLeader = setLeader();
+			ServerManager.getInstance().setLeaderStatus(isLeader);
+	
+			StateSaver saver = new StateSaver();
+			saver.start();
+	
+			if (isLeader)
+				runServer();
+			else
+				runBackup();
+		}
 	}
 
 	private void runServer()
@@ -121,7 +124,6 @@ public class Server
 			ClientListener client = new ClientListener(clSocket);
 			this.threads.execute(client);
 		}
-		System.exit(0);
 	}
 
 	private void runBackup()
@@ -131,8 +133,6 @@ public class Server
 
 		LeaderListener listener = new LeaderListener(leaderSocket);
 		listener.listen();
-
-		System.exit(0);
 	}
 
 	private boolean setLeader()
