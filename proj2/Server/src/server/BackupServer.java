@@ -52,11 +52,11 @@ public class BackupServer extends Thread
 			{
 				backupSocket = this.socket.accept();
 				ServerManager.getInstance().addBackupServer(backupSocket);
-				System.out.println("Accepted a connection from backup server" + backupSocket.getRemoteSocketAddress());
+				System.out.println("Accepted a connection from backup server " + backupSocket.getRemoteSocketAddress());
 			} 
 			catch (IOException e)
 			{
-				System.out.println("Unable to accept a socket connection");
+				System.out.println("Unable to accept a socket connection from a backup server");
 			}
 		}
 	}
