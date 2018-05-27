@@ -7,11 +7,9 @@ import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -33,7 +31,7 @@ public class Server
 	{
 		this.port = port;
 		this.id = id;
-		this.backupPort = backupPort;
+		this.setBackupPort(backupPort);
 
 		String keystore = "server" + this.id + ".keystore";
 		System.setProperty("javax.net.ssl.keyStore", keystore);
@@ -240,5 +238,13 @@ public class Server
 			System.exit(-1);
 		}
 		System.out.println("Serving on port " + port);
+	}
+
+	public int getBackupPort() {
+		return backupPort;
+	}
+
+	public void setBackupPort(int backupPort) {
+		this.backupPort = backupPort;
 	}
 }

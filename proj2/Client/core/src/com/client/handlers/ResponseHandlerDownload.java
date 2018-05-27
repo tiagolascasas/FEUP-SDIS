@@ -44,8 +44,9 @@ public class ResponseHandlerDownload extends ResponseHandler
         String tempDir = System.getProperty("java.io.tmpdir");
 		this.path = tempDir + "/" + title;
 		
-		save(title, data, this.path);
+		int onSave = save(title, data, this.path);
 		
+		String res;
 		switch (onSave) {
 		case 1:
 			res = "Track " + title + " successfully downloaded, now playing...";
@@ -61,7 +62,7 @@ public class ResponseHandlerDownload extends ResponseHandler
 		ClientManager.getInstance().log(res);
 		
 		if(onSave != 0) 
-			play(title);
+			play(title, this.path);
 	}
 
 	public static int save(String title, byte[] data, String path)
