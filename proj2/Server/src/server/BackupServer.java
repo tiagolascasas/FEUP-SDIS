@@ -16,11 +16,6 @@ public class BackupServer extends Thread
 	private boolean running = true;
 	public BackupServer(int backupPort)
 	{
-
-		System.setProperty("javax.net.ssl.trustStore", "truststore");
-		System.setProperty("javax.net.ssl.keyStore", "server.keys"); //TODO ssl create certificate
-		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-
 		try
 		{
 			SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
