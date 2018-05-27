@@ -71,6 +71,11 @@ public class Services extends CommandExecutor
 		threads.execute(request);
 	}
 	
+	public void silence()
+	{
+		ClientManager.getInstance().stopPlaying();
+	}
+	
 	@ConsoleDoc(description = "Closes the application")
 	public void exit()
 	{

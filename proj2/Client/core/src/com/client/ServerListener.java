@@ -37,7 +37,6 @@ public class ServerListener extends Thread
 	@Override
 	public void run()
 	{
-		ClientManager.getInstance().log("Subscribed to push notifications");
 		while(this.running)
 		{
 			ArrayList<Byte> message = new ArrayList<Byte>();
@@ -70,7 +69,7 @@ public class ServerListener extends Thread
 		try
 		{
 			this.socket.close();
-			ClientManager.getInstance().log("The server terminated the connection");
+			ClientManager.getInstance().log("The server is down. Attempting to find a new one...");
 			ClientManager.getInstance().setConnected(false);
 			ClientManager.getInstance().setLoggedIn(false);
 		}

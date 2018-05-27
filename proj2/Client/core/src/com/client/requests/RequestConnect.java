@@ -23,7 +23,9 @@ public class RequestConnect extends Request
 	
 	@Override
 	public void run()
-	{		
+	{
+		ClientManager.getInstance().log("Attempting to find a server...");
+		
 		while(this.keepConnecting)
 		{
 			String server = getNextServer();
@@ -41,7 +43,6 @@ public class RequestConnect extends Request
 		System.setProperty("javax.net.ssl.trustStore", "truststore");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		
-		ClientManager.getInstance().log("Attempting to connect to " + ip + ":" + port);
 		try
 		{
 			SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();  
@@ -52,7 +53,6 @@ public class RequestConnect extends Request
 		}
 		catch (IOException e)
 		{
-			ClientManager.getInstance().log("Error connecting to " + ip + ":" + port);
 			return;
 		}
 		

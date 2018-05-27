@@ -18,7 +18,10 @@ public class ResponseHandlerLogin extends ResponseHandler
 	public void run()
 	{
 		if (status == 1)
+		{
 			ClientManager.getInstance().setLoggedIn(true);
+			ClientManager.getInstance().log("Subscribed to push notifications");
+		}
 		else if (status == 0)
 		{
 			ClientManager.getInstance().setLoggedIn(false);

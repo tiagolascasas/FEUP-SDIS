@@ -172,4 +172,15 @@ public class ClientManager
 	{
 		return this.latch;
 	}
+
+	public void stopPlaying() 
+	{
+		if (this.currentTrack != null && this.currentTrack.isPlaying())
+		{
+			this.currentTrack.stop();
+			log("Stopped playing the current track");
+		}
+		else
+			log("No track is currently being played");
+	}
 }
