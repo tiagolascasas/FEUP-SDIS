@@ -43,6 +43,7 @@ public class Server
 		ServerManager.getInstance().setPort(port);
 		ServerManager.getInstance().setBackupPort(backupPort);
 		ServerManager.getInstance().setLogging(enableStdoutLogging);
+		ServerManager.getInstance().loadState();
 
 		this.threads = new ThreadPoolExecutor(
 	            200,
@@ -227,7 +228,7 @@ public class Server
 	{
 
 		try
-		{//TODO ssl server socket
+		{
 			SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			this.socket = (SSLServerSocket) ssf.createServerSocket(port);
 			this.socket.setNeedClientAuth(false);

@@ -93,6 +93,10 @@ public class LeaderListener
 					hasErrors = true;
 				break;
 			}
+			case "STATE":
+			{
+				System.out.println("STATE");
+			}
 			default:
 			{
 				hasErrors = true;

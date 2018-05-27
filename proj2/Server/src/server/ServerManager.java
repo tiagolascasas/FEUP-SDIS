@@ -3,6 +3,7 @@ package server;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,18 +36,25 @@ public class ServerManager
 	private ArrayList<Socket> backupServers;
 	private PrintWriter logFile;
 	
-	private ServerManager()
+	private ServerManager(){}
+	
+	public static ServerManager getInstance()
+	{
+		return instance;
+	}
+	
+	public synchronized void loadState()
 	{
 		try
 		{
-			InputStream inputStream = new BufferedInputStream(new FileInputStream(STATEFILE));
+			InputStream inputStream = new BufferedInputStream(new FileInputStream(STATEFILE + "_" + id));
 			ObjectInput objectStream = new ObjectInputStream(inputStream);
 			this.files = (FileStorage)objectStream.readObject();
 			this.users = (UserRegistry)objectStream.readObject();
 			this.onlineUsers = new OnlineUsers();
 			this.backupServers = new ArrayList<>();
 			objectStream.close();
-			System.out.println("Successfully accessed persistent data");
+			System.out.println("Successfully accessed persistent data on file " + STATEFILE + "_" + id);
 		}
 		catch(IOException | ClassNotFoundException e)
 		{
@@ -56,11 +64,6 @@ public class ServerManager
 			this.files = new FileStorage();
 			this.backupServers = new ArrayList<>();
 		}
-	}
-	
-	public static ServerManager getInstance()
-	{
-		return instance;
 	}
 	
 	public synchronized boolean registerUser(String username, String passwordHash)
@@ -223,11 +226,40 @@ public class ServerManager
 		this.backupPort = backupPort;
 	}
 
-	public void addBackupServer(Socket socket)
+	public synchronized void addBackupServer(Socket socket)
 	{
 		this.backupServers.add(socket);
+		try 
+		{
+			String header = "STATE ";
+			byte[] msg = Utils.byteArrayAppend(header.getBytes(), getCurrentState());
+			socket.getOutputStream().write(msg);
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 	
+	private synchronized byte[] getCurrentState() 
+	{
+		File file = new File(STATEFILE + "_" + id);
+		FileInputStream fis;
+		try 
+		{
+			fis = new FileInputStream(file);
+			byte[] data = new byte[(int) file.length()];
+			fis.read(data);
+			fis.close();
+			return Utils.encode(new String(data)).getBytes();
+		} 
+		catch (IOException e ) 
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public void deleteBackupSocket(Socket socket)
 	{
 		try 
@@ -247,6 +279,15 @@ public class ServerManager
 		byte[] msg = Utils.byteArrayAppend(message.getBytes(), new byte[]{'\0'});
 		
 		ExecutorService es = Executors.newCachedThreadPool();
+		
+		for (Socket socket : this.backupServers)
+		{
+			if (socket.isClosed())
+			{
+				System.out.println("Backup server " + socket.getRemoteSocketAddress() + " is offline");
+				this.backupServers.remove(socket);
+			}
+		}
 
 		for (Socket socket : this.backupServers)
 		{
@@ -260,7 +301,7 @@ public class ServerManager
 					} 
 					catch (IOException e) 
 					{
-					e.printStackTrace();
+						e.printStackTrace();
 					}
 				}
 			});
