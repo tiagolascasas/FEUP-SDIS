@@ -31,13 +31,14 @@ public class Server
 
 	public Server(int port, int id, int backupPort, boolean enableStdoutLogging)
 	{
-		System.setProperty("javax.net.ssl.keyStore", "server.keys"); //TODO ssl create certificate
-		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-		System.setProperty("javax.net.ssl.trustStore", "truststore");
-
 		this.port = port;
 		this.id = id;
 		this.backupPort = backupPort;
+
+		String keystore = "server" + this.id + ".keystore";
+		System.setProperty("javax.net.ssl.keyStore", keystore);
+		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+		System.setProperty("javax.net.ssl.trustStore", "truststore");
 
 		ServerManager.getInstance().setId(id);
 		ServerManager.getInstance().setPort(port);
@@ -90,10 +91,10 @@ public class Server
 		{
 			boolean isLeader = electLeader();
 			ServerManager.getInstance().setLeaderStatus(isLeader);
-	
+
 			StateSaver saver = new StateSaver();
 			saver.start();
-	
+
 			if (isLeader)
 				runServer();
 			else
@@ -150,7 +151,7 @@ public class Server
 			ips.add(elements[0]);
 			ports.add(Integer.parseInt(elements[1]));
 		}
-		
+
 		SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 
 		for (int i = 0; i < ports.size(); i++)
@@ -170,7 +171,7 @@ public class Server
 				e.printStackTrace();
 			}
 		}
-		
+
 		try
 		{
 			Thread.sleep(this.id * 100);
