@@ -1,5 +1,6 @@
 package server.handlers;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Base64;
 
@@ -24,6 +25,12 @@ public class HandlerDownload extends Handler
 	{
 		String message = "";
 		log("Starting Download of file from server");
+		
+		if (ownerIsOnline())
+		{
+			log("Owner of track " + track + " is online; forwarded request to him instead.");
+			return;
+		}
 
 		ServerManager manager = ServerManager.getInstance();
 		StringBuilder build = new StringBuilder();
@@ -32,11 +39,11 @@ public class HandlerDownload extends Handler
 		byte data[] = manager.getTrack(this.track);
 		if (data == null) {
 			message = Utils.encode("Error: File is not on server");
-			build.append(0);
+			build.append(1);
 		}
-		else if(data.length == 0) {
-			message = Utils.encode("Error: Counldn't download file from server");
-			build.append(0);
+		else if(data.length == 1) {
+			message = Utils.encode("Error: Couldn't download file from server");
+			build.append(1);
 		} else {
 			
 	        String encodedName = new String(Base64.getEncoder().encode(this.track.getBytes()));
@@ -44,10 +51,6 @@ public class HandlerDownload extends Handler
 	        
 			message = Utils.encode(encodedName + " " + encodedFile);
 			build.append(1);
-
-			String notify = "File " + track + " is now downloaded from server";
-			Notifier notif = new Notifier(username, notify);
-			notif.start();
 		}
 		
 		build.append(" ").append(message).append('\0');
@@ -55,6 +58,28 @@ public class HandlerDownload extends Handler
 		send(s);
 		
 		log("Exiting");
+	}
+
+	private boolean ownerIsOnline() 
+	{
+		String user = ServerManager.getInstance().getOwnerOfTrack(track);
+		if (user == null)
+			return false;
+		Socket s = ServerManager.getInstance().getSocketOfOnlineUser(user);
+		if (s == null)
+			return false;
+		
+		String strMsg = "TRANSMIT " + this.track + " " + socket.getRemoteSocketAddress();
+		byte[] message = Utils.byteArrayAppend(strMsg.getBytes(), new byte[] {'\0'});
+		try 
+		{
+			s.getOutputStream().write(message);
+		} 
+		catch (IOException e) 
+		{
+			return false;
+		}
+		return true;
 	}
 
 }

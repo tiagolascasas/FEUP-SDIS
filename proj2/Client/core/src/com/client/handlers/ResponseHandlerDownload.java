@@ -40,17 +40,10 @@ public class ResponseHandlerDownload extends ResponseHandler
 
 		byte[] data = Base64.getDecoder().decode(split[1]);
 		
-		int onSave = this.save(title, data);
+		save(title, data);
 		
-		String res = ""; 
-		if(onSave == 1)
-			res = "Track " + title + " successfully downloaded, now playing...";
-		else
-			res = "There was an error processing the track " + title;
-		
+		ClientManager.getInstance().log("Track " + title + " successfully downloaded, now playing...");
 		play(title);
-		
-		ClientManager.getInstance().log(res);
 	}
 
 	public int save(String title, byte[] data)
@@ -85,6 +78,11 @@ public class ResponseHandlerDownload extends ResponseHandler
 	private void play(String title) 
 	{
 		Music track = Gdx.audio.newMusic(Gdx.files.internal(this.path));
+		if (track == null)
+		{
+			ClientManager.getInstance().log("There was an error playing the track");
+			return;
+		}
 		ClientManager.getInstance().setActiveTrack(track);
 		track.play();
 		track.setOnCompletionListener(new Music.OnCompletionListener() 

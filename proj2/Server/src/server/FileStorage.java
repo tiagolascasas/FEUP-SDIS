@@ -115,5 +115,4 @@ public class FileStorage implements Serializable
 		//TODO: usar I/O ass�ncrono para ler o ficheiro
 		return data;
 	}
-
 }

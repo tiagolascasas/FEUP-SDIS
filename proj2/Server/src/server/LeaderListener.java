@@ -70,7 +70,7 @@ public class LeaderListener
 		
 		if (elements.length < 1)
 		{
-			System.out.println("Dropped uncomprehensible message \"" + message + "\"");
+			System.out.println("Dropped uncomprehensible message \"" + message.substring(0, 99) + "...\"");
 			return;
 		}
 		boolean hasErrors = false;
@@ -95,7 +95,9 @@ public class LeaderListener
 			}
 			case "STATE":
 			{
-				System.out.println("STATE");
+				byte[] state = Utils.decode(elements[1]).getBytes();
+				ServerManager.getInstance().setState(state);
+				break;
 			}
 			default:
 			{
@@ -104,6 +106,6 @@ public class LeaderListener
 			}
 		}
 		if (hasErrors)
-			System.out.println("Dropped uncomprehensible message \"" + message + "\"");
+			System.out.println("Dropped uncomprehensible message \"" + message.substring(0, 99) + "...\"");
 	}
 }

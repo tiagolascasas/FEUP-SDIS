@@ -49,4 +49,14 @@ public class UserRegistry implements Serializable
 		User user = this.users.get(username);
 		user.addTrack(title);
 	}
+	
+	public String getOwnerOfTrack(String track)
+	{
+		for (String username : this.users.keySet()) 
+		{
+		    if (this.users.get(username).hasTrack(track))
+		    	return username;
+		}
+		return null;
+	}
 }

@@ -21,6 +21,11 @@ public class User implements Serializable
 	{
 		this.files.add(title);
 	}
+	
+	public boolean hasTrack(String title)
+	{
+		return files.contains(title);
+	}
 
 	public String getPassword()
 	{

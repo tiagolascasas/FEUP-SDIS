@@ -14,6 +14,7 @@ import com.client.handlers.ResponseHandlerLogin;
 import com.client.handlers.ResponseHandlerNotification;
 import com.client.handlers.ResponseHandlerRegister;
 import com.client.handlers.ResponseHandlerSearch;
+import com.client.handlers.ResponseHandlerTransmit;
 import com.client.handlers.ResponseHandlerUpload;
 
 public class ServerListener extends Thread
@@ -97,6 +98,7 @@ public class ServerListener extends Thread
 	 * RES_REGISTER <status> <message>
 	 * RES_SEARCH <status> <results>
 	 * RES_UPLOAD <status> <message>
+	 * TRANSMIT <track> <ip:port>
 	 * NOTIF <content>
 	 * 
 	 * @param message
@@ -168,6 +170,14 @@ public class ServerListener extends Thread
 			{
 				if (elements.length == 2)
 					(new ResponseHandlerNotification(elements[1])).run();
+				else
+					hasErrors = true;
+				break;
+			}
+			case "TRANSMIT":
+			{
+				if (elements.length == 3)
+					(new ResponseHandlerTransmit(elements[1], elements[2])).run();
 				else
 					hasErrors = true;
 				break;

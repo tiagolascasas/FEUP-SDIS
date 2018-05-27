@@ -45,6 +45,8 @@ public class OnlineUsers implements Serializable
 	public Socket getUserSocket(String username)
 	{
 		int index = users.indexOf(username);
+		if (index < 0)
+			return null;
 		return sockets.get(index);
 	}
 	

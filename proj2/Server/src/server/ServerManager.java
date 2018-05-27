@@ -1,9 +1,9 @@
 package server;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,9 +86,6 @@ public class ServerManager
 		if (onlineUsers.isOnline(username, socket))
 			return false;
 		
-		System.out.println("ONLINE USERS:");
-		System.out.print(onlineUsers.toString());
-		
 		onlineUsers.setUserOnline(username, socket);
 		return true;
 	}
@@ -104,6 +101,11 @@ public class ServerManager
 		if(res == 1)
 			users.addTrackToUser(username, title);
 		return res;
+	}
+	
+	public synchronized String getOwnerOfTrack(String track)
+	{
+		return this.users.getOwnerOfTrack(track);
 	}
 	
 	public synchronized ArrayList<String> searchTrack(String title)
@@ -159,6 +161,11 @@ public class ServerManager
 	public synchronized ArrayList<Socket> getOnlineSockets(String excludeUser)
 	{
 		return onlineUsers.getAllUserSockets(excludeUser);
+	}
+	
+	public synchronized Socket getSocketOfOnlineUser(String username)
+	{
+		return this.onlineUsers.getUserSocket(username);
 	}
 
 	public int getId() 
@@ -233,6 +240,7 @@ public class ServerManager
 		{
 			String header = "STATE ";
 			byte[] msg = Utils.byteArrayAppend(header.getBytes(), getCurrentState());
+			msg = Utils.byteArrayAppend(msg, new byte[]{'\0'});
 			socket.getOutputStream().write(msg);
 		} 
 		catch (IOException e) 
@@ -319,6 +327,23 @@ public class ServerManager
 		catch (InterruptedException e) 
 		{
 			e.printStackTrace();
+		}
+	}
+
+	public synchronized void setState(byte[] state) 
+	{
+		try 
+		{
+			ByteArrayInputStream stream = new ByteArrayInputStream(state);
+			ObjectInput objectStream = new ObjectInputStream(stream);
+			this.files = (FileStorage)objectStream.readObject();
+			this.users = (UserRegistry)objectStream.readObject();
+			System.out.println("State successfully updated");
+		} 
+		catch (IOException | ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+			System.out.println("Error processing state");
 		}
 	}
 }
