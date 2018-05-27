@@ -29,10 +29,6 @@ public class ResponseHandlerDownload extends ResponseHandler
 		String decodedMessage = new String(Base64.getDecoder().decode(this.message));
 		
 		String[] split = decodedMessage.split(" ");
-		/*
-		for(int i = 0; i<split.length; i++) {
-			System.out.println(split[i]);
-		};*/
 		
 		if(status == 0) {
 			System.out.println(decodedMessage);
@@ -88,7 +84,6 @@ public class ResponseHandlerDownload extends ResponseHandler
 
 	private void play(String title) 
 	{
-		System.out.println(this.path);
 		Music track = Gdx.audio.newMusic(Gdx.files.internal(this.path));
 		ClientManager.getInstance().setActiveTrack(track);
 		track.play();
@@ -98,7 +93,8 @@ public class ResponseHandlerDownload extends ResponseHandler
             public void onCompletion(Music track) 
             {
                track.stop();
-               ClientManager.getInstance().log(track + " has finished playing");
+               ClientManager.getInstance().log(title + " has finished playing");
+               track.dispose();
             }
         });
 	}
