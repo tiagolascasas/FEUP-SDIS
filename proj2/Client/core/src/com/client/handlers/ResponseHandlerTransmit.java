@@ -30,6 +30,7 @@ public class ResponseHandlerTransmit extends ResponseHandler
 		ClientManager.getInstance().log("Sending a track to a client");
 		try 
 		{
+			@SuppressWarnings("resource")
 			Socket sk = new Socket(this.ip, this.port);
 			String track = getTrack();
 			if (track == null)

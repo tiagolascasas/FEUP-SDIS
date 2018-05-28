@@ -236,6 +236,7 @@ public class ServerManager
 		 */
 	}
 	
+	@SuppressWarnings("unused")
 	private synchronized byte[] getCurrentState() 
 	{
 		File file = new File(STATEFILE + "_" + id);
