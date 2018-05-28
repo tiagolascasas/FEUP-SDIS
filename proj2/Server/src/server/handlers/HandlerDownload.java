@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Base64;
 
-import server.Notifier;
 import server.ServerManager;
 import server.Utils;
 

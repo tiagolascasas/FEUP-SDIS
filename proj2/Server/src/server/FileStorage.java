@@ -65,7 +65,6 @@ public class FileStorage implements Serializable
 		}
 	}
 
-	//TODO: melhorar a pesquisa
 	public ArrayList<String> search(String searchTerm)
 	{	
 		String regex = Pattern.quote(searchTerm);
@@ -111,8 +110,6 @@ public class FileStorage implements Serializable
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-			
-		//TODO: usar I/O ass�ncrono para ler o ficheiro
 		return data;
 	}
 }

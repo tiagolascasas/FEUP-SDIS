@@ -7,12 +7,9 @@ import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -27,14 +24,10 @@ public class Server
 	private SSLSocket leaderSocket;
 	private int port;
 	private int id;
-	private int backupPort;
-
 	public Server(int port, int id, int backupPort, boolean enableStdoutLogging)
 	{
 		this.port = port;
 		this.id = id;
-		this.backupPort = backupPort;
-
 		String keystore = "server" + this.id + ".keystore";
 		System.setProperty("javax.net.ssl.keyStore", keystore);
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");

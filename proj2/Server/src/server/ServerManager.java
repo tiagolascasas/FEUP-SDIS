@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -35,7 +34,6 @@ public class ServerManager
 	private int port;
 	private int backupPort;
 	private ArrayList<Socket> backupServers;
-	private PrintWriter logFile;
 	private ConcurrentHashMap<String, Integer> peerPorts;
 	
 	private ServerManager(){}
@@ -130,9 +128,6 @@ public class ServerManager
 
 	public synchronized void log(String s)
 	{
-		this.logFile.write(s);
-		this.logFile.write("\n");
-
 		if (enableStdoutLogging)
 			System.out.println(s);
 	}
@@ -140,16 +135,6 @@ public class ServerManager
 	public synchronized void setLogging(boolean enableStdoutLogging)
 	{
 		this.enableStdoutLogging = enableStdoutLogging;
-		long unixTime = System.currentTimeMillis() / 1000L;
-		try
-		{
-			String fileName = ("log_" + unixTime + "_" + this.id + ".txt");
-			this.logFile = new PrintWriter(fileName, "UTF-8");
-		} 
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
 	public synchronized void saveState()
@@ -246,17 +231,9 @@ public class ServerManager
 	public synchronized void addBackupServer(Socket socket)
 	{
 		this.backupServers.add(socket);
-		try 
-		{
-			String header = "STATE ";
-			byte[] msg = Utils.byteArrayAppend(header.getBytes(), getCurrentState());
-			msg = Utils.byteArrayAppend(msg, new byte[]{'\0'});
-			socket.getOutputStream().write(msg);
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
+		/*UPDATE BACKUP SERVER STATE
+		 * unfortunately it is not working in time for delivery
+		 */
 	}
 	
 	private synchronized byte[] getCurrentState() 
@@ -344,6 +321,7 @@ public class ServerManager
 	{
 		try 
 		{
+			System.out.println(state.length);
 			ByteArrayInputStream stream = new ByteArrayInputStream(state);
 			ObjectInput objectStream = new ObjectInputStream(stream);
 			this.files = (FileStorage)objectStream.readObject();

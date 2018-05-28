@@ -70,7 +70,7 @@ public class LeaderListener
 		
 		if (elements.length < 1)
 		{
-			System.out.println("Dropped uncomprehensible message \"" + message.substring(0, 99) + "...\"");
+			System.out.println("Dropped uncomprehensible message \"" + message + "...\"");
 			return;
 		}
 		boolean hasErrors = false;
@@ -106,6 +106,6 @@ public class LeaderListener
 			}
 		}
 		if (hasErrors)
-			System.out.println("Dropped uncomprehensible message \"" + message.substring(0, 99) + "...\"");
+			System.out.println("Dropped uncomprehensible message \"" + message + "...\"");
 	}
 }

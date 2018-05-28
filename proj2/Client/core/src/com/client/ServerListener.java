@@ -108,7 +108,7 @@ public class ServerListener extends Thread
 		String[] elements = message.split(" ");
 		if (elements.length < 2)
 		{
-			System.out.println("Dropped uncomprehensible message \"" + message.substring(0, 100) + "...\"");
+			System.out.println("Dropped uncomprehensible message \"" + message + "...\"");
 			return;
 		}
 		boolean hasErrors = false;

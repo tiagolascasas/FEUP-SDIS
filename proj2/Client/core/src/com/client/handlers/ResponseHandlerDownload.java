@@ -99,5 +99,4 @@ public class ResponseHandlerDownload extends ResponseHandler
 			ClientManager.getInstance().log("The track " + title + " can't be played. Maybe it's not in the right format!");
 		}
 	}
-
 }

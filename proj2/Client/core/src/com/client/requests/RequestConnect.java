@@ -49,7 +49,6 @@ public class RequestConnect extends Request
 			SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
 			SSLSocket socket = (SSLSocket) ssf.createSocket(ip, port);
 			socket.startHandshake();
-			//Socket socket = new Socket(ip, this.port); //TODO ssl socket
 			ClientManager.getInstance().setSocket(socket);
 		}
 		catch (IOException e)

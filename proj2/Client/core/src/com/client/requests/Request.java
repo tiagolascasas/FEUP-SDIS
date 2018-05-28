@@ -16,11 +16,7 @@ public abstract class Request implements Runnable
 	}
 
 	@Override
-	public void run()
-	{
-		// TODO Auto-generated method stub
-
-	}
+	public void run(){}
 	
 	protected void send(String message)
 	{
@@ -29,7 +25,7 @@ public abstract class Request implements Runnable
 			ClientManager.getInstance().log("You must be connected to a server in order to send requests");
 		}
 		
-		SSLSocket socket = ClientManager.getInstance().getSocket(); // TODO SSL socket
+		SSLSocket socket = ClientManager.getInstance().getSocket();
 		try
 		{
 			socket.getOutputStream().write(message.getBytes());
