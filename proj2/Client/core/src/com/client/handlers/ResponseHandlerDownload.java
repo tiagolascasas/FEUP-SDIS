@@ -104,7 +104,7 @@ public class ResponseHandlerDownload extends ResponseHandler
 				@Override
 				public void onCompletion(Music track) {
 					track.stop();
-					ClientManager.getInstance().log(title + " has finished playing");
+					ClientManager.getInstance().log("The track has finished playing");
 					track.dispose();
 				}
 

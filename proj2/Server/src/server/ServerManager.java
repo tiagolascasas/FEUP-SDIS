@@ -236,6 +236,7 @@ public class ServerManager
 		 */
 	}
 	
+	@SuppressWarnings("unused")
 	private synchronized byte[] getCurrentState() 
 	{
 		File file = new File(STATEFILE + "_" + id);
@@ -330,7 +331,7 @@ public class ServerManager
 		} 
 		catch (IOException | ClassNotFoundException e) 
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("Error processing state");
 		}
 	}
